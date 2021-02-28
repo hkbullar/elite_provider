@@ -14,7 +14,6 @@ class HomeScreen extends StatefulWidget
 class _HomeScreenState extends State<HomeScreen> {
 bool ifOnline=false;
 bool hasRequest=false;
-final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
 SheetController controller = SheetController();
 
 @override
@@ -25,10 +24,9 @@ SheetController controller = SheetController();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      key: scaffoldKey,
         resizeToAvoidBottomInset: false,
-      backgroundColor: Colors.transparent,
-      body: Stack(
+        backgroundColor: Colors.transparent,
+        body: Stack(
         children: [
           Column(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -45,7 +43,6 @@ SheetController controller = SheetController();
                   child: Text("All the requests will apear here one by one through a popup. Remember you have to accept or reject the 1st request to see the second request. For now to see the a dummy request please tap on this text",textAlign: TextAlign.center,style: TextStyle(color: AppColours.white),),
                 ),
               ),
-
             ],
           ),
           Positioned(

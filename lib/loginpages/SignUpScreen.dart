@@ -40,7 +40,6 @@ class _SignUpScreenState extends State<SignUpScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-
       backgroundColor: Colors.black,
       appBar: EliteAppBar("Register"),
       body: Padding(
@@ -90,7 +89,6 @@ class _SignUpScreenState extends State<SignUpScreen> {
                             setState(() {
                               maleBoxVal=0;
                             });
-
                           },
                           child: Card(
                             color: maleBoxVal==0?AppColours.golden_button_bg:AppColours.textFeildBG,
@@ -113,7 +111,6 @@ class _SignUpScreenState extends State<SignUpScreen> {
                             setState(() {
                               maleBoxVal=1;
                             });
-
                           },
                           child: Card(
                             color: maleBoxVal==1?AppColours.golden_button_bg:AppColours.textFeildBG,
@@ -144,7 +141,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                               child: Column(
                                 children: [
                                   Image.asset(Constants.LOCAL_IMAGE+"intersex_black.png",height: 30,color: maleBoxVal==2?AppColours.black:AppColours.white,),
-                                  SizedBox(height: 10,),
+                                  SizedBox(height: 10),
                                   Text("I'M ME",style: TextStyle(color: maleBoxVal==2?AppColours.black:AppColours.white),)
                                 ],
                               ),
@@ -214,7 +211,6 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     decoration: CommonWidgets.loginFormDecoration("Confirm Password",Icons.lock_outline),
                   ),
                   SizedBox(height: 20,),
-
                   SizedBox(height: MediaQuery.of(context).size.width/99),
                   Row(
                     children: [
@@ -228,7 +224,6 @@ class _SignUpScreenState extends State<SignUpScreen> {
                             child: Text("SIGNUP",style: TextStyle(color: AppColours.black,fontWeight: FontWeight.bold,fontSize: 18),),
                             onPressed: (){
                               Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) => DocumentsScreen(userType)));
-
                               if(CommonWidgets.isValidate(_formKey)){
                                 Map jsonPost = {
                                   Constants.FIRST_NAME: _nameController.text,

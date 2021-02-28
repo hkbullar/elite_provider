@@ -1,7 +1,5 @@
 
 import 'package:elite_provider/dashboard/DashBoardScreen.dart';
-import 'package:elite_provider/loginpages/DocumentsScreen.dart';
-import 'package:elite_provider/loginpages/SplashScreen.dart';
 import 'package:flutter/material.dart';
 
 
