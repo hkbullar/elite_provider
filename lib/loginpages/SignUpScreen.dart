@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:elite_provider/global/AppColours.dart';
 import 'package:elite_provider/global/CommonWidgets.dart';
 import 'package:elite_provider/global/Constants.dart';
+import 'package:elite_provider/global/Global.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -26,9 +27,11 @@ class _SignUpScreenState extends State<SignUpScreen> {
   
   var checkBoxValue=false;
   int maleBoxVal=0;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+
       backgroundColor: Colors.black,
       appBar: AppBar(
         centerTitle: true,
@@ -235,6 +238,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
       ),
     );
   }
+
+
 
   _loginClick(){}
   _fieldFocusChange(BuildContext context, FocusNode currentFocus,FocusNode nextFocus) {

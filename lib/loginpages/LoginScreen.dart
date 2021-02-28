@@ -4,6 +4,7 @@ import 'package:elite_provider/dashboard/DashBoardScreen.dart';
 import 'package:elite_provider/global/AppColours.dart';
 import 'package:elite_provider/global/CommonWidgets.dart';
 import 'package:elite_provider/global/Constants.dart';
+import 'package:elite_provider/global/Global.dart';
 import 'package:elite_provider/loginpages/SignUpScreen.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -24,11 +25,13 @@ class _LoginScreenState extends State<LoginScreen> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   
   var checkBoxValue=false;
-  
+
+  final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.black,
+      key: scaffoldKey,
       body: Padding(
         padding: const EdgeInsets.all(25.0),
         child: Center(
@@ -133,14 +136,65 @@ class _LoginScreenState extends State<LoginScreen> {
 
   void navigationToSignUp()
   {
-    Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) => SignUpScreen()));
-  }
+    selectSignUpTypeUI();
+      }
 
   _loginClick()
   {
+
     Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) => DashBoardScreen()));
   }
 
+  selectSignUpTypeUI(){
+    scaffoldKey.currentState
+        .showBottomSheet(
+            (context) => Container(
+          height: Global.getHeight(context,divider: 3),
+          padding: EdgeInsets.all(25),
+          color: AppColours.golden_button_bg,
+          child: Column(
+            children: [
+              Text("Register as :",style: TextStyle(color: AppColours.textFeildBG,fontSize: 22,fontWeight: FontWeight.bold),),
+              SizedBox(height: 30,),
+              Row(
+                children: [
+                  Expanded(
+                    child: RaisedButton(
+                        padding: EdgeInsets.all(14),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(8.0),
+                        ),
+                        color: AppColours.textFeildBG,
+                        child: Text("DRIVER",style: TextStyle(color: AppColours.golden_button_bg,fontWeight: FontWeight.bold,fontSize: 18),),
+                        onPressed: (){
+                          Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) => SignUpScreen()));
+
+                        }),
+                  ),
+                ],
+              ),
+              SizedBox(height: 30,),
+              Row(
+                children: [
+                  Expanded(
+                    child: RaisedButton(
+                        padding: EdgeInsets.all(14),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(8.0),
+                        ),
+                        color: AppColours.textFeildBG,
+                        child: Text("GUARD",style: TextStyle(color: AppColours.golden_button_bg,fontWeight: FontWeight.bold,fontSize: 18),),
+                        onPressed: (){
+                          Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) => SignUpScreen()));
+
+                        }),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ));
+  }
   _fieldFocusChange(BuildContext context, FocusNode currentFocus,FocusNode nextFocus)
   {
     currentFocus.unfocus();
