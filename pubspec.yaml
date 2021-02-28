@@ -24,6 +24,8 @@ dependencies:
   intl:
   google_maps_flutter:
   google_maps_place_picker:
+  image_picker:
+  sliding_sheet:
   flutter:
     sdk: flutter
 

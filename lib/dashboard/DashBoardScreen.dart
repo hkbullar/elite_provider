@@ -87,7 +87,7 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
                   ),
                 ),
               ),
-              Container(height: 0.5,color: AppColours.off_white),
+              Container(height: 0.5,color: AppColours.dark_grey),
               sideBarItem(Icons.home_outlined, 0),
               sideBarItem( Icons.person_outline, 1),
               sideBarItem( Icons.schedule_outlined, 2),
@@ -106,7 +106,6 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
   Widget sideBarItem(IconData icon,int index){
     return InkWell(
       onTap: (){
-
         _onItemTapped(index); },
       child: Container(
         color: _selectedIndex==index?AppColours.golden_button_bg:Colors.transparent,
@@ -121,7 +120,7 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
             ),
             Container(
               height: 0.5,
-              color: AppColours.off_white,
+              color: AppColours.dark_grey,
             )
           ],
         ),

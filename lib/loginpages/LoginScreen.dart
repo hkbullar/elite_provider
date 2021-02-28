@@ -149,10 +149,11 @@ class _LoginScreenState extends State<LoginScreen> {
     scaffoldKey.currentState
         .showBottomSheet(
             (context) => Container(
-          height: Global.getHeight(context,divider: 3),
+          height: Global.getHeight(context,divider: 2.5),
           padding: EdgeInsets.all(25),
           color: AppColours.golden_button_bg,
           child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text("Register as :",style: TextStyle(color: AppColours.textFeildBG,fontSize: 22,fontWeight: FontWeight.bold),),
               SizedBox(height: 30,),
@@ -167,7 +168,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         color: AppColours.textFeildBG,
                         child: Text("DRIVER",style: TextStyle(color: AppColours.golden_button_bg,fontWeight: FontWeight.bold,fontSize: 18),),
                         onPressed: (){
-                          Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) => SignUpScreen()));
+                          Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) => SignUpScreen(1)));
 
                         }),
                   ),
@@ -185,8 +186,25 @@ class _LoginScreenState extends State<LoginScreen> {
                         color: AppColours.textFeildBG,
                         child: Text("GUARD",style: TextStyle(color: AppColours.golden_button_bg,fontWeight: FontWeight.bold,fontSize: 18),),
                         onPressed: (){
-                          Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) => SignUpScreen()));
+                          Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) => SignUpScreen(2)));
 
+                        }),
+                  ),
+                ],
+              ),
+              SizedBox(height: 30,),
+              Row(
+                children: [
+                  Expanded(
+                    child: RaisedButton(
+                        padding: EdgeInsets.all(14),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(8.0),
+                        ),
+                        color: AppColours.textFeildBG,
+                        child: Text("SECURITY OFFICER",style: TextStyle(color: AppColours.golden_button_bg,fontWeight: FontWeight.bold,fontSize: 18),),
+                        onPressed: (){
+                          Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) => SignUpScreen(3)));
                         }),
                   ),
                 ],

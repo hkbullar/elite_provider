@@ -41,4 +41,23 @@ class CommonWidgets{
          color: AppColours.golden_button_bg,
        ));
   }
+
+  Widget requestTextContainer(String text,IconData icon){
+   return Container(
+     decoration: BoxDecoration(
+         color: AppColours.textFeildBG,
+         borderRadius: BorderRadius.all(Radius.circular(10))
+     ),
+     child: Padding(
+       padding: const EdgeInsets.all(12.0),
+       child: Row(
+         children: [
+           Icon(icon,color: AppColours.white,),
+           SizedBox(width: 5,),
+           Expanded(child: Text(text,style: TextStyle(color: AppColours.white,fontSize: 16),)),
+         ],
+       ),
+     ),
+   );
+  }
 }
