@@ -42,22 +42,33 @@ class CommonWidgets{
        ));
   }
 
-  Widget requestTextContainer(String text,IconData icon){
-   return Container(
-     decoration: BoxDecoration(
-         color: AppColours.textFeildBG,
-         borderRadius: BorderRadius.all(Radius.circular(10))
-     ),
-     child: Padding(
-       padding: const EdgeInsets.all(12.0),
-       child: Row(
-         children: [
-           Icon(icon,color: AppColours.white,),
-           SizedBox(width: 5,),
-           Expanded(child: Text(text,style: TextStyle(color: AppColours.white,fontSize: 16),)),
-         ],
+  Widget requestTextContainer(String title,String text,IconData icon){
+   return Column(
+     crossAxisAlignment: CrossAxisAlignment.start,
+     children: [
+       SizedBox(height: 10,),
+       Padding(
+         padding: const EdgeInsets.only(left: 6,bottom: 6),
+         child: Text(title,style: TextStyle(color: AppColours.white,fontSize: 16),),
        ),
-     ),
+       Container(
+         decoration: BoxDecoration(
+             color: AppColours.textFeildBG,
+             borderRadius: BorderRadius.all(Radius.circular(10))
+         ),
+         child: Padding(
+           padding: const EdgeInsets.all(12.0),
+           child: Row(
+             children: [
+               Icon(icon,color: AppColours.white,),
+               SizedBox(width: 5,),
+               Expanded(child: Text(text,style: TextStyle(color: AppColours.white,fontSize: 16),)),
+             ],
+           ),
+         ),
+       ),
+       SizedBox(height: 10,),
+     ],
    );
   }
 }

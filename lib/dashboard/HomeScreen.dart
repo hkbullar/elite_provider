@@ -13,14 +13,8 @@ class HomeScreen extends StatefulWidget
 
 class _HomeScreenState extends State<HomeScreen> {
 bool ifOnline=false;
-bool hasRequest=false;
 SheetController controller = SheetController();
 
-@override
-  void initState() {
-    controller.hide();
-    super.initState();
-  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -34,9 +28,7 @@ SheetController controller = SheetController();
               Text("Google Map",style: TextStyle(color: AppColours.white),),
               InkWell(
                 onTap: (){
-                  setState(() {
-                    controller.show();
-                  });
+                  controller.show();
                 },
                 child: Padding(
                   padding: const EdgeInsets.all(22.0),
@@ -64,7 +56,7 @@ SheetController controller = SheetController();
                     });
                 }),
           ),
-        buildSheet()
+          buildSheet()
         ],
       )
     );
@@ -102,16 +94,37 @@ Widget buildSheet() {
         alignment: Alignment.centerLeft,
         child: Padding(
           padding: const EdgeInsets.only(left: 20),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.start,
+          child: Row(
             children: [
-              Text('New Request',
-                style: TextStyle(color: AppColours.white,fontSize: 18,fontWeight: FontWeight.bold),
+              Row(
+                children: [
+                  Icon(Icons.request_page_outlined,color: AppColours.white,size: 35,),
+                  SizedBox(width: 10,),
+                  Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text('New Request (\$370)',
+                        style: TextStyle(color: AppColours.white,fontSize: 18,fontWeight: FontWeight.bold),
+                      ),
+                      Text('Pull me up please',
+                        style: TextStyle(color: AppColours.white,fontSize: 12),
+                      ),
+                    ],
+                  ),
+                ],
               ),
-              Text('Pull me up please',
-                style: TextStyle(color: AppColours.white,fontSize: 12),
-              ),
+              Expanded(
+                child: Container(
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      Icon(Icons.keyboard_arrow_up,color: AppColours.white,size: 35,),
+                      SizedBox(width: 10,)
+                    ],
+                  ),
+                ),
+              )
             ],
           ),
         ),
@@ -129,54 +142,22 @@ Widget buildChild(BuildContext context, SheetState state) {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
-          Padding(
-            padding: const EdgeInsets.only(left: 6,bottom: 6),
-            child: Text("From",style: TextStyle(color: AppColours.white,fontSize: 16),),
-          ),
-          CommonWidgets().requestTextContainer("text",Icons.location_on_outlined),
-          SizedBox(height: 20,),
-          Padding(
-            padding: const EdgeInsets.only(left: 6,bottom: 6),
-            child: Text("To",style: TextStyle(color: AppColours.white,fontSize: 16),),
-          ),
-          CommonWidgets().requestTextContainer("text",Icons.location_on_outlined),
-          SizedBox(height: 20,),
+          CommonWidgets().requestTextContainer("From","Poplar St, Tyldesley, Manchester M29 8AX, United Kingdom",Icons.location_on_outlined),
+          CommonWidgets().requestTextContainer("To","145 Elliott St, Tyldesley, Manchester M29 8FL, United Kingdom",Icons.location_on_outlined),
           Row(
             children: [
               Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.only(left: 6,bottom: 6),
-                      child: Text("Date",style: TextStyle(color: AppColours.white,fontSize: 16),),
-                    ),
-                    CommonWidgets().requestTextContainer("text",Icons.location_on_outlined),
-                  ],
-                ),
+                child: CommonWidgets().requestTextContainer("Date","24th March",Icons.date_range_outlined),
+
               ),
               SizedBox(width: 20,),
               Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.only(left: 6,bottom: 6),
-                      child: Text("Time",style: TextStyle(color: AppColours.white,fontSize: 16),),
-                    ),
-                    CommonWidgets().requestTextContainer("text",Icons.location_on_outlined),
-                  ],
-                ),
+                child: CommonWidgets().requestTextContainer("Time","9:25 AM",Icons.time_to_leave_outlined),
               )
             ],
           ),
-          SizedBox(height: 20,),
-          Padding(
-            padding: const EdgeInsets.only(left: 6,bottom: 6),
-            child: Text("Comments",style: TextStyle(color: AppColours.white,fontSize: 16),),
-          ),
-          CommonWidgets().requestTextContainer("text",Icons.location_on_outlined),
-          SizedBox(height: 20,),
+          CommonWidgets().requestTextContainer("Comments","Be on time Please",Icons.comment_bank_outlined),
+          SizedBox(height: 10,),
           Row(
             children: [
               Expanded(child: RaisedButton(
@@ -213,5 +194,4 @@ Widget buildChild(BuildContext context, SheetState state) {
     ),
   );
 }
-
 }

@@ -1,5 +1,5 @@
 
-import 'package:elite_provider/dashboard/DashBoardScreen.dart';
+import 'package:elite_provider/loginpages/SplashScreen.dart';
 import 'package:flutter/material.dart';
 
 
@@ -14,7 +14,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'ELITE',
       theme: ThemeData(primarySwatch: Colors.grey),
-      home: DashBoardScreen(),
+      home: SplashScreen(),
       //home: HireGuardScreen(),
     );
   }

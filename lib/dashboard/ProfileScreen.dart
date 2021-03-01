@@ -2,6 +2,7 @@
 import 'package:elite_provider/global/AppColours.dart';
 import 'package:elite_provider/global/CommonWidgets.dart';
 import 'package:elite_provider/global/Constants.dart';
+import 'package:elite_provider/screens/ChangePasswordScreen.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -14,6 +15,8 @@ class ProfileScreen extends StatefulWidget
 
 class _ProfileScreenState extends State<ProfileScreen> {
   var _nameController = TextEditingController();
+  var _mobileController = TextEditingController();
+  var _addressController = TextEditingController();
   int maleBoxVal=0;
 
   var editButtonPressed=false;
@@ -23,7 +26,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
     setState(() {
       _nameController.text="John Deo";
     });
-
     super.initState();
   }
   @override
@@ -40,18 +42,18 @@ class _ProfileScreenState extends State<ProfileScreen> {
               child: Column(
                 children: [
                   Container(
-                    width: 130,
-                    height: 130,
+                    width: 100,
+                    height: 100,
                     decoration: new BoxDecoration(
                         shape: BoxShape.circle,
-                        border: Border.all(color: AppColours.white,width: 6),
+                        border: Border.all(color: AppColours.white,width: 4),
                         image: DecorationImage(
                           image: AssetImage("assets/images/ic_profile.png"),
                         )
                     ),
                   ),
                   editButtonPressed?FractionalTranslation(
-                      translation: Offset(1.5,-2.3),
+                      translation: Offset(1.1,-2.0),
                       child: Container(
                           child: Icon(Icons.camera_alt_outlined,size: 20,color: AppColours.black,),
                           width:40,
@@ -62,8 +64,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   SizedBox(height: editButtonPressed?0:35),
 
                   FractionalTranslation(
-                      translation: Offset(0,-0.5),
-                      child: Text("John Deo",style: TextStyle(fontSize: 30,fontWeight: FontWeight.bold,color: AppColours.white),)),
+                      translation: Offset(0,-0.6),
+                      child: Text("John Deo",style: TextStyle(fontSize: 25,fontWeight: FontWeight.bold,color: AppColours.white),)),
                 ],
               ),
             ),
@@ -164,6 +166,22 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     ],
                   ),
                   SizedBox(height: 20),
+                  TextFormField(
+                    enabled: editButtonPressed?true:false,
+                    textInputAction: TextInputAction.next,
+                    controller: _mobileController,
+                    style: TextStyle(color: Colors.white),
+                    decoration: CommonWidgets.loginFormDecoration("Mobile Number",Icons.phone_android_outlined),
+                  ),
+                  SizedBox(height: 20),
+                  TextFormField(
+                    enabled: editButtonPressed?true:false,
+                    textInputAction: TextInputAction.next,
+                    controller: _addressController,
+                    style: TextStyle(color: Colors.white),
+                    decoration: CommonWidgets.loginFormDecoration("Address",Icons.home_outlined),
+                  ),
+                  SizedBox(height: 20),
                   Row(
                     children: [
                       Expanded(
@@ -173,7 +191,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             color: AppColours.golden_button_bg,
                             child: Text("Change Password",style: TextStyle(color: AppColours.black,fontWeight: FontWeight.bold,fontSize: 18),),
                             onPressed: (){
-                              //Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) => ChangePasswordScreen()));
+                              Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) => ChangePasswordScreen()));
                             }),
                       ),
                     ],
@@ -195,6 +213,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       ),
                     ],
                   ),
+                  SizedBox(height: 20),
                 ],
               ),
             )
