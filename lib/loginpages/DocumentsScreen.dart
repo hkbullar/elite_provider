@@ -189,7 +189,7 @@ class _DocumentsScreenState extends State<DocumentsScreen> {
 
     setState(() {
       if (pickedFile != null) {
-        if(fileType==0){ _liveImage = File(pickedFile.path);}
+        if(fileType==0){_liveImage = File(pickedFile.path);}
         if(fileType==1){_rcImage = File(pickedFile.path);}
         if(fileType==2){_idImage = File(pickedFile.path);}
 

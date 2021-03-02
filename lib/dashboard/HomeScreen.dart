@@ -52,7 +52,7 @@ SheetController controller = SheetController();
                 ),
                 onPressed: (){
                     setState(() {
-                      ifOnline=!ifOnline;
+                      showServiceDialog(context);
                     });
                 }),
           ),
@@ -173,7 +173,7 @@ Widget buildChild(BuildContext context, SheetState state) {
 
                       controller.hide();
                   })),
-              SizedBox(width: 20,),
+              SizedBox(width: 20),
               Expanded(child: RaisedButton(
                   color: Colors.green,
                   shape: RoundedRectangleBorder(
@@ -192,6 +192,37 @@ Widget buildChild(BuildContext context, SheetState state) {
         ],
       ),
     ),
+  );
+}
+showServiceDialog(BuildContext context) {
+  // Create button
+  Widget okButton = FlatButton(
+    child: Text(ifOnline?"Go Offline":"Go Online",style: TextStyle(color: AppColours.golden_button_bg,fontSize: 16)),
+
+    onPressed: () {
+      setState(() {
+        ifOnline=!ifOnline;
+        Navigator.of(context).pop();
+      });
+    },
+  );
+  Widget cancelButton = FlatButton(
+    child: Text("Cancel",style: TextStyle(color: AppColours.golden_button_bg,fontSize: 16)),
+    onPressed: () {
+      Navigator.of(context).pop();
+    },
+  );
+  // Create AlertDialog
+  AlertDialog alert = AlertDialog(
+    backgroundColor: AppColours.textFeildBG,
+      title: Text(ifOnline?"Go Offline":"Go Online",style: TextStyle(color: AppColours.golden_button_bg,fontSize: 20)),
+      content: Text(ifOnline?"Do you really want to go Offline?":"Do you really want to go online?",style: TextStyle(color: AppColours.golden_button_bg,fontSize: 14)),
+      actions: [cancelButton,okButton]);
+  showDialog(
+    context: context,
+    builder: (BuildContext context) {
+      return alert;
+    },
   );
 }
 }
