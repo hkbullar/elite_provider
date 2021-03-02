@@ -14,12 +14,10 @@ class Constants{
   static const String ISREGISTERED = "isRegistered";
 
   static const String SEARCH_USER = "search";
-
   //CREATE COMMENT KEYS
   static const String COMMENT_USER_ID = "user_id";
   static const String COMMENT_FEED_ID = "feeds_id";
   static const String COMMENT_CONTENT = "comment";
-
   //LIKE/DISLIKE KEYS
   static const String LIKE_USER_ID = "user_id";
   static const String LIKE_FEED_ID = "feeds_id";

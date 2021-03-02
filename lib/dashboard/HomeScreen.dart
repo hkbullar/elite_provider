@@ -173,7 +173,7 @@ Widget buildChild(BuildContext context, SheetState state) {
 
                       controller.hide();
                   })),
-              SizedBox(width: 20,),
+              SizedBox(width: 20),
               Expanded(child: RaisedButton(
                   color: Colors.green,
                   shape: RoundedRectangleBorder(

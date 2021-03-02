@@ -30,6 +30,7 @@ class CommonWidgets{
      return false;
    }
  }
+
   static Widget settingsIcon(IconData icon){
    return Container(
        padding: EdgeInsets.all(10),
@@ -71,4 +72,13 @@ class CommonWidgets{
      ],
    );
   }
+
+ //selectedFont text
+ static Widget selectedFontWidget(String title,Color textColor,double fontSize,FontWeight _boldOrNot){
+   return Text(title, style: new TextStyle( fontSize: fontSize,color: textColor,
+       fontFamily: "Lato",fontWeight: _boldOrNot));
+ }
+
+
+
 }
