@@ -93,76 +93,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   SizedBox(height: 20),
                   Row(
                     children: [
-                      Expanded(
-                        child: InkWell(
-                          onTap: (){
-                            setState(() {
-                              if(editButtonPressed)
-                              maleBoxVal=0;
-                            });
-                          },
-                          child: Card(
-                            color: maleBoxVal==0?AppColours.golden_button_bg:AppColours.textFeildBG,
-                            child: Padding(
-                              padding: const EdgeInsets.all(25.0),
-                              child: Column(
-                                children: [
-                                  Image.asset(Constants.LOCAL_IMAGE+"man_black.png",height: 30,color: maleBoxVal==0?AppColours.black:AppColours.white,),
-                                  SizedBox(height: 10),
-                                  Text("MALE",style: TextStyle(color: maleBoxVal==0?AppColours.black:AppColours.white),)
-                                ],
-                              ),
-                            ),
-                          ),
-                        ),
-                      ),
-                      Expanded(
-                        child: InkWell(
-                          onTap: (){
-                            setState(() {
-                              if(editButtonPressed)
-                              maleBoxVal=1;
-                            });
-
-                          },
-                          child: Card(
-                            color: maleBoxVal==1?AppColours.golden_button_bg:AppColours.textFeildBG,
-                            child: Padding(
-                              padding: const EdgeInsets.all(25.0),
-                              child: Column(
-                                children: [
-                                  Image.asset(Constants.LOCAL_IMAGE+"woman_black.png",height: 30,color: maleBoxVal==1?AppColours.black:AppColours.white,),
-                                  SizedBox(height: 10),
-                                  Text("FEMALE",style: TextStyle(color: maleBoxVal==1?AppColours.black:AppColours.white),)
-                                ],
-                              ),
-                            ),
-                          ),
-                        ),
-                      ),
-                      Expanded(
-                        child: InkWell(
-                          onTap: (){
-                            setState(() {
-                              if(editButtonPressed)
-                              maleBoxVal=2;
-                            });
-                          },
-                          child: Card(
-                            color: maleBoxVal==2?AppColours.golden_button_bg:AppColours.textFeildBG,
-                            child: Padding(
-                              padding: const EdgeInsets.all(25.0),
-                              child: Column(
-                                children: [
-                                  Image.asset(Constants.LOCAL_IMAGE+"intersex_black.png",height: 30,color: maleBoxVal==2?AppColours.black:AppColours.white,),
-                                  SizedBox(height: 10,),
-                                  Text("I'M ME",style: TextStyle(color: maleBoxVal==2?AppColours.black:AppColours.white),)
-                                ],
-                              ),
-                            ),
-                          ),
-                        ),
-                      )
+                      maleFemaleButton(0, "MALE", "man_black.png"),
+                      maleFemaleButton(1, "FEMALE", "woman_black.png"),
+                      maleFemaleButton(2, "I'M ME", "intersex_black.png")
                     ],
                   ),
                   SizedBox(height: 20),
@@ -182,37 +115,15 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     decoration: CommonWidgets.loginFormDecoration("Address",Icons.home_outlined),
                   ),
                   SizedBox(height: 20),
-                  Row(
-                    children: [
-                      Expanded(
-                        child: RaisedButton(
-                            padding: EdgeInsets.all(14),
-                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0)),
-                            color: AppColours.golden_button_bg,
-                            child: Text("Change Password",style: TextStyle(color: AppColours.black,fontWeight: FontWeight.bold,fontSize: 18),),
-                            onPressed: (){
-                              Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) => ChangePasswordScreen()));
-                            }),
-                      ),
-                    ],
-                  ),
+                  CommonWidgets.goldenFullWidthButton("Change Password",onClick: (){
+                    Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) => ChangePasswordScreen()));
+                  }),
                   SizedBox(height: 20),
-                  Row(
-                    children: [
-                      Expanded(
-                        child: RaisedButton(
-                            padding: EdgeInsets.all(14),
-                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0)),
-                            color: AppColours.golden_button_bg,
-                            child: Text(editButtonPressed?"Save Changes":"Edit Profile",style: TextStyle(color: AppColours.black,fontWeight: FontWeight.bold,fontSize: 18),),
-                            onPressed: (){
-                                  setState(() {
-                                    editButtonPressed=!editButtonPressed;
-                                  });
-                            }),
-                      ),
-                    ],
-                  ),
+                  CommonWidgets.goldenFullWidthButton(editButtonPressed?"Save Changes":"Edit Profile",onClick: (){
+                    setState(() {
+                      editButtonPressed=!editButtonPressed;
+                    });
+                  }),
                   SizedBox(height: 20),
                 ],
               ),
@@ -220,6 +131,31 @@ class _ProfileScreenState extends State<ProfileScreen> {
           ],
         ),
       )
+    );
+  }
+  Widget maleFemaleButton(int defButtonValue,String text,String image,{Function onClick}){
+   return Expanded(
+      child: InkWell(
+        onTap: (){
+          setState(() {
+            if(editButtonPressed)
+              maleBoxVal=defButtonValue;
+          });
+        },
+        child: Card(
+          color: maleBoxVal==defButtonValue?AppColours.golden_button_bg:AppColours.textFeildBG,
+          child: Padding(
+            padding: const EdgeInsets.all(25.0),
+            child: Column(
+              children: [
+                Image.asset(Constants.LOCAL_IMAGE+image,height: 30,color: maleBoxVal==defButtonValue?AppColours.black:AppColours.white,),
+                SizedBox(height: 10),
+                Text(text,style: TextStyle(color: maleBoxVal==defButtonValue?AppColours.black:AppColours.white),)
+              ],
+            ),
+          ),
+        ),
+      ),
     );
   }
 }

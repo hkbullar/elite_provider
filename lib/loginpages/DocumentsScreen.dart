@@ -3,6 +3,7 @@
 import 'dart:io';
 
 import 'package:elite_provider/global/AppColours.dart';
+import 'package:elite_provider/global/CommonWidgets.dart';
 import 'package:elite_provider/global/EliteAppBar.dart';
 import 'package:elite_provider/global/Global.dart';
 import 'package:flutter/cupertino.dart';
@@ -18,9 +19,13 @@ class DocumentsScreen extends StatefulWidget
 }
 
 class _DocumentsScreenState extends State<DocumentsScreen> {
+
   _DocumentsScreenState(this.userType);
+
   int userType;
+
   File _liveImage,_rcImage,_idImage;
+
   final picker = ImagePicker();
 
   final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
@@ -171,20 +176,9 @@ class _DocumentsScreenState extends State<DocumentsScreen> {
               ],
             ),
             SizedBox(height: 20,),
-            Row(
-              children: [
-                Expanded(
-                  child: RaisedButton(
-                      padding: EdgeInsets.all(14),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(8.0),
-                      ),
-                      color: AppColours.golden_button_bg,
-                      child: Text("Upload Documents",style: TextStyle(color: AppColours.black,fontWeight: FontWeight.bold,fontSize: 18),),
-                      onPressed: (){}),
-                ),
-              ],
-            ),
+            CommonWidgets.goldenFullWidthButton("Upload Documents",onClick: (){
+
+            }),
           ],
         ),
       )
@@ -211,45 +205,14 @@ class _DocumentsScreenState extends State<DocumentsScreen> {
           height: Global.getHeight(context,divider: 3),
           padding: EdgeInsets.all(25),
           color: AppColours.golden_button_bg,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text("Pick Photo from :",style: TextStyle(color: AppColours.textFeildBG,fontSize: 22,fontWeight: FontWeight.bold),),
-              SizedBox(height: 30,),
-              Row(
-                children: [
-                  Expanded(
-                    child: RaisedButton(
-                        padding: EdgeInsets.all(14),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(8.0),
-                        ),
-                        color: AppColours.textFeildBG,
-                        child: Text("Camera",style: TextStyle(color: AppColours.golden_button_bg,fontWeight: FontWeight.bold,fontSize: 18),),
-                        onPressed: (){
-                          getImage(fileType,ImageSource.camera);
-                        }),
-                  ),
-                ],
-              ),
-              SizedBox(height: 30,),
-              Row(
-                children: [
-                  Expanded(
-                    child: RaisedButton(
-                        padding: EdgeInsets.all(14),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(8.0),
-                        ),
-                        color: AppColours.textFeildBG,
-                        child: Text("Gallery",style: TextStyle(color: AppColours.golden_button_bg,fontWeight: FontWeight.bold,fontSize: 18),),
-                        onPressed: (){
-                          getImage(fileType,ImageSource.gallery);
-                        }),
-                  ),
-                ],
-              ),
-
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text("Pick Photo from :",style: TextStyle(color: AppColours.textFeildBG,fontSize: 22,fontWeight: FontWeight.bold),),
+                    SizedBox(height: 30),
+                    CommonWidgets.blackFullWidthButton("Camera",onClick:() =>getImage(fileType,ImageSource.gallery)),
+                    SizedBox(height: 30,),
+                    CommonWidgets.blackFullWidthButton("Gallery",onClick: ()=>getImage(fileType,ImageSource.camera)),
             ],
           ),
         ));

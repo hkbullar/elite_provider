@@ -95,26 +95,13 @@ class _LoginScreenState extends State<LoginScreen> {
               ),
               SizedBox(height: 25,),
               SizedBox(height: MediaQuery.of(context).size.width/99),
-              Row(
-                children: [
-                  Expanded(
-                    child: RaisedButton(
-                      padding: EdgeInsets.all(14),
-                        shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(8.0),
-                            ),
-                      color: AppColours.golden_button_bg,
-                        child: Text("LOGIN",style: TextStyle(color: AppColours.black,fontWeight: FontWeight.bold,fontSize: 18),),
-                        onPressed: (){
-                      _loginClick();
-                    }),
-                  ),
-                ],
-              ),
+              CommonWidgets.goldenFullWidthButton("LOGIN",onClick: (){
+                _loginClick();
+              }),
               SizedBox(height: MediaQuery.of(context).size.height/15),
               InkWell(
                 onTap: (){
-                  navigationToSignUp();
+                  selectSignUpTypeUI();
                 },
                 child: Padding(
                   padding: const EdgeInsets.all(8.0),
@@ -134,9 +121,9 @@ class _LoginScreenState extends State<LoginScreen> {
     );
   }
 
-  void navigationToSignUp()
+  void navigationToSignUp(userType)
   {
-    selectSignUpTypeUI();
+    Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) => SignUpScreen(userType)));
       }
 
   _loginClick()
@@ -148,67 +135,21 @@ class _LoginScreenState extends State<LoginScreen> {
   selectSignUpTypeUI(){
     scaffoldKey.currentState
         .showBottomSheet(
-            (context) => Container(
-          height: Global.getHeight(context,divider: 2.5),
-          padding: EdgeInsets.all(25),
-          color: AppColours.golden_button_bg,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text("Register as :",style: TextStyle(color: AppColours.textFeildBG,fontSize: 22,fontWeight: FontWeight.bold),),
-              SizedBox(height: 30,),
-              Row(
-                children: [
-                  Expanded(
-                    child: RaisedButton(
-                        padding: EdgeInsets.all(14),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(8.0),
-                        ),
-                        color: AppColours.textFeildBG,
-                        child: Text("DRIVER",style: TextStyle(color: AppColours.golden_button_bg,fontWeight: FontWeight.bold,fontSize: 18),),
-                        onPressed: (){
-                          Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) => SignUpScreen(1)));
-
-                        }),
-                  ),
-                ],
-              ),
-              SizedBox(height: 30,),
-              Row(
-                children: [
-                  Expanded(
-                    child: RaisedButton(
-                        padding: EdgeInsets.all(14),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(8.0),
-                        ),
-                        color: AppColours.textFeildBG,
-                        child: Text("GUARD",style: TextStyle(color: AppColours.golden_button_bg,fontWeight: FontWeight.bold,fontSize: 18),),
-                        onPressed: (){
-                          Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) => SignUpScreen(2)));
-
-                        }),
-                  ),
-                ],
-              ),
-              SizedBox(height: 30,),
-              Row(
-                children: [
-                  Expanded(
-                    child: RaisedButton(
-                        padding: EdgeInsets.all(14),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(8.0),
-                        ),
-                        color: AppColours.textFeildBG,
-                        child: Text("SECURITY OFFICER",style: TextStyle(color: AppColours.golden_button_bg,fontWeight: FontWeight.bold,fontSize: 18),),
-                        onPressed: (){
-                          Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) => SignUpScreen(3)));
-                        }),
-                  ),
-                ],
-              ),
+            (context) =>
+                Container(
+                        height: Global.getHeight(context,divider: 2.5),
+                        padding: EdgeInsets.all(25),
+                        color: AppColours.golden_button_bg,
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                 Text("Register as :",style: TextStyle(color: AppColours.textFeildBG,fontSize: 22,fontWeight: FontWeight.bold),),
+                                SizedBox(height: 30,),
+                                CommonWidgets.blackFullWidthButton("DRIVER",onClick: (){navigationToSignUp(1);}),
+                                SizedBox(height: 30,),
+                                CommonWidgets.blackFullWidthButton("GUARD",onClick: (){navigationToSignUp(2);}),
+                                SizedBox(height: 30,),
+                                CommonWidgets.blackFullWidthButton("SECURITY OFFICER",onClick: (){navigationToSignUp(3);}),
             ],
           ),
         ));

@@ -75,22 +75,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
               decoration: CommonWidgets.loginFormDecoration("Confirm New Password",Icons.lock_outline),
             ),
             SizedBox(height: 20),
-            Row(
-              children: [
-                Expanded(
-                  child: RaisedButton(
-                      padding: EdgeInsets.all(14),
-                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0)),
-                      color: AppColours.golden_button_bg,
-                      child: Text("Change Password",style: TextStyle(color: AppColours.black,fontWeight: FontWeight.bold,fontSize: 18),),
-                      onPressed: (){
-                        setState(() {
-
-                        });
-                      }),
-                ),
-              ],
-            ),
+            CommonWidgets.goldenFullWidthButton("Change Password",onClick: (){})
           ],
         ),
       )
