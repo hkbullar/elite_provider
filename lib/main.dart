@@ -1,5 +1,6 @@
 
 import 'package:elite_provider/loginpages/SplashScreen.dart';
+import 'package:elite_provider/screens/JobDetailsScreen.dart';
 import 'package:flutter/material.dart';
 
 import 'dashboard/JobsScreen.dart';

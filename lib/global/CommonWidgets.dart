@@ -42,7 +42,34 @@ class CommonWidgets{
          color: AppColours.golden_button_bg,
        ));
   }
-
+ static Widget goldenFullWidthButton(String text,{Function onClick})
+ {
+   return Row(
+       children: [
+         Expanded(
+           child: RaisedButton(
+               padding: EdgeInsets.all(14),
+               shape: RoundedRectangleBorder(
+                   borderRadius: BorderRadius.circular(8.0)),
+               color: AppColours.golden_button_bg,
+               child: Text(text,style: TextStyle(color: AppColours.black,fontWeight: FontWeight.bold,fontSize: 18),),
+               onPressed: onClick),
+         )]);
+ }
+ static Widget blackFullWidthButton(String text,{Function onClick})
+ {
+   return Row(
+       children: [
+         Expanded(
+           child: RaisedButton(
+               padding: EdgeInsets.all(14),
+               shape: RoundedRectangleBorder(
+                   borderRadius: BorderRadius.circular(8.0)),
+               color: AppColours.textFeildBG,
+               child: Text(text,style: TextStyle(color: AppColours.golden_button_bg,fontWeight: FontWeight.bold,fontSize: 18),),
+               onPressed: onClick),
+         )]);
+ }
   Widget requestTextContainer(String title,String text,IconData icon){
    return Column(
      crossAxisAlignment: CrossAxisAlignment.start,

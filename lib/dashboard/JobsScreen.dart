@@ -3,12 +3,6 @@ import 'package:elite_provider/global/AppColours.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-import '../global/AppColours.dart';
-import '../global/AppColours.dart';
-import '../global/AppColours.dart';
-import '../global/CommonWidgets.dart';
-import '../global/Constants.dart';
-
 class JobsScreen extends StatefulWidget
 {
   @override
@@ -28,6 +22,10 @@ class _JobsScreenState extends State<JobsScreen> {
     );
   }
 
+  Widget listUI(){
+   return InkWell(
+     onTap: (){
+       Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) => JobDetailsScreen()));
 
   listUI(){
     Column(
