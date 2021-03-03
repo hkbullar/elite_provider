@@ -19,7 +19,6 @@ SheetController controller = SheetController();
   Widget build(BuildContext context) {
     return Scaffold(
         resizeToAvoidBottomInset: false,
-        backgroundColor: Colors.transparent,
         body: Stack(
         children: [
           Column(
@@ -142,21 +141,21 @@ Widget buildChild(BuildContext context, SheetState state) {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
-          CommonWidgets().requestTextContainer("From","Poplar St, Tyldesley, Manchester M29 8AX, United Kingdom",Icons.location_on_outlined),
-          CommonWidgets().requestTextContainer("To","145 Elliott St, Tyldesley, Manchester M29 8FL, United Kingdom",Icons.location_on_outlined),
+          CommonWidgets.requestTextContainer("From","Poplar St, Tyldesley, Manchester M29 8AX, United Kingdom",Icons.location_on_outlined),
+          CommonWidgets.requestTextContainer("To","145 Elliott St, Tyldesley, Manchester M29 8FL, United Kingdom",Icons.location_on_outlined),
           Row(
             children: [
               Expanded(
-                child: CommonWidgets().requestTextContainer("Date","24th March",Icons.date_range_outlined),
+                child: CommonWidgets.requestTextContainer("Date","24th March",Icons.date_range_outlined),
 
               ),
               SizedBox(width: 20,),
               Expanded(
-                child: CommonWidgets().requestTextContainer("Time","9:25 AM",Icons.time_to_leave_outlined),
+                child: CommonWidgets.requestTextContainer("Time","9:25 AM",Icons.time_to_leave_outlined),
               )
             ],
           ),
-          CommonWidgets().requestTextContainer("Comments","Be on time Please",Icons.comment_bank_outlined),
+          CommonWidgets.requestTextContainer("Comments","Be on time Please",Icons.comment_bank_outlined),
           SizedBox(height: 10,),
           Row(
             children: [

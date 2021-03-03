@@ -33,7 +33,7 @@ class _DocumentsScreenState extends State<DocumentsScreen> {
   Widget build(BuildContext context)
   {
     return Scaffold(
-      backgroundColor: Colors.transparent,
+      backgroundColor: AppColours.black,
         key: scaffoldKey,
       appBar: EliteAppBar("Upload Documents"),
       body: Padding(

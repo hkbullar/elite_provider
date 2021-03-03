@@ -70,7 +70,7 @@ class CommonWidgets{
                onPressed: onClick),
          )]);
  }
-  Widget requestTextContainer(String title,String text,IconData icon){
+ static Widget requestTextContainer(String title,String text,IconData icon){
    return Column(
      crossAxisAlignment: CrossAxisAlignment.start,
      children: [

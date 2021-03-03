@@ -25,12 +25,12 @@ class _JobDetailsScreenState extends State<JobDetailsScreen> {
         child: SingleChildScrollView(
           child: Column(
             children: [
-              CommonWidgets().requestTextContainer("From","Poplar St, Tyldesley, Manchester M29 8AX, United Kingdom",Icons.location_on_outlined),
-              CommonWidgets().requestTextContainer("To","45 Elliott St, Tyldesley, Manchester M29 8AX, United Kingdom",Icons.location_on_outlined),
-              CommonWidgets().requestTextContainer("Date","Sunday, 21st March",Icons.date_range_outlined),
-              CommonWidgets().requestTextContainer("Time","4:15 PM",Icons.time_to_leave_outlined),
-              CommonWidgets().requestTextContainer("Comments","Be on Time Please",Icons.comment_bank_outlined),
-              CommonWidgets().requestTextContainer("Price","475",Icons.attach_money),
+              CommonWidgets.requestTextContainer("From","Poplar St, Tyldesley, Manchester M29 8AX, United Kingdom",Icons.location_on_outlined),
+              CommonWidgets.requestTextContainer("To","45 Elliott St, Tyldesley, Manchester M29 8AX, United Kingdom",Icons.location_on_outlined),
+              CommonWidgets.requestTextContainer("Date","Sunday, 21st March",Icons.date_range_outlined),
+              CommonWidgets.requestTextContainer("Time","4:15 PM",Icons.time_to_leave_outlined),
+              CommonWidgets.requestTextContainer("Comments","Be on Time Please",Icons.comment_bank_outlined),
+              CommonWidgets.requestTextContainer("Price","475",Icons.attach_money),
               SizedBox(height: 10),
               CommonWidgets.goldenFullWidthButton("Start Job",onClick: (){})
             ],
