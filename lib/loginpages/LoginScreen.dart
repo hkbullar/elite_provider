@@ -1,10 +1,12 @@
 import 'dart:async';
+import 'dart:developer';
 
 import 'package:elite_provider/dashboard/DashBoardScreen.dart';
 import 'package:elite_provider/global/AppColours.dart';
 import 'package:elite_provider/global/CommonWidgets.dart';
 import 'package:elite_provider/global/Constants.dart';
 import 'package:elite_provider/global/Global.dart';
+import 'package:elite_provider/global/ServiceHttp.dart';
 import 'package:elite_provider/loginpages/SignUpScreen.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -27,6 +29,12 @@ class _LoginScreenState extends State<LoginScreen> {
   var checkBoxValue=false;
 
   final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
+
+  @override
+  void initState() {
+    abcHitAPI();
+    super.initState();
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -124,7 +132,7 @@ class _LoginScreenState extends State<LoginScreen> {
   void navigationToSignUp(userType)
   {
     Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) => SignUpScreen(userType)));
-      }
+  }
 
   _loginClick()
   {
@@ -153,6 +161,10 @@ class _LoginScreenState extends State<LoginScreen> {
             ],
           ),
         ));
+  }
+  abcHitAPI(){
+    ServiceHttp().httpRequestGet("login",onSuccess: (value){
+      print(value);});
   }
   _fieldFocusChange(BuildContext context, FocusNode currentFocus,FocusNode nextFocus)
   {
