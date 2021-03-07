@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:developer';
 
 import 'package:elite_provider/dashboard/DashBoardScreen.dart';
+import 'package:elite_provider/global/API.dart';
 import 'package:elite_provider/global/AppColours.dart';
 import 'package:elite_provider/global/CommonWidgets.dart';
 import 'package:elite_provider/global/Constants.dart';
@@ -31,18 +32,14 @@ class _LoginScreenState extends State<LoginScreen> {
   final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
 
   @override
-  void initState() {
-    abcHitAPI();
-    super.initState();
-  }
-  @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.black,
       key: scaffoldKey,
       body: Padding(
         padding: const EdgeInsets.all(25.0),
-        child: Center(
+        child: Form(
+          key: _formKey,
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
@@ -136,8 +133,16 @@ class _LoginScreenState extends State<LoginScreen> {
 
   _loginClick()
   {
+    if(CommonWidgets.isValidate(_formKey)) {
+      Map jsonPost =
+      {
+        Constants.EMAIL: _emailController.text,
+        Constants.PASSWORD: _passwordController.text,
+      };
 
-    Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) => DashBoardScreen()));
+      FocusScope.of(context).unfocus();
+      API(context).login(jsonPost);
+    }
   }
 
   selectSignUpTypeUI(){
@@ -162,10 +167,7 @@ class _LoginScreenState extends State<LoginScreen> {
           ),
         ));
   }
-  abcHitAPI(){
-    ServiceHttp().httpRequestGet("login",onSuccess: (value){
-      print(value);});
-  }
+
   _fieldFocusChange(BuildContext context, FocusNode currentFocus,FocusNode nextFocus)
   {
     currentFocus.unfocus();

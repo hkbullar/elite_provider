@@ -56,6 +56,32 @@ class CommonWidgets{
                onPressed: onClick),
          )]);
  }
+ static TextEditingController formFieldFixText(String value){
+   TextEditingController _controller = new TextEditingController();
+   _controller.text=value;
+   return _controller;
+ }
+ static showMessage(BuildContext context,String message) {
+   // Create button
+   Widget okButton = FlatButton(
+     child: Text("OK",style: TextStyle(color: AppColours.golden_button_bg,fontSize: 16)),
+     onPressed: () {
+       Navigator.of(context).pop();
+     },
+   );
+   // Create AlertDialog
+   AlertDialog alert = AlertDialog(
+       backgroundColor: AppColours.textFeildBG,
+       title: Text("Message",style: TextStyle(color: AppColours.golden_button_bg,fontSize: 20)),
+       content: Text(message,style: TextStyle(color: AppColours.golden_button_bg,fontSize: 14)),
+       actions: [okButton]);
+   showDialog(
+     context: context,
+     builder: (BuildContext context) {
+       return alert;
+     },
+   );
+ }
  static Widget blackFullWidthButton(String text,{Function onClick})
  {
    return Row(

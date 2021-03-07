@@ -4,6 +4,7 @@ class Constants{
   static const String EMAIL = "email";
   static const String PHONE = "phone";
   static const String PASSWORD = "password";
+  static const String USER_TYPE = "user_type";
   static const String PASSWORD_CONFIRMATION = "password_confirmation";
   static const String ID = "id";
   static const String LANGUAGE_CODE = "language";
@@ -123,6 +124,10 @@ class Constants{
   static const String RECENT_SEARCH_LIST = "searchlist";
 
   static const String LOCAL_IMAGE="assets/images/";
+
+  static const String USER_TYPE_DRIVER="driver";
+  static const String USER_TYPE_GUARDIAN="guard";
+  static const String USER_TYPE_OFFICER="assets/images/";
 
   //BASE URL FOR IMAGES
   static const String IMAGE_BASE_URL="https://geeniuz.co/storage/app/";

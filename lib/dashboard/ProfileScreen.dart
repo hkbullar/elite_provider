@@ -1,7 +1,11 @@
 
+import 'dart:convert';
+
 import 'package:elite_provider/global/AppColours.dart';
 import 'package:elite_provider/global/CommonWidgets.dart';
 import 'package:elite_provider/global/Constants.dart';
+import 'package:elite_provider/global/Global.dart';
+import 'package:elite_provider/pojo/User.dart';
 import 'package:elite_provider/screens/ChangePasswordScreen.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -21,10 +25,17 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   var editButtonPressed=false;
 
+  User userinfo;
+
   @override
   void initState() {
-    setState(() {
-      _nameController.text="John Deo";
+    Global.getUser().then((value) async {
+      setState(()
+      {
+        userinfo = User.fromJson(json.decode(value));
+        _nameController.text=userinfo.name;
+      });
+
     });
     super.initState();
   }
@@ -85,7 +96,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   SizedBox(height: 20),
                   TextFormField(
                     enabled: false,
-                    initialValue: "john.deo@gmail.com",
+                    controller: CommonWidgets.formFieldFixText(userinfo!=null?userinfo.email:""),
                     textInputAction: TextInputAction.next,
                     style: TextStyle(color: Colors.white),
                     decoration: CommonWidgets.loginFormDecoration("Full Name",Icons.mail_outline),

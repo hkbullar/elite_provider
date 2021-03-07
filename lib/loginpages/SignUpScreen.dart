@@ -1,4 +1,5 @@
 
+import 'package:elite_provider/global/API.dart';
 import 'package:elite_provider/global/AppColours.dart';
 import 'package:elite_provider/global/CommonWidgets.dart';
 import 'package:elite_provider/global/Constants.dart';
@@ -177,17 +178,21 @@ class _SignUpScreenState extends State<SignUpScreen> {
   }
 
 _signUpClick() {
-  Navigator.push(context, MaterialPageRoute(
-      builder: (BuildContext context) => DocumentsScreen(userType)));
+
+  String userTypeText="";
+  if(userType==1){userTypeText=Constants.USER_TYPE_DRIVER;}
+  if(userType==2){userTypeText=Constants.USER_TYPE_GUARDIAN;}
+  if(userType==3){userTypeText=Constants.USER_TYPE_OFFICER;}
+
   if (CommonWidgets.isValidate(_formKey)) {
     Map jsonPost = {
-      Constants.FIRST_NAME: _nameController.text,
+      Constants.NAME: _nameController.text,
       Constants.EMAIL: _emailController.text,
       Constants.PASSWORD: _passwordController.text,
-      Constants.PASSWORD_CONFIRMATION: _confirmPasswordController.text
+      Constants.USER_TYPE: userTypeText,
     };
     print(jsonPost);
-    // ServiceHttp().registerUser(jsonPost,context);
+    API(context).register(jsonPost,userType);
   }
 }
   Widget maleFemaleButton(int defButtonValue,String text,String image){
