@@ -1,5 +1,6 @@
 
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:elite_provider/global/AppColours.dart';
 import 'package:elite_provider/global/CommonWidgets.dart';
@@ -12,7 +13,6 @@ import 'package:flutter/material.dart';
 
 class ProfileScreen extends StatefulWidget
 {
-
   @override
   _ProfileScreenState createState() => _ProfileScreenState();
 }
@@ -22,7 +22,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   var _mobileController = TextEditingController();
   var _addressController = TextEditingController();
   int maleBoxVal=0;
-
+  File _profileImage;
   var editButtonPressed=false;
 
   User userinfo;
@@ -66,7 +66,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   editButtonPressed?FractionalTranslation(
                       translation: Offset(1.1,-2.0),
                       child: Container(
-                          child: Icon(Icons.camera_alt_outlined,size: 20,color: AppColours.black,),
+                          child: Icon(Icons.camera_alt_outlined,size: 20,color: AppColours.black),
                           width:40,
                           height:40,
                           decoration: new BoxDecoration(

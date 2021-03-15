@@ -1,13 +1,8 @@
-import 'dart:async';
-import 'dart:developer';
-
-import 'package:elite_provider/dashboard/DashBoardScreen.dart';
 import 'package:elite_provider/global/API.dart';
 import 'package:elite_provider/global/AppColours.dart';
 import 'package:elite_provider/global/CommonWidgets.dart';
 import 'package:elite_provider/global/Constants.dart';
 import 'package:elite_provider/global/Global.dart';
-import 'package:elite_provider/global/ServiceHttp.dart';
 import 'package:elite_provider/loginpages/SignUpScreen.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -75,7 +70,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 },
                 decoration: CommonWidgets.loginFormDecoration("Password",Icons.lock_outline),
               ),
-              SizedBox(height: 5,),
+              SizedBox(height: 5),
               Row(
                 children: [
                   Expanded(
@@ -162,12 +157,37 @@ class _LoginScreenState extends State<LoginScreen> {
                                 SizedBox(height: 30,),
                                 CommonWidgets.blackFullWidthButton("GUARD",onClick: (){navigationToSignUp(2);}),
                                 SizedBox(height: 30,),
-                                CommonWidgets.blackFullWidthButton("SECURITY OFFICER",onClick: (){navigationToSignUp(3);}),
+                                CommonWidgets.blackFullWidthButton("SECURITY OFFICER",onClick: (){selectSecurityOfficerTypeUI();}),
             ],
           ),
         ));
   }
-
+  selectSecurityOfficerTypeUI(){
+    scaffoldKey.currentState
+        .showBottomSheet(
+            (context) =>
+            Container(
+              height: Global.getHeight(context,divider: 1.9),
+              padding: EdgeInsets.all(25),
+              color: AppColours.golden_button_bg,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text("Register as :",style: TextStyle(color: AppColours.textFeildBG,fontSize: 22,fontWeight: FontWeight.bold),),
+                  SizedBox(height: 20,),
+                  CommonWidgets.blackFullWidthButton("Steward",onClick: (){navigationToSignUp(3);}),
+                  SizedBox(height: 20,),
+                  CommonWidgets.blackFullWidthButton("Security Guard",onClick: (){navigationToSignUp(4);}),
+                  SizedBox(height: 20,),
+                  CommonWidgets.blackFullWidthButton("Door Supervisor",onClick: (){navigationToSignUp(5);}),
+                  SizedBox(height: 20,),
+                  CommonWidgets.blackFullWidthButton("Close Protection Officerr",onClick: (){navigationToSignUp(6);}),
+                  SizedBox(height: 20,),
+                  CommonWidgets.blackFullWidthButton("CSAS Officer",onClick: (){navigationToSignUp(7);}),
+                ],
+              ),
+            ));
+  }
   _fieldFocusChange(BuildContext context, FocusNode currentFocus,FocusNode nextFocus)
   {
     currentFocus.unfocus();
