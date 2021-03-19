@@ -14,6 +14,21 @@ class Constants{
   static const String FIREBASE_TOKEN = "firebase_token";
   static const String ISREGISTERED = "isRegistered";
 
+  //SP KEYS
+  static const String USER_ROLE="role";
+  static const String USER_ROLE_DRIVER="driver";
+  static const String USER_ROLE_GUARD="guard";
+
+  //UPLOAD DOCUMENTS KEYS
+  static const String DOCUMENT_USER_TYPE_GUARDIAN="gurad";
+  static const String DOCUMENT_USER_TYPE_DRIVER="driver";
+  static const String DOCUMENT_USER_TYPE="type";
+  static const String DOCUMENT_IMAGE_TYPE="image_type";
+  static const String DOCUMENT_IMAGE="picture";
+  static const String DOCUMENT_RC_PIC="rc_image";
+  static const String DOCUMENT_PROFILE_PIC="profile_picture";
+  static const String DOCUMENT_ID_PIC="profile_id";
+
   static const String SEARCH_USER = "search";
   //CREATE COMMENT KEYS
   static const String COMMENT_USER_ID = "user_id";

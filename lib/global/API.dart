@@ -7,6 +7,7 @@ import 'package:elite_provider/global/PLoader.dart';
 import 'package:elite_provider/global/ServiceHttp.dart';
 import 'package:elite_provider/loginpages/DocumentsScreen.dart';
 import 'package:elite_provider/pojo/ErrorPojo.dart';
+import 'package:elite_provider/pojo/GetDocumentsPojo.dart';
 import 'package:elite_provider/pojo/LoginPojo.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -25,7 +26,9 @@ class API{
           SharedPreferences preferences =await Global.getSharedPref();
           preferences.setString(Constants.TOKEN, loginPojo.token);
           preferences.setBool(Constants.ISREGISTERED, true);
+          preferences.setString(Constants.USER_TYPE, loginPojo.role);
           preferences.setString(Constants.USER_PREF,json.encode(loginPojo.user.toJson()));
+
           loader.hide();
           Global.toast(context, "Logged In Successfully");
           Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) => DashBoardScreen()));
@@ -49,6 +52,23 @@ class API{
           loader.hide();
           Global.toast(context, "Registered Successfully");
           Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) => DocumentsScreen(userType)));
+        }, onError: (value) {
+          loader.hide();
+          CommonWidgets.showMessage(context, ErrorPojo.fromJson(json.decode(value)).errors.error[0]);
+        });
+  }
+  getDocuments(int userType,{void onSuccess(GetDocumentsPojo value)}){
+    Map<String, dynamic> jsonPost =
+    {
+      Constants.DOCUMENT_USER_TYPE: userType==1?Constants.DOCUMENT_USER_TYPE_DRIVER:Constants.DOCUMENT_USER_TYPE_GUARDIAN,
+    };
+    PLoader loader=PLoader(context);
+    loader.show();
+    ServiceHttp().httpRequestPost("getDocument",map: jsonPost,
+        onSuccess: (value) async {
+          GetDocumentsPojo loginPojo= GetDocumentsPojo.fromJson(json.decode(value));
+          onSuccess(loginPojo);
+          loader.hide();
         }, onError: (value) {
           loader.hide();
           CommonWidgets.showMessage(context, ErrorPojo.fromJson(json.decode(value)).errors.error[0]);

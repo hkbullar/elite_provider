@@ -1,4 +1,5 @@
 
+import 'package:elite_provider/loginpages/DocumentsScreen.dart';
 import 'package:elite_provider/loginpages/SplashScreen.dart';
 import 'package:elite_provider/screens/JobDetailsScreen.dart';
 import 'package:flutter/material.dart';
@@ -18,7 +19,7 @@ class MyApp extends StatelessWidget {
        debugShowCheckedModeBanner: false,
       title: 'ELITE',
       theme: ThemeData(primarySwatch: Colors.grey),
-      home: SplashScreen(),
+      home: DocumentsScreen(1),
 //      home: JobsScreen(),
       //home: HireGuardScreen(),
     );

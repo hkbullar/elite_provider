@@ -104,7 +104,6 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   ),
                   SizedBox(height: 20),
                   TextFormField(
-                    validator: (value) => value.isEmpty ? 'Address cannot be blank': null,
                     textInputAction: TextInputAction.next,
                     controller: _addressController,
                     style: TextStyle(color: Colors.white),
@@ -113,7 +112,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     {
                       _fieldFocusChange(context, _addressFocus, _passwordFocus);
                     },
-                    decoration: CommonWidgets.loginFormDecoration("Full Address",Icons.home_outlined),
+                    decoration: CommonWidgets.loginFormDecoration("Full Address(Optional)",Icons.home_outlined),
                   ),
                   SizedBox(height: 20),
                   TextFormField(
@@ -182,7 +181,7 @@ _signUpClick() {
   String userTypeText="";
   if(userType==1){userTypeText=Constants.USER_TYPE_DRIVER;}
   if(userType==2){userTypeText=Constants.USER_TYPE_GUARDIAN;}
-  if(userType==3){userTypeText=Constants.USER_TYPE_OFFICER;}
+  if(userType==3){userTypeText=Constants.USER_TYPE_GUARDIAN;}
 
   if (CommonWidgets.isValidate(_formKey)) {
     Map jsonPost = {
