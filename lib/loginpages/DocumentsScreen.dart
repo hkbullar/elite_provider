@@ -187,7 +187,6 @@ class _DocumentsScreenState extends State<DocumentsScreen> {
                                   alignment: Alignment.topRight,
                                   onPressed: (){
                                     setState(() {
-
                                       _rcImage=null;
                                       buttonView();
                                     });
@@ -218,7 +217,7 @@ class _DocumentsScreenState extends State<DocumentsScreen> {
               SizedBox(height: 20),
               Padding(
                 padding: const EdgeInsets.all(8.0),
-                child: Text("ID Proof",style: TextStyle(color: AppColours.white,fontSize: 18),),
+                child: Text("ID Proof",style: TextStyle(color: AppColours.white,fontSize: 18)),
               ),
               Row(
                 children: [

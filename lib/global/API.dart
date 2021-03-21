@@ -87,9 +87,8 @@ class API{
     {
       "status": isOnline?1:0,
     };
-    ServiceHttp().httpRequestPost("getDocument",map: jsonPost,
+    ServiceHttp().httpRequestPost("online-offline",map: jsonPost,
         onSuccess: (value) async {
-
         }, onError: (value) {
           CommonWidgets.showMessage(context, ErrorPojo.fromJson(json.decode(value)).errors.error[0]);
         });

@@ -61,7 +61,6 @@ class _JobsScreenState extends State<JobsScreen> {
                                             FontWeight.bold),
                                       ],
                                     ),
-
                                     SizedBox(height: 20.0),
                                     CommonWidgets.selectedFontWidget("From:",
                                         AppColours.black, 15.0, FontWeight.bold),
@@ -87,9 +86,8 @@ class _JobsScreenState extends State<JobsScreen> {
                                               FontWeight.w500),),
                                         RaisedButton(
                                           elevation: 5.0,
-                                          onPressed: () {
-
-                                          }, color: AppColours.golden_button_bg,
+                                          onPressed: () {},
+                                          color: AppColours.golden_button_bg,
                                           child: CommonWidgets.selectedFontWidget(
                                               "Start journey",
                                               AppColours.white, 14.0,
