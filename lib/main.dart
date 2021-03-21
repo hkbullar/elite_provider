@@ -19,7 +19,7 @@ class MyApp extends StatelessWidget {
        debugShowCheckedModeBanner: false,
       title: 'ELITE',
       theme: ThemeData(primarySwatch: Colors.grey),
-      home: DocumentsScreen(1),
+      home: SplashScreen(),
 //      home: JobsScreen(),
       //home: HireGuardScreen(),
     );

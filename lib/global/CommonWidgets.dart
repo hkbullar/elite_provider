@@ -42,6 +42,22 @@ class CommonWidgets{
          color: AppColours.golden_button_bg,
        ));
   }
+
+ static Widget NetworkImage(String image){
+   return Image.network(image,fit: BoxFit.fill,
+     loadingBuilder:(BuildContext context, Widget child,ImageChunkEvent loadingProgress) {
+       if (loadingProgress == null) return child;
+       return Center(
+         child: CircularProgressIndicator(
+           value: loadingProgress.expectedTotalBytes != null ?
+           loadingProgress.cumulativeBytesLoaded / loadingProgress.expectedTotalBytes
+               : null,
+         ),
+       );
+     },
+   );
+ }
+
  static Widget goldenFullWidthButton(String text,{Function onClick})
  {
    return Row(

@@ -3,6 +3,7 @@ import 'package:elite_provider/dashboard/DashBoardScreen.dart';
 import 'package:elite_provider/global/AppColours.dart';
 import 'package:elite_provider/global/Constants.dart';
 import 'package:elite_provider/global/Global.dart';
+import 'package:elite_provider/loginpages/DocumentsScreen.dart';
 import 'package:elite_provider/loginpages/LoginScreen.dart';
 import 'package:flutter/material.dart';
 
@@ -35,11 +36,26 @@ class _SplashScreenState extends State<SplashScreen> {
   void navigationPage() {
     Global.isRegistered().then((isLogged) {
       if (isLogged) {
-        Navigator.of(context)
-            .pushReplacement(MaterialPageRoute(builder: (context) => DashBoardScreen()));
+        Global.isApproved().then((value) {
+          if(value){
+            Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => DashBoardScreen()));
+          }else{
+            Global.userType().then((value){
+              if(value==Constants.USER_ROLE_DRIVER){
+                Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => DocumentsScreen(1, true)));
+              }
+              else if(value==Constants.USER_ROLE_GUARD){
+                Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => DocumentsScreen(2, true)));
+              }
+              else{
+                Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => LoginScreen()));
+              }
+            });
+          }
+        }
+        );
       } else {
-        Navigator.of(context)
-            .pushReplacement(MaterialPageRoute(builder: (context) => LoginScreen()));
+        Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => LoginScreen()));
       }
     });
   }

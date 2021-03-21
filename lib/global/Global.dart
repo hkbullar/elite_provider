@@ -20,6 +20,14 @@ class Global{
     SharedPreferences prefs = await SharedPreferences.getInstance();
     return prefs.getBool(Constants.ISREGISTERED) ?? false;
   }
+  static Future<bool> isApproved() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    return prefs.getBool(Constants.ISAPPROVED) ?? false;
+  }
+  static Future<String> userType() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    return prefs.getString(Constants.USER_ROLE) ?? "";
+  }
   static Future<String> getToken() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     return prefs.getString(Constants.TOKEN) ?? '';

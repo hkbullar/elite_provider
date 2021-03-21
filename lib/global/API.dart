@@ -26,12 +26,21 @@ class API{
           SharedPreferences preferences =await Global.getSharedPref();
           preferences.setString(Constants.TOKEN, loginPojo.token);
           preferences.setBool(Constants.ISREGISTERED, true);
-          preferences.setString(Constants.USER_TYPE, loginPojo.role);
+          preferences.setBool(Constants.ISAPPROVED, false);
+          preferences.setString(Constants.USER_ROLE, loginPojo.role);
           preferences.setString(Constants.USER_PREF,json.encode(loginPojo.user.toJson()));
 
           loader.hide();
-          Global.toast(context, "Logged In Successfully");
-          Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) => DashBoardScreen()));
+          Global.toast(context, "Logged In Successfully\nWelcome to Elite");
+          Global.userType().then((value){
+            if(value==Constants.USER_ROLE_DRIVER){
+              Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) => DocumentsScreen(1, true)));
+            }
+            else if(value==Constants.USER_ROLE_GUARD){
+              Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) => DocumentsScreen(2, true)));
+            }
+          });
+
         }, onError: (value) {
           loader.hide();
           Map<String, dynamic> map = json.decode(value);
@@ -47,30 +56,41 @@ class API{
           LoginPojo loginPojo= LoginPojo.fromJson(json.decode(value));
           SharedPreferences preferences =await Global.getSharedPref();
           preferences.setString(Constants.TOKEN, loginPojo.token);
+          preferences.setString(Constants.USER_ROLE, loginPojo.role);
           preferences.setBool(Constants.ISREGISTERED, true);
+          preferences.setBool(Constants.ISAPPROVED, false);
           preferences.setString(Constants.USER_PREF,json.encode(loginPojo.user.toJson()));
           loader.hide();
           Global.toast(context, "Registered Successfully");
-          Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) => DocumentsScreen(userType)));
+          Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) => DocumentsScreen(userType,false)));
         }, onError: (value) {
           loader.hide();
           CommonWidgets.showMessage(context, ErrorPojo.fromJson(json.decode(value)).errors.error[0]);
         });
   }
+
   getDocuments(int userType,{void onSuccess(GetDocumentsPojo value)}){
     Map<String, dynamic> jsonPost =
     {
       Constants.DOCUMENT_USER_TYPE: userType==1?Constants.DOCUMENT_USER_TYPE_DRIVER:Constants.DOCUMENT_USER_TYPE_GUARDIAN,
     };
-    PLoader loader=PLoader(context);
-    loader.show();
     ServiceHttp().httpRequestPost("getDocument",map: jsonPost,
         onSuccess: (value) async {
           GetDocumentsPojo loginPojo= GetDocumentsPojo.fromJson(json.decode(value));
           onSuccess(loginPojo);
-          loader.hide();
         }, onError: (value) {
-          loader.hide();
+          CommonWidgets.showMessage(context, ErrorPojo.fromJson(json.decode(value)).errors.error[0]);
+        });
+  }
+  goOnlineOffline(bool isOnline){
+    Map<String, dynamic> jsonPost =
+    {
+      "status": isOnline?1:0,
+    };
+    ServiceHttp().httpRequestPost("getDocument",map: jsonPost,
+        onSuccess: (value) async {
+
+        }, onError: (value) {
           CommonWidgets.showMessage(context, ErrorPojo.fromJson(json.decode(value)).errors.error[0]);
         });
   }

@@ -5,6 +5,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:sliding_sheet/sliding_sheet.dart';
 
+import '../global/API.dart';
+
 class HomeScreen extends StatefulWidget
 {
   @override
@@ -13,6 +15,7 @@ class HomeScreen extends StatefulWidget
 
 class _HomeScreenState extends State<HomeScreen> {
 bool ifOnline=false;
+
 SheetController controller = SheetController();
 
   @override
@@ -145,18 +148,13 @@ Widget buildChild(BuildContext context, SheetState state) {
           CommonWidgets.requestTextContainer("To","145 Elliott St, Tyldesley, Manchester M29 8FL, United Kingdom",Icons.location_on_outlined),
           Row(
             children: [
-              Expanded(
-                child: CommonWidgets.requestTextContainer("Date","24th March",Icons.date_range_outlined),
-
-              ),
-              SizedBox(width: 20,),
-              Expanded(
-                child: CommonWidgets.requestTextContainer("Time","9:25 AM",Icons.time_to_leave_outlined),
-              )
+              Expanded(child: CommonWidgets.requestTextContainer("Date","24th March",Icons.date_range_outlined)),
+              SizedBox(width: 20),
+              Expanded(child: CommonWidgets.requestTextContainer("Time","9:25 AM",Icons.time_to_leave_outlined))
             ],
           ),
           CommonWidgets.requestTextContainer("Comments","Be on time Please",Icons.comment_bank_outlined),
-          SizedBox(height: 10,),
+          SizedBox(height: 10),
           Row(
             children: [
               Expanded(child: RaisedButton(
@@ -169,7 +167,6 @@ Widget buildChild(BuildContext context, SheetState state) {
                     child: Text("Reject",style: TextStyle(color: AppColours.white,fontSize: 18),),
                   ),
                   onPressed: (){
-
                       controller.hide();
                   })),
               SizedBox(width: 20),
@@ -201,6 +198,7 @@ showServiceDialog(BuildContext context) {
     onPressed: () {
       setState(() {
         ifOnline=!ifOnline;
+        API(context).goOnlineOffline(ifOnline);
         Navigator.of(context).pop();
       });
     },
