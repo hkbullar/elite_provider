@@ -20,6 +20,10 @@ class Global{
     SharedPreferences prefs = await SharedPreferences.getInstance();
     return prefs.getBool(Constants.ISREGISTERED) ?? false;
   }
+  static Future<bool> isOnline() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    return prefs.getBool(Constants.ISONLINE) ?? false;
+  }
   static Future<bool> isApproved() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     return prefs.getBool(Constants.ISAPPROVED) ?? false;
@@ -84,5 +88,39 @@ class Global{
   static  hideKeyBoard(BuildContext context){
     FocusScope.of(context).requestFocus(FocusNode());
   }
+  static String formatTime(String time){
 
+    return DateFormat.jm().format(DateFormat('HH:mm:ss').parse(time)).toString();
+  }
+  static  String generateDate(DateTime dt){
+    var formatter = new DateFormat('MMM, EEEE');
+    String date="${dt.day}${Global.getDayOfMonthSuffix(dt.day)} ${formatter.format(dt)}";
+    return date;
+  }
+  static  String generateShortMonth(DateTime dt){
+    var formatter = new DateFormat('EEE');
+    String date="${DateFormat('EEE').format(dt)}";
+    return date;
+  }
+  static  String generateFullMonth(DateTime dt){
+    var formatter = new DateFormat('EEEE');
+    String date="${dt.day}${Global.getDayOfMonthSuffix(dt.day)} ${formatter.format(dt)}";
+    return date;
+  }
+  static String getDayOfMonthSuffix(int dayNum) {
+    if(!(dayNum >= 1 && dayNum <= 31)) {
+      throw Exception('Invalid day of month');
+    }
+
+    if(dayNum >= 11 && dayNum <= 13) {
+      return 'th';
+    }
+
+    switch(dayNum % 10) {
+      case 1: return 'st';
+      case 2: return 'nd';
+      case 3: return 'rd';
+      default: return 'th';
+    }
+  }
 }

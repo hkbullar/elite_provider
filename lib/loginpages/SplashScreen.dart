@@ -36,7 +36,8 @@ class _SplashScreenState extends State<SplashScreen> {
   void navigationPage() {
     Global.isRegistered().then((isLogged) {
       if (isLogged) {
-        Global.isApproved().then((value) {
+        Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => DashBoardScreen()));
+        /*Global.isApproved().then((value) {
           if(value){
             Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => DashBoardScreen()));
           }else{
@@ -53,7 +54,7 @@ class _SplashScreenState extends State<SplashScreen> {
             });
           }
         }
-        );
+        );*/
       } else {
         Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => LoginScreen()));
       }

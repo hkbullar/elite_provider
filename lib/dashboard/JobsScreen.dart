@@ -13,7 +13,6 @@ class JobsScreen extends StatefulWidget
 }
 
 class _JobsScreenState extends State<JobsScreen> {
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -28,76 +27,54 @@ class _JobsScreenState extends State<JobsScreen> {
             return SafeArea(
               child: Container(
                   child: ListView.separated(
-                      itemCount: 2,
+                      itemCount: 12,
                       separatorBuilder: (context, i) {
                         return Divider(thickness: 2.0,);
                       },
                       itemBuilder: (context, index) {
-                        return InkWell(
-                          onTap: (){
-                            Navigator.push(context, MaterialPageRoute(
-                                builder: (BuildContext context) => JobDetailsScreen()));
-                          },
-                          child: Card(elevation: 5.0,
-                              margin: EdgeInsets.fromLTRB(5.0, 5.0, 5.0, 5.0),
-                              shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(15.0)),
-                              child: Container(padding: EdgeInsets.fromLTRB(
-                                  15.0, 10.0, 15.0, 10.0),
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Row(
-                                      children: [
-                                        Expanded(
-                                          child: CommonWidgets.selectedFontWidget(
-                                              "02-03-2021" + " at " +
-                                                  "12:25", AppColours.black, 15.0,
-                                              FontWeight.bold),
-                                        ),
-                                        CommonWidgets.selectedFontWidget(
-                                            "220" + " GHS", AppColours.off_white,
-                                            15.0,
+                        return Card(
+                            elevation: 5.0,
+                            color: AppColours.golden_button_bg,
+                            margin: EdgeInsets.fromLTRB(5.0, 5.0, 5.0, 5.0),
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(15.0)),
+                            child: Container(padding: EdgeInsets.fromLTRB(
+                                15.0, 10.0, 15.0, 10.0),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Row(
+                                    children: [
+                                      Expanded(
+                                        child: CommonWidgets.selectedFontWidget(
+                                            "2nd April" + " at " +
+                                                "12:25 PM", AppColours.black, 15.0,
                                             FontWeight.bold),
-                                      ],
-                                    ),
-                                    SizedBox(height: 20.0),
-                                    CommonWidgets.selectedFontWidget("From:",
-                                        AppColours.black, 15.0, FontWeight.bold),
-                                    CommonWidgets.selectedFontWidget("Chandigarh",
-                                        AppColours.black, 13.0, FontWeight.w500),
-                                    SizedBox(height: 20.0),
-                                    CommonWidgets.selectedFontWidget("To:",
-                                        AppColours.black, 15.0, FontWeight.bold),
-                                    CommonWidgets.selectedFontWidget("Punjab",
-                                        AppColours.black, 13.0, FontWeight.w500),
-                                    SizedBox(height: 20.0),
-                                    Row(mainAxisAlignment: MainAxisAlignment
-                                        .spaceEvenly,
-                                      children: [
-                                        RaisedButton(
-                                          elevation: 5.0,
-                                          onPressed: () {
-
-                                          }, color: AppColours.white,
-                                          child: CommonWidgets.selectedFontWidget(
-                                              "Cancel journey",
-                                              AppColours.golden_button_bg, 14.0,
-                                              FontWeight.w500),),
-                                        RaisedButton(
-                                          elevation: 5.0,
-                                          onPressed: () {},
-                                          color: AppColours.golden_button_bg,
-                                          child: CommonWidgets.selectedFontWidget(
-                                              "Start journey",
-                                              AppColours.white, 14.0,
-                                              FontWeight.w500),)
-                                      ],
-                                    ),
-                                  ],
-                                ),
-                              )),
-                        );
+                                      ),
+                                      CommonWidgets.selectedFontWidget(
+                                          "220" + " GHS", AppColours.white,
+                                          15.0,
+                                          FontWeight.bold),
+                                    ],
+                                  ),
+                                  SizedBox(height: 20.0),
+                                  CommonWidgets.selectedFontWidget("From:",
+                                      AppColours.black, 15.0, FontWeight.bold),
+                                  CommonWidgets.selectedFontWidget("Chandigarh International Airport",
+                                      AppColours.black, 13.0, FontWeight.w500),
+                                  SizedBox(height: 20.0),
+                                  CommonWidgets.selectedFontWidget("To:",
+                                      AppColours.black, 15.0, FontWeight.bold),
+                                  CommonWidgets.selectedFontWidget("Indira Gandhi International Airport, Terminal 4",
+                                      AppColours.black, 13.0, FontWeight.w500),
+                                  SizedBox(height: 20.0),
+                                  CommonWidgets.blackFullWidthButton("JOB DETAILS",onClick: (){
+                                    Navigator.push(context, MaterialPageRoute(
+                                        builder: (BuildContext context) => JobDetailsScreen()));
+                                  })
+                                ],
+                              ),
+                            ));
                       })
               ),
             );

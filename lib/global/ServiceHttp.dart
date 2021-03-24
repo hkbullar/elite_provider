@@ -7,7 +7,7 @@ class ServiceHttp{
 
   httpRequestPost(String url,{Map map,void onSuccess(value),void onError(value)}) async{
     var token = await Global.getToken();
-    if(token.isNotEmpty)
+    print(token);
     print(BASE_URL+url);
     var response= await http.post(
       BASE_URL+url,

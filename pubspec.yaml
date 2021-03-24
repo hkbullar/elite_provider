@@ -23,7 +23,6 @@ environment:
 dependencies:
   intl:
   google_maps_flutter:
-  google_maps_place_picker:
   http:
   progress_dialog:
   flutter_absolute_path:

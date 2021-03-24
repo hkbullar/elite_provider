@@ -4,6 +4,7 @@ import 'dart:convert';
 import 'package:elite_provider/dashboard/AboutScreen.dart';
 import 'package:elite_provider/dashboard/HomeScreen.dart';
 import 'package:elite_provider/dashboard/JobsScreen.dart';
+import 'package:elite_provider/dashboard/PrivacyPolicy.dart';
 import 'package:elite_provider/dashboard/ProfileScreen.dart';
 import 'package:elite_provider/global/AppColours.dart';
 import 'package:elite_provider/global/Global.dart';
@@ -24,7 +25,7 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
   int _selectedIndex = 0;
   static const List<String> titleList=<String>["Home","Jobs","Profile","Privacy Policy","Terms & Conditions","Contact Us","About Us","Log Out"];
    List<Widget> _widgetOptions = <Widget>[
-    HomeScreen(),JobsScreen(),ProfileScreen(),AboutScreen(),AboutScreen(),AboutScreen(),AboutScreen(),
+    HomeScreen(),JobsScreen(),ProfileScreen(),PrivacyPolicy(),AboutScreen(),AboutScreen(),AboutScreen(),
   ];
 
   User userinfo;

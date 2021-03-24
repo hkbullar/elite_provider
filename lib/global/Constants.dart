@@ -9,6 +9,7 @@ class Constants{
   static const String ID = "id";
   static const String LANGUAGE_CODE = "language";
   static const String TOKEN = "token";
+  static const String ISONLINE = "isonline";
   static const String TOKEN_TYPE = "token_type";
   static const String USER_PREF = "userpref";
   static const String FIREBASE_TOKEN = "firebase_token";

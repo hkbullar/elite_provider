@@ -1,14 +1,15 @@
 import 'dart:convert';
-import 'package:elite_provider/dashboard/DashBoardScreen.dart';
 import 'package:elite_provider/global/CommonWidgets.dart';
 import 'package:elite_provider/global/Constants.dart';
 import 'package:elite_provider/global/Global.dart';
 import 'package:elite_provider/global/PLoader.dart';
 import 'package:elite_provider/global/ServiceHttp.dart';
 import 'package:elite_provider/loginpages/DocumentsScreen.dart';
+import 'package:elite_provider/pojo/DriverBookingsPojo.dart';
 import 'package:elite_provider/pojo/ErrorPojo.dart';
 import 'package:elite_provider/pojo/GetDocumentsPojo.dart';
 import 'package:elite_provider/pojo/LoginPojo.dart';
+import 'package:elite_provider/pojo/OnlineOfflinePojo.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -82,13 +83,30 @@ class API{
           CommonWidgets.showMessage(context, ErrorPojo.fromJson(json.decode(value)).errors.error[0]);
         });
   }
-  goOnlineOffline(bool isOnline){
+  goOnlineOffline(bool isOnline,{void onSuccess(bool isOnline)}){
     Map<String, dynamic> jsonPost =
     {
       "status": isOnline?1:0,
     };
     ServiceHttp().httpRequestPost("online-offline",map: jsonPost,
         onSuccess: (value) async {
+          OnlineOfflinePojo pojo= OnlineOfflinePojo.fromJson(json.decode(value));
+          if(pojo.user.onlineOffline==1){
+           onSuccess(true);
+          }else{
+            onSuccess(false);
+          }
+        }, onError: (value) {
+          CommonWidgets.showMessage(context, ErrorPojo.fromJson(json.decode(value)).errors.error[0]);
+        });
+  }
+  getDriverRequests({void onSuccess(List<DriverBookingsPojoBooking> booking)}){
+    Map<String, dynamic> jsonPost =
+    {};
+    ServiceHttp().httpRequestPost("getDriverBooking",map: jsonPost,
+        onSuccess: (value) async {
+          DriverBookingsPojo bookingsPojo= DriverBookingsPojo.fromJson(json.decode(value));
+          onSuccess(bookingsPojo.booking);
         }, onError: (value) {
           CommonWidgets.showMessage(context, ErrorPojo.fromJson(json.decode(value)).errors.error[0]);
         });

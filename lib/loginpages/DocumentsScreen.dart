@@ -321,6 +321,11 @@ class _DocumentsScreenState extends State<DocumentsScreen> {
 
 uploadPicProfile() async {
   loader.show();
+  if(_liveImageDoc!=null){
+
+  }else{
+
+  }
   Map<String, dynamic> jsonPost =
   {
     Constants.DOCUMENT_USER_TYPE: userType==1?Constants.DOCUMENT_USER_TYPE_DRIVER:Constants.DOCUMENT_USER_TYPE_GUARDIAN,

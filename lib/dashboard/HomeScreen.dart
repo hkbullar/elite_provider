@@ -1,8 +1,14 @@
 
+import 'dart:async';
+
 import 'package:elite_provider/global/AppColours.dart';
 import 'package:elite_provider/global/CommonWidgets.dart';
+import 'package:elite_provider/global/Constants.dart';
+import 'package:elite_provider/global/Global.dart';
+import 'package:elite_provider/pojo/DriverBookingsPojo.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sliding_sheet/sliding_sheet.dart';
 
 import '../global/API.dart';
@@ -13,11 +19,60 @@ class HomeScreen extends StatefulWidget
   _HomeScreenState createState() => _HomeScreenState();
 }
 
-class _HomeScreenState extends State<HomeScreen> {
+class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
 bool ifOnline=false;
-
+BookingBooking bookingDetails;
+bool isBooking=false;
+bool isDisposed=false;
 SheetController controller = SheetController();
+Timer timer;
+@override
+  void initState() {
+  isDisposed=false;
+  Global.isOnline().then((isOnline) {
+    if(isOnline)
+      setState(() {
+        ifOnline=isOnline;
+        startTimer();
+      });
+  });
+  WidgetsBinding.instance.addObserver(this);
 
+    super.initState();
+  }
+startTimer(){
+  timer= Timer.periodic(new Duration(seconds: 5), (timer) {
+    Global.isOnline().then((isOnline) {
+      if(isOnline){
+        getRequests();
+      }
+    });
+  });
+}
+stopTimer(){
+  if(timer!=null){
+    timer.cancel();
+  }
+}
+  @override
+  void dispose() {
+    isDisposed=true;
+    stopTimer();
+    WidgetsBinding.instance.removeObserver(this);
+    super.dispose();
+  }
+
+@override
+void didChangeAppLifecycleState(AppLifecycleState state) {
+  print('state = $state');
+  if( state==AppLifecycleState.resumed)
+ {
+   startTimer();
+ }
+  if(state==AppLifecycleState.paused){
+    stopTimer();
+  }
+}
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -58,7 +113,7 @@ SheetController controller = SheetController();
                     });
                 }),
           ),
-          buildSheet()
+          isBooking?buildSheet():SizedBox()
         ],
       )
     );
@@ -106,7 +161,7 @@ Widget buildSheet() {
                     mainAxisAlignment: MainAxisAlignment.center,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text('New Request (\$370)',
+                      Text('New Request (\$${bookingDetails.price}})',
                         style: TextStyle(color: AppColours.white,fontSize: 18,fontWeight: FontWeight.bold),
                       ),
                       Text('Pull me up please',
@@ -144,16 +199,16 @@ Widget buildChild(BuildContext context, SheetState state) {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
-          CommonWidgets.requestTextContainer("From","Poplar St, Tyldesley, Manchester M29 8AX, United Kingdom",Icons.location_on_outlined),
-          CommonWidgets.requestTextContainer("To","145 Elliott St, Tyldesley, Manchester M29 8FL, United Kingdom",Icons.location_on_outlined),
+          CommonWidgets.requestTextContainer("From",bookingDetails.destinationLocation,Icons.location_on_outlined),
+          CommonWidgets.requestTextContainer("To",bookingDetails.arrivalLocation,Icons.location_on_outlined),
           Row(
             children: [
-              Expanded(child: CommonWidgets.requestTextContainer("Date","24th March",Icons.date_range_outlined)),
+              Expanded(child: CommonWidgets.requestTextContainer("Date","${Global.generateDate(bookingDetails.date)}",Icons.date_range_outlined)),
               SizedBox(width: 20),
-              Expanded(child: CommonWidgets.requestTextContainer("Time","9:25 AM",Icons.time_to_leave_outlined))
+              Expanded(child: CommonWidgets.requestTextContainer("Time","${Global.formatTime(bookingDetails.time)}",Icons.time_to_leave_outlined))
             ],
           ),
-          CommonWidgets.requestTextContainer("Comments","Be on time Please",Icons.comment_bank_outlined),
+          bookingDetails.comment.isNotEmpty?CommonWidgets.requestTextContainer("Comments",bookingDetails.comment,Icons.comment_bank_outlined):SizedBox(),
           SizedBox(height: 10),
           Row(
             children: [
@@ -181,7 +236,6 @@ Widget buildChild(BuildContext context, SheetState state) {
                   ),
                   onPressed: (){
                     controller.hide();
-
                   })),
             ],
           )
@@ -194,11 +248,16 @@ showServiceDialog(BuildContext context) {
   // Create button
   Widget okButton = FlatButton(
     child: Text(ifOnline?"Go Offline":"Go Online",style: TextStyle(color: AppColours.golden_button_bg,fontSize: 16)),
-
     onPressed: () {
       setState(() {
         ifOnline=!ifOnline;
-        API(context).goOnlineOffline(ifOnline);
+        API(context).goOnlineOffline(ifOnline,onSuccess: (isOnline) async {
+            SharedPreferences preferences =await Global.getSharedPref();
+            preferences.setBool(Constants.ISONLINE, isOnline);
+        });
+        if(timer==null){
+          startTimer();
+        }
         Navigator.of(context).pop();
       });
     },
@@ -221,5 +280,27 @@ showServiceDialog(BuildContext context) {
       return alert;
     },
   );
+}
+getRequests(){
+  Global.userType().then((value){
+    if(value==Constants.USER_ROLE_DRIVER){
+      API(context).getDriverRequests(onSuccess: (value){
+        if(value!=null){
+          if(value.isNotEmpty){
+            if(!isDisposed){
+              setState(() {
+                bookingDetails=value[0].bookings[0];
+                print(bookingDetails.price);
+                isBooking=true;
+              });
+            }
+          }
+        }
+      });
+    }
+    else if(value==Constants.USER_ROLE_GUARD){
+
+    }
+  });
 }
 }

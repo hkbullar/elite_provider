@@ -1,0 +1,3 @@
+class AboutUs{
+ static String aboutUs="Elite Guardians is part of the Elite group and provides bespoke staffing solutions to those who require a specialist service not found via normal recruitment or agencies.\nWe have supplied staff to security services, NHS trusts, blue chip organisations, local authorities and film and media companies.\nOur global network ensures we meet your requirements without compromising the quality and service we provide.\nIn the UK we offer qualified, experienced operatives in sectors that are traditionally difficult to resource, Over 25 years In the security and healthcare sector will ensure our experience makes your experience with us Elite.";
+}
