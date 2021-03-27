@@ -1,6 +1,5 @@
 
 import 'dart:convert';
-import 'dart:io';
 
 import 'package:elite_provider/global/AppColours.dart';
 import 'package:elite_provider/global/CommonWidgets.dart';
@@ -22,7 +21,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   var _mobileController = TextEditingController();
   var _addressController = TextEditingController();
   int maleBoxVal=0;
-  File _profileImage;
+ // File _profileImage;
   var editButtonPressed=false;
 
   User userinfo;

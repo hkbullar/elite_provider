@@ -43,7 +43,7 @@ class CommonWidgets{
        ));
   }
 
- static Widget NetworkImage(String image){
+ static Widget networkImage(String image){
    return Image.network(image,fit: BoxFit.fill,
      loadingBuilder:(BuildContext context, Widget child,ImageChunkEvent loadingProgress) {
        if (loadingProgress == null) return child;
@@ -72,14 +72,16 @@ class CommonWidgets{
                onPressed: onClick),
          )]);
  }
+
  static TextEditingController formFieldFixText(String value){
    TextEditingController _controller = new TextEditingController();
    _controller.text=value;
    return _controller;
  }
+
  static showMessage(BuildContext context,String message) {
    // Create button
-   Widget okButton = FlatButton(
+   Widget okButton = TextButton(
      child: Text("OK",style: TextStyle(color: AppColours.golden_button_bg,fontSize: 16)),
      onPressed: () {
        Navigator.of(context).pop();

@@ -4,7 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class EliteAppBar extends PreferredSize {
-  String title;
+ final String title;
   EliteAppBar(this.title);
   @override
   Size get preferredSize => Size.fromHeight(55); // set height of your choice

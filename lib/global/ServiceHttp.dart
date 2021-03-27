@@ -3,14 +3,16 @@ import 'package:elite_provider/global/Global.dart';
 import 'package:http/http.dart' as http;
 
 class ServiceHttp{
-  String BASE_URL = "https://eliteguardian.co.uk/api/";
+  static const  String BASE_URL = "eliteguardian.co.uk";
 
-  httpRequestPost(String url,{Map map,void onSuccess(value),void onError(value)}) async{
+  httpRequestPost(String url1,{Map map,void onSuccess(value),void onError(value)}) async{
     var token = await Global.getToken();
     print(token);
-    print(BASE_URL+url);
-    var response= await http.post(
-      BASE_URL+url,
+    print(BASE_URL+url1);
+    var url =
+    Uri.https(BASE_URL, "/api/"+url1, {'q': '{http}'});
+
+    var response= await http.post(url,
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
         'Authorization': token.isNotEmpty?'Bearer $token':"",
@@ -27,12 +29,13 @@ class ServiceHttp{
     }
   }
 
-  httpRequestGet(String url,{void onSuccess(value),void onError(value)}) async{
+  httpRequestGet(String url1,{void onSuccess(value),void onError(value)}) async{
     var token = await Global.getToken();
     if(token.isNotEmpty)
-      print(BASE_URL+url);
-    var response= await http.get(
-      BASE_URL+url,
+      print(BASE_URL+url1);
+    var url =
+    Uri.https(BASE_URL, url1, {'q': '{http}'});
+    var response= await http.get(url,
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
         'Authorization': token.isNotEmpty?'Bearer $token':"",

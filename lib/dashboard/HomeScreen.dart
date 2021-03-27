@@ -8,6 +8,8 @@ import 'package:elite_provider/global/Global.dart';
 import 'package:elite_provider/pojo/DriverBookingsPojo.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:geolocator/geolocator.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sliding_sheet/sliding_sheet.dart';
 
@@ -23,8 +25,15 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
 bool ifOnline=false;
 BookingBooking bookingDetails;
 bool isBooking=false;
+LatLng currentPostion;
 bool isDisposed=false;
+
 SheetController controller = SheetController();
+CameraPosition _kGooglePlex = CameraPosition(
+  target: LatLng(37.42796133580664, -122.085749655962),
+  zoom: 14.4746,
+);
+Completer<GoogleMapController> _controller = Completer();
 Timer timer;
 @override
   void initState() {
@@ -37,7 +46,6 @@ Timer timer;
       });
   });
   WidgetsBinding.instance.addObserver(this);
-
     super.initState();
   }
 startTimer(){
@@ -79,19 +87,18 @@ void didChangeAppLifecycleState(AppLifecycleState state) {
         resizeToAvoidBottomInset: false,
         body: Stack(
         children: [
+          GoogleMap(
+            mapType: MapType.normal,
+            initialCameraPosition: _kGooglePlex,
+            onMapCreated: (GoogleMapController controller) {
+              _controller.complete(controller);
+              _getUserLocation();
+            },
+          ),
           Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Text("Google Map",style: TextStyle(color: AppColours.white),),
-              InkWell(
-                onTap: (){
-                  controller.show();
-                },
-                child: Padding(
-                  padding: const EdgeInsets.all(22.0),
-                  child: Text("All the requests will apear here one by one through a popup. Remember you have to accept or reject the 1st request to see the second request. For now to see the a dummy request please tap on this text",textAlign: TextAlign.center,style: TextStyle(color: AppColours.white),),
-                ),
-              ),
+
             ],
           ),
           Positioned(
@@ -156,17 +163,13 @@ Widget buildSheet() {
               Row(
                 children: [
                   Icon(Icons.request_page_outlined,color: AppColours.white,size: 35,),
-                  SizedBox(width: 10,),
+                  SizedBox(width: 10),
                   Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text('New Request (\$${bookingDetails.price}})',
-                        style: TextStyle(color: AppColours.white,fontSize: 18,fontWeight: FontWeight.bold),
-                      ),
-                      Text('Pull me up please',
-                        style: TextStyle(color: AppColours.white,fontSize: 12),
-                      ),
+                      Text('New Request (\$${bookingDetails.price}})',style: TextStyle(color: AppColours.white,fontSize: 18,fontWeight: FontWeight.bold)),
+                      Text('Pull me up please',style: TextStyle(color: AppColours.white,fontSize: 12)),
                     ],
                   ),
                 ],
@@ -177,7 +180,7 @@ Widget buildSheet() {
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [
                       Icon(Icons.keyboard_arrow_up,color: AppColours.white,size: 35,),
-                      SizedBox(width: 10,)
+                      SizedBox(width: 10)
                     ],
                   ),
                 ),
@@ -202,7 +205,8 @@ Widget buildChild(BuildContext context, SheetState state) {
           CommonWidgets.requestTextContainer("From",bookingDetails.destinationLocation,Icons.location_on_outlined),
           CommonWidgets.requestTextContainer("To",bookingDetails.arrivalLocation,Icons.location_on_outlined),
           Row(
-            children: [
+            children:
+            [
               Expanded(child: CommonWidgets.requestTextContainer("Date","${Global.generateDate(bookingDetails.date)}",Icons.date_range_outlined)),
               SizedBox(width: 20),
               Expanded(child: CommonWidgets.requestTextContainer("Time","${Global.formatTime(bookingDetails.time)}",Icons.time_to_leave_outlined))
@@ -232,8 +236,7 @@ Widget buildChild(BuildContext context, SheetState state) {
                   ),
                   child: Padding(
                     padding: const EdgeInsets.all(12.0),
-                    child: Text("Accept",style: TextStyle(color: AppColours.white,fontSize: 18),),
-                  ),
+                    child: Text("Accept",style: TextStyle(color: AppColours.white,fontSize: 18))),
                   onPressed: (){
                     controller.hide();
                   })),
@@ -244,9 +247,10 @@ Widget buildChild(BuildContext context, SheetState state) {
     ),
   );
 }
+
 showServiceDialog(BuildContext context) {
   // Create button
-  Widget okButton = FlatButton(
+  Widget okButton = TextButton(
     child: Text(ifOnline?"Go Offline":"Go Online",style: TextStyle(color: AppColours.golden_button_bg,fontSize: 16)),
     onPressed: () {
       setState(() {
@@ -262,7 +266,8 @@ showServiceDialog(BuildContext context) {
       });
     },
   );
-  Widget cancelButton = FlatButton(
+
+  Widget cancelButton = TextButton(
     child: Text("Cancel",style: TextStyle(color: AppColours.golden_button_bg,fontSize: 16)),
     onPressed: () {
       Navigator.of(context).pop();
@@ -281,6 +286,7 @@ showServiceDialog(BuildContext context) {
     },
   );
 }
+
 getRequests(){
   Global.userType().then((value){
     if(value==Constants.USER_ROLE_DRIVER){
@@ -298,9 +304,18 @@ getRequests(){
         }
       });
     }
-    else if(value==Constants.USER_ROLE_GUARD){
-
-    }
+    else if(value==Constants.USER_ROLE_GUARD){}
   });
+}
+
+void _getUserLocation() async {
+  var position = await GeolocatorPlatform.instance
+      .getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
+
+    CameraPosition cc = CameraPosition(
+      target: LatLng(position.latitude, position.longitude),
+      zoom: 14.4746);
+    final GoogleMapController controller = await _controller.future;
+    controller.animateCamera(CameraUpdate.newCameraPosition(cc));
 }
 }

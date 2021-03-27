@@ -140,7 +140,7 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
   }
   showLogOutDialog(BuildContext context) {
     // Create button
-    Widget okButton = FlatButton(
+    Widget okButton = TextButton(
       child: Text("Log Out",style: TextStyle(color: AppColours.golden_button_bg,fontSize: 16)),
       onPressed: () {
         setState(() {
@@ -149,7 +149,7 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
         });
       },
     );
-    Widget cancelButton = FlatButton(
+    Widget cancelButton = TextButton(
       child: Text("Cancel",style: TextStyle(color: AppColours.golden_button_bg,fontSize: 16)),
       onPressed: () {
         Navigator.of(context).pop();
@@ -170,7 +170,7 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
   }
   showExitDialog(BuildContext context) {
     // Create button
-    Widget okButton = FlatButton(
+    Widget okButton = TextButton(
       child: Text("Exit",style: TextStyle(color: AppColours.golden_button_bg,fontSize: 16)),
       onPressed: () {
         setState(() {
@@ -178,7 +178,7 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
         });
       },
     );
-    Widget cancelButton = FlatButton(
+    Widget cancelButton = TextButton(
       child: Text("Cancel",style: TextStyle(color: AppColours.golden_button_bg,fontSize: 16)),
       onPressed: () {
         Navigator.of(context).pop();

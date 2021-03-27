@@ -21,20 +21,22 @@ environment:
   sdk: ">=2.7.0 <3.0.0"
 
 dependencies:
-  intl:
-  google_maps_flutter:
   http:
   progress_dialog:
   flutter_absolute_path:
-  shared_preferences:
+  shared_preferences: ^2.0.4
+  permission_handler: ^6.1.0
   dio:
   toast:
-  path_provider:
   image_picker:
-  sliding_sheet:
+  path_provider:
+  intl:
+  sliding_sheet: ^0.5.0
+  geolocator: ^7.0.1
+  google_maps_flutter:
+  google_maps_place_picker:
   flutter:
     sdk: flutter
-
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.

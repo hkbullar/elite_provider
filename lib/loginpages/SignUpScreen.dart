@@ -4,12 +4,11 @@ import 'package:elite_provider/global/AppColours.dart';
 import 'package:elite_provider/global/CommonWidgets.dart';
 import 'package:elite_provider/global/Constants.dart';
 import 'package:elite_provider/global/EliteAppBar.dart';
-import 'package:elite_provider/loginpages/DocumentsScreen.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class SignUpScreen extends StatefulWidget {
-  int userType;
+ final int userType;
   SignUpScreen(this.userType);
   @override
   _SignUpScreenState createState() => _SignUpScreenState(userType);

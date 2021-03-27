@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:elite_provider/dashboard/DashBoardScreen.dart';
 import 'package:elite_provider/global/CommonWidgets.dart';
 import 'package:elite_provider/global/Constants.dart';
 import 'package:elite_provider/global/Global.dart';
@@ -34,11 +35,12 @@ class API{
           loader.hide();
           Global.toast(context, "Logged In Successfully\nWelcome to Elite");
           Global.userType().then((value){
+            Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) => DashBoardScreen()));
             if(value==Constants.USER_ROLE_DRIVER){
-              Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) => DocumentsScreen(1, true)));
+            //  Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) => DocumentsScreen(1, true)));
             }
             else if(value==Constants.USER_ROLE_GUARD){
-              Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) => DocumentsScreen(2, true)));
+            //  Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) => DocumentsScreen(2, true)));
             }
           });
 
@@ -63,7 +65,7 @@ class API{
           preferences.setString(Constants.USER_PREF,json.encode(loginPojo.user.toJson()));
           loader.hide();
           Global.toast(context, "Registered Successfully");
-          Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) => DocumentsScreen(userType,false)));
+        //  Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) => DocumentsScreen(userType,false)));
         }, onError: (value) {
           loader.hide();
           CommonWidgets.showMessage(context, ErrorPojo.fromJson(json.decode(value)).errors.error[0]);

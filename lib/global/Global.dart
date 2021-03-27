@@ -98,7 +98,6 @@ class Global{
     return date;
   }
   static  String generateShortMonth(DateTime dt){
-    var formatter = new DateFormat('EEE');
     String date="${DateFormat('EEE').format(dt)}";
     return date;
   }

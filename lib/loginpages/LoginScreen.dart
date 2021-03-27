@@ -3,9 +3,11 @@ import 'package:elite_provider/global/AppColours.dart';
 import 'package:elite_provider/global/CommonWidgets.dart';
 import 'package:elite_provider/global/Constants.dart';
 import 'package:elite_provider/global/Global.dart';
+import 'package:elite_provider/global/PermissionHandler.dart';
 import 'package:elite_provider/loginpages/SignUpScreen.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 class LoginScreen extends StatefulWidget {
   @override
@@ -134,12 +136,29 @@ class _LoginScreenState extends State<LoginScreen> {
         Constants.EMAIL: _emailController.text,
         Constants.PASSWORD: _passwordController.text,
       };
-
-      FocusScope.of(context).unfocus();
+      permissionCode(jsonPost);
+    }
+  }
+permissionCode(Map jsonPost) async {
+  var status = await Permission.location.status;
+  if (status.isDenied) {
+    if (await Permission.location.request().isGranted) {
       API(context).login(jsonPost);
+      FocusScope.of(context).unfocus();
+    }
+    else{
+    print("AA");
     }
   }
 
+// You can can also directly ask the permission about its status.
+  if (await Permission.location.isRestricted) {
+    if (await Permission.location.request().isGranted) {
+      API(context).login(jsonPost);
+      FocusScope.of(context).unfocus();
+    }
+  }
+}
   selectSignUpTypeUI(){
     scaffoldKey.currentState
         .showBottomSheet(
