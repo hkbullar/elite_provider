@@ -31,6 +31,11 @@ class Constants{
   static const String DOCUMENT_PROFILE_PIC="profile_picture";
   static const String DOCUMENT_ID_PIC="profile_id";
 
+  //REQUEST ACCEPT REJECT KEYS
+  static const String REQUEST_AR_BOOKING_ID="booking_id";
+  static const String REQUEST_AR_DRIVER_ID="driver_id";
+  static const String REQUEST_AR_GUARDIAN_ID="guard_id";
+
   static const String SEARCH_USER = "search";
   //CREATE COMMENT KEYS
   static const String COMMENT_USER_ID = "user_id";

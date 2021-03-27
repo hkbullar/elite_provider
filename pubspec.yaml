@@ -31,10 +31,11 @@ dependencies:
   image_picker:
   path_provider:
   intl:
+  location:
+  firebase_core:
+  cloud_firestore:
   sliding_sheet: ^0.5.0
-  geolocator: ^7.0.1
   google_maps_flutter:
-  google_maps_place_picker:
   flutter:
     sdk: flutter
 

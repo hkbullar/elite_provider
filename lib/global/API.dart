@@ -5,10 +5,10 @@ import 'package:elite_provider/global/Constants.dart';
 import 'package:elite_provider/global/Global.dart';
 import 'package:elite_provider/global/PLoader.dart';
 import 'package:elite_provider/global/ServiceHttp.dart';
-import 'package:elite_provider/loginpages/DocumentsScreen.dart';
 import 'package:elite_provider/pojo/DriverBookingsPojo.dart';
 import 'package:elite_provider/pojo/ErrorPojo.dart';
 import 'package:elite_provider/pojo/GetDocumentsPojo.dart';
+import 'package:elite_provider/pojo/GuardianBookingsPojo.dart';
 import 'package:elite_provider/pojo/LoginPojo.dart';
 import 'package:elite_provider/pojo/OnlineOfflinePojo.dart';
 import 'package:flutter/cupertino.dart';
@@ -91,7 +91,7 @@ class API{
       "status": isOnline?1:0,
     };
     ServiceHttp().httpRequestPost("online-offline",map: jsonPost,
-        onSuccess: (value) async {
+        onSuccess: (value){
           OnlineOfflinePojo pojo= OnlineOfflinePojo.fromJson(json.decode(value));
           if(pojo.user.onlineOffline==1){
            onSuccess(true);
@@ -106,11 +106,60 @@ class API{
     Map<String, dynamic> jsonPost =
     {};
     ServiceHttp().httpRequestPost("getDriverBooking",map: jsonPost,
-        onSuccess: (value) async {
+        onSuccess: (value){
           DriverBookingsPojo bookingsPojo= DriverBookingsPojo.fromJson(json.decode(value));
           onSuccess(bookingsPojo.booking);
         }, onError: (value) {
           CommonWidgets.showMessage(context, ErrorPojo.fromJson(json.decode(value)).errors.error[0]);
         });
   }
+  getGuardianRequests({void onSuccess(List<GuardianBookingsPojoBooking> booking)}){
+    Map<String, dynamic> jsonPost =
+    {};
+    ServiceHttp().httpRequestPost("getGuardBooking",map: jsonPost,
+        onSuccess: (value){
+          GuardianBookingsPojo bookingsPojo= GuardianBookingsPojo.fromJson(json.decode(value));
+          onSuccess(bookingsPojo.booking);
+        }, onError: (value) {
+          CommonWidgets.showMessage(context, ErrorPojo.fromJson(json.decode(value)).errors.error[0]);
+        });
+  }
+  journeyAcceptReject(bool isRejected,bool isGuardian,int bookingID,{void onSuccess(),int driverGuardID}){
+    String apiName="";
+    Map<String, dynamic> jsonPost ={};
+    if(isRejected && isGuardian){
+      apiName="reject-guard-booking";
+      jsonPost ={
+        Constants.REQUEST_AR_BOOKING_ID:bookingID,
+        Constants.REQUEST_AR_GUARDIAN_ID:driverGuardID
+      };
+    }
+    else if(!isRejected && isGuardian){
+      apiName="accept-guradian-booking";
+      jsonPost ={
+        Constants.REQUEST_AR_BOOKING_ID:bookingID
+      };
+    }
+    else if (isRejected && !isGuardian){
+      apiName="reject-driver-booking";
+      jsonPost ={
+        Constants.REQUEST_AR_BOOKING_ID:bookingID,
+        Constants.REQUEST_AR_DRIVER_ID:driverGuardID
+      };
+    }
+    else{
+      apiName="accept-driver-booking";
+      jsonPost ={
+        Constants.REQUEST_AR_BOOKING_ID:bookingID
+      };
+    }
+    ServiceHttp().httpRequestPost(apiName,map: jsonPost,
+        onSuccess: (value) async {
+      print(value);
+          onSuccess();
+        }, onError: (value) {
+          CommonWidgets.showMessage(context, ErrorPojo.fromJson(json.decode(value)).errors.error[0]);
+        });
+  }
+
 }

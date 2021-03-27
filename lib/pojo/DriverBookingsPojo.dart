@@ -45,7 +45,7 @@ class DriverBookingsPojoBooking {
   int status;
   DateTime createdAt;
   DateTime updatedAt;
-  List<BookingBooking> bookings;
+  List<JourneyBooking> bookings;
 
   factory DriverBookingsPojoBooking.fromJson(Map<String, dynamic> json) => DriverBookingsPojoBooking(
     id: json["id"],
@@ -54,7 +54,7 @@ class DriverBookingsPojoBooking {
     status: json["status"],
     createdAt: DateTime.parse(json["created_at"]),
     updatedAt: DateTime.parse(json["updated_at"]),
-    bookings: List<BookingBooking>.from(json["bookings"].map((x) => BookingBooking.fromJson(x))),
+    bookings: List<JourneyBooking>.from(json["bookings"].map((x) => JourneyBooking.fromJson(x))),
   );
 
   Map<String, dynamic> toJson() => {
@@ -68,8 +68,8 @@ class DriverBookingsPojoBooking {
   };
 }
 
-class BookingBooking {
-  BookingBooking({
+class JourneyBooking {
+  JourneyBooking({
     this.id,
     this.userId,
     this.destinationLocation,
@@ -101,7 +101,7 @@ class BookingBooking {
   DateTime createdAt;
   DateTime updatedAt;
 
-  factory BookingBooking.fromJson(Map<String, dynamic> json) => BookingBooking(
+  factory JourneyBooking.fromJson(Map<String, dynamic> json) => JourneyBooking(
     id: json["id"],
     userId: json["user_id"],
     destinationLocation: json["destination_location"],
