@@ -7,10 +7,7 @@ class ServiceHttp{
 
   httpRequestPost(String url1,{Map map,void onSuccess(value),void onError(value)}) async{
     var token = await Global.getToken();
-    print(token);
-    print(BASE_URL+url1);
-    var url =
-    Uri.https(BASE_URL, "/api/"+url1, {'q': '{http}'});
+    var url = Uri.https(BASE_URL, "/api/"+url1, {'q': '{http}'});
 
     var response= await http.post(url,
       headers: <String, String>{
@@ -31,10 +28,7 @@ class ServiceHttp{
 
   httpRequestGet(String url1,{void onSuccess(value),void onError(value)}) async{
     var token = await Global.getToken();
-    if(token.isNotEmpty)
-      print(BASE_URL+url1);
-    var url =
-    Uri.https(BASE_URL, url1, {'q': '{http}'});
+    var url = Uri.https(BASE_URL, "/api/"+url1, {'q': '{http}'});
     var response= await http.get(url,
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',

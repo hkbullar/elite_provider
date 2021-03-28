@@ -19,20 +19,28 @@ import '../global/API.dart';
 
 class HomeScreen extends StatefulWidget
 {
+  HomeScreen();
   @override
   _HomeScreenState createState() => _HomeScreenState();
 }
 
 class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
 bool ifOnline=false;
+
+JourneyBooking liveJourneyBooking;
+GuardianBooking liveGuardianBooking;
+
 JourneyBooking journeyBooking;
 GuardianBooking guardianBooking;
+
 bool isBooking=false;
 bool isGuard=false;
-LatLng currentPostion;
 bool isDisposed=false;
 
+LatLng currentPostion;
+
 SheetController controller = SheetController();
+  SheetController currentJobController = SheetController();
 CameraPosition _kGooglePlex = CameraPosition(
   target: LatLng(37.42796133580664, -122.085749655962),
   zoom: 14.4746,
@@ -40,6 +48,7 @@ CameraPosition _kGooglePlex = CameraPosition(
 
 Completer<GoogleMapController> _controller = Completer();
 Timer timer;
+
 @override
   void initState() {
   isDisposed=false;
@@ -52,7 +61,8 @@ Timer timer;
   });
   WidgetsBinding.instance.addObserver(this);
     super.initState();
-  }
+}
+
 startTimer(){
   timer= Timer.periodic(Duration(seconds: 5), (timer) {
     Global.isOnline().then((isOnline) {
@@ -62,11 +72,13 @@ startTimer(){
     });
   });
 }
+
 stopTimer(){
   if(timer!=null){
     timer.cancel();
   }
 }
+
   @override
   void dispose() {
     isDisposed=true;
@@ -76,7 +88,8 @@ stopTimer(){
   }
 
 @override
-void didChangeAppLifecycleState(AppLifecycleState state) {
+void didChangeAppLifecycleState(AppLifecycleState state)
+{
   print('state = $state');
   if( state==AppLifecycleState.resumed)
  {
@@ -87,6 +100,7 @@ void didChangeAppLifecycleState(AppLifecycleState state) {
     stopTimer();
   }
 }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -125,6 +139,7 @@ void didChangeAppLifecycleState(AppLifecycleState state) {
                     });
                 }),
           ),
+          liveJourneyBooking!=null || liveGuardianBooking!=null?currentJobSheet():SizedBox(),
           isBooking?buildSheet():SizedBox()
         ],
       )
@@ -145,11 +160,7 @@ Widget buildSheet() {
     snapSpec: SnapSpec(
       snap: true,
       positioning: SnapPositioning.relativeToAvailableSpace,
-      snappings: const [
-        SnapSpec.headerFooterSnap,
-        0.6,
-        SnapSpec.expanded,
-      ],
+      snappings: const [SnapSpec.headerFooterSnap,0.6,SnapSpec.expanded],
       onSnap: (state, snap) {
        // print('Snapped to $snap');
       },
@@ -171,7 +182,7 @@ Widget buildSheet() {
                     mainAxisAlignment: MainAxisAlignment.center,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text('New Request (\$${journeyBooking.price}})',style: TextStyle(color: AppColours.white,fontSize: 18,fontWeight: FontWeight.bold)),
+                      Text('New Request (\$${journeyBooking.price})',style: TextStyle(color: AppColours.white,fontSize: 18,fontWeight: FontWeight.bold)),
                       Text('Pull me up please',style: TextStyle(color: AppColours.white,fontSize: 12)),
                     ],
                   ),
@@ -196,7 +207,60 @@ Widget buildSheet() {
     builder: buildChild,
   );
 }
+  Widget currentJobSheet() {
+    return SlidingSheet(
+      duration: Duration(milliseconds: 600),
+      color: Colors.white,
+      shadowColor: Colors.black26,
+      elevation: 12,
+      controller: controller,
+      cornerRadius: 16,
+      cornerRadiusOnFullscreen: 0.0,
+      addTopViewPaddingOnFullscreen: true,
+      isBackdropInteractable: true,
+      snapSpec: SnapSpec(
+        snap: true,
+        positioning: SnapPositioning.relativeToAvailableSpace,
+        snappings: const [SnapSpec.headerFooterSnap,0.6,SnapSpec.expanded],
+        onSnap: (state, snap) {
+          // print('Snapped to $snap');
+        },
+      ),
+      headerBuilder: (context, state) {
+        return Container(
+          height: 140,
+          color: AppColours.golden_button_bg,
+          alignment: Alignment.centerLeft,
+          child: Padding(
+            padding: EdgeInsets.all(20),
+            child: Column(
+              children: [
+                Text("${isGuard?"Location":"Source"}: ${isGuard?liveGuardianBooking.location:liveJourneyBooking.destinationLocation}",style: TextStyle(color: AppColours.black,fontSize: 16,fontWeight: FontWeight.bold)),
+                SizedBox(height: 10),
+                isGuard?SizedBox(): Text("Destination: ${liveJourneyBooking.arrivalLocation}",style: TextStyle(color: AppColours.black,fontSize: 16,fontWeight: FontWeight.bold)),
+              ],
+            ),
+          ),
+        );
+      },
+      builder: currentJobSheetChild,
+    );
+  }
 
+  Widget currentJobSheetChild(BuildContext context, SheetState state) {
+  return Container(
+    color: AppColours.golden_button_bg,
+    padding: EdgeInsets.all(20),
+    child: Column(
+      children: [
+        CommonWidgets.blackFullWidthButton("COMPLETE JOB",onClick: ()
+        {
+
+        }),
+      ],
+    ),
+  );
+  }
 Widget buildChild(BuildContext context, SheetState state) {
   return Container(
     color: AppColours.black,
@@ -292,6 +356,7 @@ showServiceDialog(BuildContext context) {
       Navigator.of(context).pop();
     },
   );
+
   // Create AlertDialog
   AlertDialog alert = AlertDialog(
     backgroundColor: AppColours.textFeildBG,
@@ -340,7 +405,8 @@ getRequests(){
               });
             }
           }
-          else{
+          else
+            {
             setState(() {
               isBooking=false;
             });

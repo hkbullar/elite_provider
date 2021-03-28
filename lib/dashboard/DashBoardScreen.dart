@@ -8,6 +8,8 @@ import 'package:elite_provider/dashboard/PrivacyPolicy.dart';
 import 'package:elite_provider/dashboard/ProfileScreen.dart';
 import 'package:elite_provider/global/AppColours.dart';
 import 'package:elite_provider/global/Global.dart';
+import 'package:elite_provider/pojo/DriverBookingsPojo.dart';
+import 'package:elite_provider/pojo/GuardianBookingsPojo.dart';
 import 'package:elite_provider/pojo/User.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -15,29 +17,40 @@ import 'package:flutter/services.dart';
 
 class DashBoardScreen extends StatefulWidget
 {
-
   @override
   _DashBoardScreenState createState() => _DashBoardScreenState();
 }
 
 class _DashBoardScreenState extends State<DashBoardScreen> {
-
   int _selectedIndex = 0;
-  static const List<String> titleList=<String>["Home","Jobs","Profile","Privacy Policy","Terms & Conditions","Contact Us","About Us","Log Out"];
-   List<Widget> _widgetOptions = <Widget>[
-    HomeScreen(),JobsScreen(),ProfileScreen(),PrivacyPolicy(),AboutScreen(),AboutScreen(),AboutScreen(),
-  ];
+  JobsScreen jobsScreen;
+
+  List<String> titleList;
+  List<Widget> _widgetOptions;
+
+  JourneyBooking journeyBooking;
+  GuardianBooking guardianBooking;
 
   User userinfo;
 
   @override
   void initState() {
+    jobsScreen=JobsScreen(onClick: (journeyBooking,guardianBooking,isGuard){
+      setState(() {
+        _onItemTapped(0,noPop: true);
+      });
+    });
+
+    _widgetOptions = <Widget>[
+      HomeScreen(),jobsScreen,ProfileScreen(),PrivacyPolicy(),AboutScreen(),AboutScreen(),AboutScreen(),
+    ];
+    titleList=<String>["Home","Jobs","Profile","Privacy Policy","Terms & Conditions","Contact Us","About Us","Log Out"];
+
     Global.getUser().then((value) async {
       setState(()
       {
         userinfo = User.fromJson(json.decode(value));
       });
-
     });
     super.initState();
   }
@@ -52,7 +65,7 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
           backgroundColor: AppColours.black,
             iconTheme:IconThemeData(color: Colors.white),
             centerTitle: true,
-            title: Text(titleList[_selectedIndex],style: TextStyle(color: AppColours.white),)),
+            title: Text(titleList[_selectedIndex],style: TextStyle(color: AppColours.white))),
         body: _widgetOptions.elementAt(_selectedIndex),
         drawer: Drawer(
           child: Container(
@@ -65,7 +78,7 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
                   alignment: Alignment.center,
                   child: Container(
                     height: 50,
-                    padding: EdgeInsets.only(left: 30,),
+                    padding: EdgeInsets.only(left: 30),
                     alignment: Alignment.center,
                     child: Row(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -200,8 +213,10 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
   Future<bool> _onWillPop() async {
     return (await showExitDialog(context)) ?? false;
   }
-  void _onItemTapped(int index) {
-    Navigator.of(context).pop();
+  void _onItemTapped(int index,{bool noPop}) {
+    if(noPop==null){
+      Navigator.of(context).pop();
+    }
     if(index!=7){
       if(_selectedIndex!=index)
       {
@@ -210,7 +225,8 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
         });
       }
     }
-    else{
+    else
+      {
       showLogOutDialog(context);
     }
 

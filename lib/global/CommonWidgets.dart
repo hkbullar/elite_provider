@@ -68,7 +68,7 @@ class CommonWidgets{
                shape: RoundedRectangleBorder(
                    borderRadius: BorderRadius.circular(8.0)),
                color: AppColours.golden_button_bg,
-               child: Text(text,style: TextStyle(color: AppColours.black,fontWeight: FontWeight.bold,fontSize: 18),),
+               child: Text(text,style: TextStyle(color: AppColours.black,fontWeight: FontWeight.bold,fontSize: 18)),
                onPressed: onClick),
          )]);
  }

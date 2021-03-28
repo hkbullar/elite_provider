@@ -10,11 +10,11 @@ class GuardianBookingsPojo {
     this.message,
   });
 
-  List<GuardianBookingsPojoBooking> booking;
+  List<GuardianBookingPojo> booking;
   String message;
 
   factory GuardianBookingsPojo.fromJson(Map<String, dynamic> json) => GuardianBookingsPojo(
-    booking: List<GuardianBookingsPojoBooking>.from(json["booking"].map((x) => GuardianBookingsPojoBooking.fromJson(x))),
+    booking: List<GuardianBookingPojo>.from(json["booking"].map((x) => GuardianBookingPojo.fromJson(x))),
     message: json["message"],
   );
 
@@ -24,8 +24,8 @@ class GuardianBookingsPojo {
   };
 }
 
-class GuardianBookingsPojoBooking {
-  GuardianBookingsPojoBooking({
+class GuardianBookingPojo {
+  GuardianBookingPojo({
     this.id,
     this.bookingId,
     this.guardId,
@@ -43,7 +43,7 @@ class GuardianBookingsPojoBooking {
   DateTime updatedAt;
   List<GuardianBooking> bookings;
 
-  factory GuardianBookingsPojoBooking.fromJson(Map<String, dynamic> json) => GuardianBookingsPojoBooking(
+  factory GuardianBookingPojo.fromJson(Map<String, dynamic> json) => GuardianBookingPojo(
     id: json["id"],
     bookingId: json["booking_id"],
     guardId: json["guard_id"],

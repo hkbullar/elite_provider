@@ -119,8 +119,8 @@ class Constants{
   static const String USER_ID_F ="id";
   static const String USER_NAME ="name";
   static const String USER_EMAIL ="email";
-  static const String USER_PHONE ="mobile";
-  static const String USER_IMAGE ="image";
+  static const String USER_LATITUDE ="latitude";
+  static const String USER_LONGITUDE ="longitude";
   static const String USER_CHATTING_WITH ="chattingwith";
   static const String USER_LAST_MESSAGE ="lastmessage";
   static const String USER_LAST_MESSAGE_TIME ="messagetime";

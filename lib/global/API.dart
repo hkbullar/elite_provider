@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:elite_provider/dashboard/DashBoardScreen.dart';
 import 'package:elite_provider/global/CommonWidgets.dart';
 import 'package:elite_provider/global/Constants.dart';
@@ -11,8 +12,10 @@ import 'package:elite_provider/pojo/GetDocumentsPojo.dart';
 import 'package:elite_provider/pojo/GuardianBookingsPojo.dart';
 import 'package:elite_provider/pojo/LoginPojo.dart';
 import 'package:elite_provider/pojo/OnlineOfflinePojo.dart';
+import 'package:elite_provider/pojo/User.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class API{
@@ -34,8 +37,10 @@ class API{
 
           loader.hide();
           Global.toast(context, "Logged In Successfully\nWelcome to Elite");
+          //addUserForChat(loginPojo.user,latLng);
           Global.userType().then((value){
             Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) => DashBoardScreen()));
+
             if(value==Constants.USER_ROLE_DRIVER){
             //  Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) => DocumentsScreen(1, true)));
             }
@@ -65,6 +70,7 @@ class API{
           preferences.setString(Constants.USER_PREF,json.encode(loginPojo.user.toJson()));
           loader.hide();
           Global.toast(context, "Registered Successfully");
+          //addUserForChat(loginPojo.user,latLng);
         //  Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) => DocumentsScreen(userType,false)));
         }, onError: (value) {
           loader.hide();
@@ -102,7 +108,8 @@ class API{
           CommonWidgets.showMessage(context, ErrorPojo.fromJson(json.decode(value)).errors.error[0]);
         });
   }
-  getDriverRequests({void onSuccess(List<DriverBookingsPojoBooking> booking)}){
+
+  getDriverRequests({void onSuccess(List<DriverBookingPojo> booking)}){
     Map<String, dynamic> jsonPost =
     {};
     ServiceHttp().httpRequestPost("getDriverBooking",map: jsonPost,
@@ -113,7 +120,7 @@ class API{
           CommonWidgets.showMessage(context, ErrorPojo.fromJson(json.decode(value)).errors.error[0]);
         });
   }
-  getGuardianRequests({void onSuccess(List<GuardianBookingsPojoBooking> booking)}){
+  getGuardianRequests({void onSuccess(List<GuardianBookingPojo> booking)}){
     Map<String, dynamic> jsonPost =
     {};
     ServiceHttp().httpRequestPost("getGuardBooking",map: jsonPost,
@@ -124,10 +131,12 @@ class API{
           CommonWidgets.showMessage(context, ErrorPojo.fromJson(json.decode(value)).errors.error[0]);
         });
   }
+
   journeyAcceptReject(bool isRejected,bool isGuardian,int bookingID,{void onSuccess(),int driverGuardID}){
     String apiName="";
     Map<String, dynamic> jsonPost ={};
-    if(isRejected && isGuardian){
+    if(isRejected && isGuardian)
+    {
       apiName="reject-guard-booking";
       jsonPost ={
         Constants.REQUEST_AR_BOOKING_ID:bookingID,
@@ -142,14 +151,15 @@ class API{
     }
     else if (isRejected && !isGuardian){
       apiName="reject-driver-booking";
-      jsonPost ={
+      jsonPost={
         Constants.REQUEST_AR_BOOKING_ID:bookingID,
         Constants.REQUEST_AR_DRIVER_ID:driverGuardID
       };
     }
     else{
       apiName="accept-driver-booking";
-      jsonPost ={
+      jsonPost =
+      {
         Constants.REQUEST_AR_BOOKING_ID:bookingID
       };
     }
@@ -160,6 +170,22 @@ class API{
         }, onError: (value) {
           CommonWidgets.showMessage(context, ErrorPojo.fromJson(json.decode(value)).errors.error[0]);
         });
+  }
+
+  addUserForChat(User user,LatLng latlng) async {
+    await FirebaseFirestore.instance.collection(Constants.USER_TABLE).where(Constants.USER_ID_F, isEqualTo: user.id).get().then((value) async {
+      if(value.size==0) {
+        FirebaseFirestore.instance.collection(Constants.USER_TABLE).doc(
+            '${user.id}').set(
+            {
+              Constants.USER_NAME: user.name,
+              Constants.USER_ID_F: user.id,
+              Constants.USER_EMAIL: user.email,
+              Constants.USER_LATITUDE: latlng.latitude,
+              Constants.USER_LONGITUDE: latlng.longitude,
+            });
+      }
+    });
   }
 
 }

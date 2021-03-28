@@ -6,6 +6,7 @@ import 'package:elite_provider/global/Global.dart';
 import 'package:elite_provider/loginpages/SignUpScreen.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:location/location.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -22,7 +23,7 @@ class _LoginScreenState extends State<LoginScreen> {
   final FocusNode _passwordFocus = FocusNode();
 
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-  
+  Location location = new Location();
   var checkBoxValue=false;
 
   final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
@@ -142,8 +143,7 @@ permissionCode(Map jsonPost) async {
   var status = await Permission.location.status;
   if (status.isDenied) {
     if (await Permission.location.request().isGranted) {
-      API(context).login(jsonPost);
-      FocusScope.of(context).unfocus();
+      loginAPI(jsonPost);
     }
     else{
     print("AA");
@@ -153,11 +153,14 @@ permissionCode(Map jsonPost) async {
 // You can can also directly ask the permission about its status.
   if (await Permission.location.isRestricted) {
     if (await Permission.location.request().isGranted) {
-      API(context).login(jsonPost);
-      FocusScope.of(context).unfocus();
+      loginAPI(jsonPost);
     }
   }
 }
+  loginAPI(Map jsonPost){
+    API(context).login(jsonPost);
+    FocusScope.of(context).unfocus();
+  }
   selectSignUpTypeUI(){
     scaffoldKey.currentState
         .showBottomSheet(

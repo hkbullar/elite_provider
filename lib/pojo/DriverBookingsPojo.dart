@@ -14,11 +14,11 @@ class DriverBookingsPojo {
     this.message,
   });
 
-  List<DriverBookingsPojoBooking> booking;
+  List<DriverBookingPojo> booking;
   String message;
 
   factory DriverBookingsPojo.fromJson(Map<String, dynamic> json) => DriverBookingsPojo(
-    booking: List<DriverBookingsPojoBooking>.from(json["booking"].map((x) => DriverBookingsPojoBooking.fromJson(x))),
+    booking: List<DriverBookingPojo>.from(json["booking"].map((x) => DriverBookingPojo.fromJson(x))),
     message: json["message"],
   );
 
@@ -28,8 +28,8 @@ class DriverBookingsPojo {
   };
 }
 
-class DriverBookingsPojoBooking {
-  DriverBookingsPojoBooking({
+class DriverBookingPojo {
+  DriverBookingPojo({
     this.id,
     this.bookingId,
     this.driverId,
@@ -47,7 +47,7 @@ class DriverBookingsPojoBooking {
   DateTime updatedAt;
   List<JourneyBooking> bookings;
 
-  factory DriverBookingsPojoBooking.fromJson(Map<String, dynamic> json) => DriverBookingsPojoBooking(
+  factory DriverBookingPojo.fromJson(Map<String, dynamic> json) => DriverBookingPojo(
     id: json["id"],
     bookingId: json["booking_id"],
     driverId: json["driver_id"],
