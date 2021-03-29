@@ -142,12 +142,17 @@ class _LoginScreenState extends State<LoginScreen> {
 permissionCode(Map jsonPost) async {
   var status = await Permission.location.status;
   if (status.isDenied) {
-    if (await Permission.location.request().isGranted) {
+    if (await Permission.location.request().isGranted)
+    {
       loginAPI(jsonPost);
     }
-    else{
+    else
+    {
     print("AA");
     }
+  }
+  else{
+    loginAPI(jsonPost);
   }
 
 // You can can also directly ask the permission about its status.

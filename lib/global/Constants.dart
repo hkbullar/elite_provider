@@ -21,6 +21,24 @@ class Constants{
   static const String USER_ROLE_DRIVER="driver";
   static const String USER_ROLE_GUARD="guard";
 
+  //USER_MALE_FEMALE_VALUES
+  static const String USER_MALE = "male";
+  static const String USER_FEMALE = "female";
+  static const String USER_ME = "me";
+
+  //EDIT PROFILE KEYS
+  static const String EDIT_PROFILE_NAME = "name";
+  static const String EDIT_PROFILE_GENDER = "gender";
+  static const String EDIT_PROFILE_PHONE_NUMBER = "phone_no";
+  static const String EDIT_PROFILE_IMAGE = "profile_image";
+
+  static const String BASE_URL="https://eliteguardian.co.uk/api/";
+
+  //CHANGE PASSWORD KEYS
+  static const String CHANGE_PASSWORD_OLD="old_password";
+  static const String CHANGE_PASSWORD_NEW="new_password";
+  static const String CHANGE_PASSWORD_CONFIRM="confirm_password";
+
   //UPLOAD DOCUMENTS KEYS
   static const String DOCUMENT_USER_TYPE_GUARDIAN="gurad";
   static const String DOCUMENT_USER_TYPE_DRIVER="driver";

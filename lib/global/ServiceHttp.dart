@@ -8,7 +8,6 @@ class ServiceHttp{
   httpRequestPost(String url1,{Map map,void onSuccess(value),void onError(value)}) async{
     var token = await Global.getToken();
     var url = Uri.https(BASE_URL, "/api/"+url1, {'q': '{http}'});
-
     var response= await http.post(url,
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',

@@ -29,6 +29,7 @@ dependencies:
   dio:
   toast:
   image_picker:
+  webview_flutter:
   path_provider:
   intl:
   location:

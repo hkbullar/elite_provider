@@ -109,9 +109,11 @@ class API{
         });
   }
 
-  getDriverRequests({void onSuccess(List<DriverBookingPojo> booking)}){
+  getDriverRequests(bool isAccepted,{void onSuccess(List<DriverBookingPojo> booking)}){
     Map<String, dynamic> jsonPost =
-    {};
+    {
+      "status": isAccepted?1:0,
+    };
     ServiceHttp().httpRequestPost("getDriverBooking",map: jsonPost,
         onSuccess: (value){
           DriverBookingsPojo bookingsPojo= DriverBookingsPojo.fromJson(json.decode(value));
@@ -120,9 +122,11 @@ class API{
           CommonWidgets.showMessage(context, ErrorPojo.fromJson(json.decode(value)).errors.error[0]);
         });
   }
-  getGuardianRequests({void onSuccess(List<GuardianBookingPojo> booking)}){
+  getGuardianRequests(bool isAccepted,{void onSuccess(List<GuardianBookingPojo> booking)}){
     Map<String, dynamic> jsonPost =
-    {};
+    {
+      "status": isAccepted?1:0,
+    };
     ServiceHttp().httpRequestPost("getGuardBooking",map: jsonPost,
         onSuccess: (value){
           GuardianBookingsPojo bookingsPojo= GuardianBookingsPojo.fromJson(json.decode(value));
@@ -186,6 +190,30 @@ class API{
             });
       }
     });
-  }
 
+
+  }
+  changePassword(Map jsonPost){
+    PLoader loader=PLoader(context);
+    loader.show();
+    ServiceHttp().httpRequestPost("change-password-user",map: jsonPost,
+        onSuccess: (value) async {
+          loader.hide();
+          Map<String, dynamic> map = json.decode(value);
+          int status=map["status"];
+          if(status==200 || status==201)
+          {
+            Global.toast(context, "Password Changed Successfully");
+            Navigator.of(context).pop();
+          }
+          else
+          {
+            CommonWidgets.showMessage(context,map["message"]);
+          }
+        }, onError: (value) {
+          loader.hide();
+          Map<String, dynamic> map = json.decode(value);
+          CommonWidgets.showMessage(context,map["error"]);
+        });
+  }
 }

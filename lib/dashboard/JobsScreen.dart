@@ -24,6 +24,8 @@ class _JobsScreenState extends State<JobsScreen> {
   bool isGuard=false;
   List<GuardianBookingPojo> guardianBooking;
   List<DriverBookingPojo> journeyBooking;
+  bool isJobs=true;
+  bool _loading = true;
   @override
   void initState() {
     _getRequests();
@@ -35,7 +37,7 @@ class _JobsScreenState extends State<JobsScreen> {
         backgroundColor: Colors.transparent,
         body: Padding(
             padding: const EdgeInsets.all(25.0),
-            child: _listOfData() //Center(child: Text("Driver's all Jobs schedule will appear here as list",textAlign: TextAlign.center,style: TextStyle(color: AppColours.white,fontSize: 22),)),
+            child: isJobs? _loading?Center(child: CommonWidgets.loader(context)):_listOfData(): Center(child: Text("No Jobs Accepted Yet",textAlign: TextAlign.center,style: TextStyle(color: AppColours.white,fontSize: 22),)),
         )
     );
   }
@@ -74,7 +76,7 @@ class _JobsScreenState extends State<JobsScreen> {
                                 isGuard?CommonWidgets.selectedFontWidget("From: ${Global.generateDate(guardianBooking[index].bookings[0].fromDate)} "
                                     "To: ${Global.generateDate(guardianBooking[index].bookings[0].toDate)}\n"
                                     "Timings: ${Global.formatTime(guardianBooking[index].bookings[0].fromTime)}To"
-                                    " ${Global.formatTime(guardianBooking[index].bookings[0].toTime)}\n${guardianBooking[index].bookings[0].selectDays}",
+                                    " ${Global.formatTime(guardianBooking[index].bookings[0].toTime)}\n${guardianBooking[index].bookings[0].selectDays.toString()}",
                                     AppColours.black, 15.0,FontWeight.bold):
                                 CommonWidgets.selectedFontWidget("${Global.generateDate(journeyBooking[index].bookings[0].date)} at ${Global.formatTime(journeyBooking[index].bookings[0].time)}", AppColours.black, 15.0,FontWeight.bold),
                               ],
@@ -104,11 +106,24 @@ class _JobsScreenState extends State<JobsScreen> {
 listItemClick(JourneyBooking journeyBooking,GuardianBooking guardianBooking) async {
 
   if(isGuard){
-    await  Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) => JobDetailsScreen(null,guardianBooking))).then((value) =>
-    {widget.onClick(null,guardianBooking,isGuard)});
+    await  Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) => JobDetailsScreen(null,guardianBooking,isGuard))).then((value) =>
+    {
+      if(value!=null){
+        if(value){
+          widget.onClick(null,guardianBooking,isGuard)
+        }
+      }
+
+    });
   }else{
-   await Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) => JobDetailsScreen(journeyBooking,null))).then((value) =>
-   {widget.onClick(journeyBooking,null,isGuard)});
+   await Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) => JobDetailsScreen(journeyBooking,null,isGuard))).then((value) =>
+   {
+     if(value!=null){
+       if(value){
+         widget.onClick(journeyBooking,null,isGuard)
+       }
+     }
+   });
   }
 }
 
@@ -116,25 +131,37 @@ listItemClick(JourneyBooking journeyBooking,GuardianBooking guardianBooking) asy
     Global.userType().then((value){
       if(value==Constants.USER_ROLE_DRIVER){
         isGuard=false;
-        API(context).getDriverRequests(onSuccess: (value){
-          if(value!=null && value.isNotEmpty){
-                setState(() {
-                  journeyBooking=value;
-                });
-          }
+        API(context).getDriverRequests(true,onSuccess: (value){
+          setState(() {
+            _loading=false;
+            if(value!=null && value.isNotEmpty){
+              isJobs=true;
+              journeyBooking=value;
+            }
+            else{
+              isJobs=false;
+            }
+          });
+
         });
       }
       else if(value==Constants.USER_ROLE_GUARD){
         isGuard=true;
-        API(context).getGuardianRequests(onSuccess: (value){
+        API(context).getGuardianRequests(true,onSuccess: (value){
+          setState(() {
+          _loading=false;
           if(value!=null && value.isNotEmpty){
-                setState(() {
+                  isJobs=true;
                   guardianBooking=value;
-                });
           }
+          else{
+            isJobs=false;
+          }
+          });
         });
       }
     });
   }
+
   }
 

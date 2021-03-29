@@ -36,6 +36,7 @@ GuardianBooking guardianBooking;
 bool isBooking=false;
 bool isGuard=false;
 bool isDisposed=false;
+bool isSheetLoading=false;
 
 LatLng currentPostion;
 
@@ -182,7 +183,7 @@ Widget buildSheet() {
                     mainAxisAlignment: MainAxisAlignment.center,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text('New Request (\$${journeyBooking.price})',style: TextStyle(color: AppColours.white,fontSize: 18,fontWeight: FontWeight.bold)),
+                      Text('New Request (\$${isGuard?guardianBooking.price:journeyBooking.price})',style: TextStyle(color: AppColours.white,fontSize: 18,fontWeight: FontWeight.bold)),
                       Text('Pull me up please',style: TextStyle(color: AppColours.white,fontSize: 12)),
                     ],
                   ),
@@ -284,10 +285,10 @@ Widget buildChild(BuildContext context, SheetState state) {
           isGuard?CommonWidgets.requestTextContainer("Timing","${Global.formatTime(guardianBooking.fromTime)} To: ${Global.formatTime(guardianBooking.toTime)}",Icons.time_to_leave_outlined):SizedBox(),
           isGuard?CommonWidgets.requestTextContainer("Working Days","${guardianBooking.selectDays}",Icons.view_week_outlined):SizedBox(),
 
-          journeyBooking.comment.isNotEmpty && guardianBooking.comment.isNotEmpty?CommonWidgets.requestTextContainer("Comments",isGuard?guardianBooking.comment:journeyBooking.comment,Icons.comment_bank_outlined):SizedBox(),
+          commentBoxText()!=null?CommonWidgets.requestTextContainer("Comments",commentBoxText(),Icons.comment_bank_outlined):SizedBox(),
 
           SizedBox(height: 10),
-          Row(
+          isSheetLoading?Padding(padding: EdgeInsets.all(15),child: Center(child: CommonWidgets.loader(context))):Row(
             children: [
               Expanded(child: RaisedButton(
                 color: Colors.red,
@@ -325,12 +326,35 @@ Widget buildChild(BuildContext context, SheetState state) {
 }
 
 driverGuardAcceptReject(bool isRejected,bool isGuardian,int bookingId,int id){
+  setState(() {
+    isSheetLoading=true;
+  });
   API(context).journeyAcceptReject(isRejected, isGuardian, bookingId,driverGuardID: id,onSuccess: (){
     controller.hide();
+    setState(() {
+      isSheetLoading=false;
+    });
     getRequests();
   });
 }
-
+String commentBoxText(){
+  if(isGuard){
+    if(guardianBooking.comment!=null && guardianBooking.comment.isNotEmpty){
+      return guardianBooking.comment;
+    }
+    else{
+      return null;
+    }
+  }
+  else{
+    if(journeyBooking.comment!=null && journeyBooking.comment.isNotEmpty){
+      return journeyBooking.comment;
+    }
+    else{
+      return null;
+    }
+  }
+}
 showServiceDialog(BuildContext context) {
   // Create button
   Widget okButton = TextButton(
@@ -338,7 +362,8 @@ showServiceDialog(BuildContext context) {
     onPressed: () {
       setState(() {
         ifOnline=!ifOnline;
-        API(context).goOnlineOffline(ifOnline,onSuccess: (isOnline) async {
+        API(context).goOnlineOffline(ifOnline,onSuccess: (isOnline) async
+        {
             SharedPreferences preferences =await Global.getSharedPref();
             preferences.setBool(Constants.ISONLINE, isOnline);
         });
@@ -375,13 +400,15 @@ getRequests(){
   Global.userType().then((value){
     if(value==Constants.USER_ROLE_DRIVER){
       isGuard=false;
-      API(context).getDriverRequests(onSuccess: (value){
+      API(context).getDriverRequests(false,onSuccess: (value){
         if(value!=null){
           if(value.isNotEmpty){
             if(!isDisposed){
               setState(() {
+
                 journeyBooking=value[0].bookings[0];
                 isBooking=true;
+                controller.show();
               });
             }
           }
@@ -395,13 +422,14 @@ getRequests(){
     }
     else if(value==Constants.USER_ROLE_GUARD){
       isGuard=true;
-      API(context).getGuardianRequests(onSuccess: (value){
+      API(context).getGuardianRequests(false,onSuccess: (value){
         if(value!=null){
           if(value.isNotEmpty){
             if(!isDisposed){
               setState(() {
                 guardianBooking=value[0].bookings[0];
                 isBooking=true;
+                controller.show();
               });
             }
           }

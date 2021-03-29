@@ -95,7 +95,7 @@ class GuardianBooking {
   int price;
   int status;
   String comment;
-  String selectDays;
+  List<String> selectDays;
   DateTime createdAt;
   DateTime updatedAt;
 
@@ -112,7 +112,7 @@ class GuardianBooking {
     price: json["price"],
     status: json["status"],
     comment: json["comment"],
-    selectDays: json["select_days"],
+    selectDays: List<String>.from(json["select_days"].map((x) => x)),
     createdAt: DateTime.parse(json["created_at"]),
     updatedAt: DateTime.parse(json["updated_at"]),
   );
@@ -130,7 +130,7 @@ class GuardianBooking {
     "price": price,
     "status": status,
     "comment": comment,
-    "select_days": selectDays,
+    "select_days": List<dynamic>.from(selectDays.map((x) => x)),
     "created_at": createdAt.toIso8601String(),
     "updated_at": updatedAt.toIso8601String(),
   };

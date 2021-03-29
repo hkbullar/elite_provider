@@ -12,32 +12,19 @@ import 'package:flutter/material.dart';
 
 class JobDetailsScreen extends StatefulWidget
 {
-  JobDetailsScreen(this.journeyBooking,this.guardianBooking);
-  JourneyBooking journeyBooking;
-  GuardianBooking guardianBooking;
-  @override
-  _JobDetailsScreenState createState() => _JobDetailsScreenState(guardianBooking: guardianBooking,journeyBooking: journeyBooking);
-}
-
-class _JobDetailsScreenState extends State<JobDetailsScreen> {
-  _JobDetailsScreenState({this.journeyBooking,this.guardianBooking});
+  JobDetailsScreen(this.journeyBooking,this.guardianBooking,this.isGuard);
   JourneyBooking journeyBooking;
   GuardianBooking guardianBooking;
   bool isGuard=false;
   @override
-  void initState() {
-    Global.userType().then((value){
-      setState(() {
-        if(value==Constants.USER_ROLE_DRIVER){
-          isGuard=false;
-        }
-        else if(value==Constants.USER_ROLE_GUARD){
-          isGuard=true;
-        }
-      });
-    });
-    super.initState();
-  }
+  _JobDetailsScreenState createState() => _JobDetailsScreenState(guardianBooking: guardianBooking,journeyBooking: journeyBooking,isGuard: isGuard);
+}
+
+class _JobDetailsScreenState extends State<JobDetailsScreen> {
+  _JobDetailsScreenState({this.journeyBooking,this.guardianBooking,this.isGuard});
+  JourneyBooking journeyBooking;
+  GuardianBooking guardianBooking;
+  bool isGuard=false;
 
   @override
   Widget build(BuildContext context) {
@@ -51,7 +38,7 @@ class _JobDetailsScreenState extends State<JobDetailsScreen> {
             children: [
               isGuard?CommonWidgets.requestTextContainer("For",guardianBooking.location,Icons.location_on_outlined):
               CommonWidgets.requestTextContainer("From",journeyBooking.destinationLocation,Icons.location_on_outlined),
-              CommonWidgets.requestTextContainer("To",journeyBooking.arrivalLocation,Icons.location_on_outlined),
+              !isGuard?CommonWidgets.requestTextContainer("To",journeyBooking.arrivalLocation,Icons.location_on_outlined):SizedBox(),
 
               isGuard?CommonWidgets.requestTextContainer("Date","From: ${Global.generateDate(guardianBooking.fromDate)} To: ${Global.generateDate(guardianBooking.toDate)}",Icons.date_range_outlined):
               CommonWidgets.requestTextContainer("Date",Global.generateDate(journeyBooking.date),Icons.date_range_outlined),
@@ -59,18 +46,38 @@ class _JobDetailsScreenState extends State<JobDetailsScreen> {
               isGuard?CommonWidgets.requestTextContainer("Timings","${Global.formatTime(guardianBooking.fromTime)} To ${Global.formatTime(guardianBooking.toTime)}",Icons.time_to_leave_outlined):
               CommonWidgets.requestTextContainer("Time","${Global.formatTime(journeyBooking.time)}",Icons.time_to_leave_outlined),
 
-              CommonWidgets.requestTextContainer("Comments",isGuard?guardianBooking.comment.isNotEmpty?guardianBooking.comment:"No Comments":journeyBooking.comment.isNotEmpty?journeyBooking.comment:"No Comments",Icons.comment_bank_outlined),
+              isGuard?CommonWidgets.requestTextContainer("Working Days:","${guardianBooking.selectDays.toString()}",Icons.view_week_outlined):
+
+              commentBoxText()!=null?CommonWidgets.requestTextContainer("Comments",commentBoxText(),Icons.comment_bank_outlined):SizedBox(),
 
               CommonWidgets.requestTextContainer("Price","${isGuard?guardianBooking.price:journeyBooking.price}",Icons.attach_money),
               SizedBox(height: 10),
               CommonWidgets.goldenFullWidthButton("Start Job",onClick: (){
 
-                Navigator.pop(context, isGuard?guardianBooking:journeyBooking);
+                Navigator.pop(context,true);
               })
             ],
           ),
         ),
       )
     );
+  }
+  String commentBoxText(){
+    if(isGuard){
+      if(guardianBooking.comment!=null && guardianBooking.comment.isNotEmpty){
+        return guardianBooking.comment;
+      }
+      else{
+        return null;
+      }
+    }
+    else{
+      if(journeyBooking.comment!=null && journeyBooking.comment.isNotEmpty){
+        return journeyBooking.comment;
+      }
+      else{
+        return null;
+      }
+    }
   }
 }

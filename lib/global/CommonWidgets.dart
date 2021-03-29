@@ -57,7 +57,12 @@ class CommonWidgets{
      },
    );
  }
-
+static Widget loader(BuildContext context)
+ {
+   return  CircularProgressIndicator(
+     valueColor: AlwaysStoppedAnimation<Color>(AppColours.golden_button_bg),
+   );
+ }
  static Widget goldenFullWidthButton(String text,{Function onClick})
  {
    return Row(
