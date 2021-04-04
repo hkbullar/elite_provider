@@ -54,6 +54,13 @@ class Constants{
   static const String REQUEST_AR_DRIVER_ID="driver_id";
   static const String REQUEST_AR_GUARDIAN_ID="guard_id";
 
+  //JOB START COMPLETE KEYS
+  //static const String JOB_SC_GUARD_ID="booking_id";
+  static const String JOB_SC_DRIVER_ID="driver_id";
+  static const String JOB_SC_JOB_STATUS="start_job";
+  static const String JOB_SC_CREATED_BY="created_by";
+  static const String JOB_SC_BOOKING_ID="booking_id";
+
   static const String SEARCH_USER = "search";
   //CREATE COMMENT KEYS
   static const String COMMENT_USER_ID = "user_id";
@@ -147,6 +154,11 @@ class Constants{
   static const String USER_COMMUNITIES ="my_communities";
   static const String USER_STATUS_ONLINE ="Online";
   static const String USER_STATUS_OFFLINE ="Offline";
+
+  //UPDATE LOCATION API KEYS
+  static const String UPDATE_L_USER_ID ="id";
+  static const String UPDATE_L_LATITUDE ="lat";
+  static const String UPDATE_L_LONGITUDE ="long";
 
   //FIREBASE COMMUNITY OBJECT KEYS
   static const String COM_ID_F ="com_id";

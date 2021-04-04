@@ -6,6 +6,7 @@ import 'package:elite_provider/global/Constants.dart';
 import 'package:elite_provider/global/EliteAppBar.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 class SignUpScreen extends StatefulWidget {
  final int userType;
@@ -183,16 +184,18 @@ _signUpClick() {
   if(userType==3){userTypeText=Constants.USER_TYPE_GUARDIAN;}
 
   if (CommonWidgets.isValidate(_formKey)) {
-    Map jsonPost = {
+    Map jsonPost =
+    {
       Constants.NAME: _nameController.text,
       Constants.EMAIL: _emailController.text,
       Constants.PASSWORD: _passwordController.text,
       Constants.USER_TYPE: userTypeText,
     };
     print(jsonPost);
-    API(context).register(jsonPost,userType);
+    permissionCode(jsonPost);
   }
 }
+
   Widget maleFemaleButton(int defButtonValue,String text,String image){
     return Expanded(
       child: InkWell(
@@ -220,5 +223,24 @@ _signUpClick() {
   _fieldFocusChange(BuildContext context, FocusNode currentFocus,FocusNode nextFocus) {
     currentFocus.unfocus();
     FocusScope.of(context).requestFocus(nextFocus);
+  }
+  permissionCode(Map jsonPost) async {
+    var status = await Permission.location.status;
+    if (status.isDenied) {
+      if (await Permission.location.request().isGranted)
+      {
+        API(context).register(jsonPost,userType);
+      }
+    }
+    else{
+      API(context).register(jsonPost,userType);
+    }
+
+// You can can also directly ask the permission about its status.
+    if (await Permission.location.isRestricted) {
+      if (await Permission.location.request().isGranted) {
+        API(context).register(jsonPost,userType);
+      }
+    }
   }
 }

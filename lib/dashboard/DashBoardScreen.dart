@@ -23,6 +23,7 @@ class DashBoardScreen extends StatefulWidget
 
 class _DashBoardScreenState extends State<DashBoardScreen> {
   int _selectedIndex = 0;
+
   JobsScreen jobsScreen;
 
   List<String> titleList;
@@ -56,7 +57,8 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context)
+  {
     return WillPopScope(
       onWillPop: _onWillPop,
       child: Scaffold(
@@ -96,7 +98,7 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
                           ),
                         ),
                         Padding(
-                          padding: const EdgeInsets.only(left: 10,),
+                          padding: EdgeInsets.only(left: 10),
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             mainAxisAlignment: MainAxisAlignment.start,
@@ -111,6 +113,7 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
                   ),
                 ),
                 Container(height: 0.5,color: AppColours.dark_grey),
+
                 sideBarItem(Icons.home_outlined, 0),
                 sideBarItem(Icons.person_outline, 1),
                 sideBarItem(Icons.schedule_outlined, 2),
@@ -129,8 +132,7 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
 
   Widget sideBarItem(IconData icon,int index){
     return InkWell(
-      onTap: (){
-        _onItemTapped(index); },
+      onTap: (){  _onItemTapped(index); },
       child: Container(
         color: _selectedIndex==index?AppColours.golden_button_bg:Colors.transparent,
         child: Column(
@@ -139,7 +141,7 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
               padding: EdgeInsets.all(5),
               child: ListTile(
                 leading: Icon(icon,color: _selectedIndex==index?AppColours.white:AppColours.golden_button_bg),
-                title: Text(titleList[index],style: TextStyle(color: AppColours.white),),
+                title: Text(titleList[index],style: TextStyle(color: AppColours.white)),
               ),
             ),
             Container(
@@ -151,6 +153,7 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
       ),
     );
   }
+
   showLogOutDialog(BuildContext context) {
     // Create button
     Widget okButton = TextButton(
@@ -210,9 +213,11 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
       },
     );
   }
+
   Future<bool> _onWillPop() async {
     return (await showExitDialog(context)) ?? false;
   }
+
   void _onItemTapped(int index,{bool noPop}) {
     if(noPop==null){
       Navigator.of(context).pop();
@@ -229,6 +234,5 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
       {
       showLogOutDialog(context);
     }
-
   }
 }

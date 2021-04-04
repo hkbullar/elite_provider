@@ -26,6 +26,7 @@ class _JobsScreenState extends State<JobsScreen> {
   List<DriverBookingPojo> journeyBooking;
   bool isJobs=true;
   bool _loading = true;
+  
   @override
   void initState() {
     _getRequests();
@@ -113,7 +114,6 @@ listItemClick(JourneyBooking journeyBooking,GuardianBooking guardianBooking) asy
           widget.onClick(null,guardianBooking,isGuard)
         }
       }
-
     });
   }else{
    await Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) => JobDetailsScreen(journeyBooking,null,isGuard))).then((value) =>
@@ -142,7 +142,6 @@ listItemClick(JourneyBooking journeyBooking,GuardianBooking guardianBooking) asy
               isJobs=false;
             }
           });
-
         });
       }
       else if(value==Constants.USER_ROLE_GUARD){
@@ -162,6 +161,5 @@ listItemClick(JourneyBooking journeyBooking,GuardianBooking guardianBooking) asy
       }
     });
   }
-
   }
 

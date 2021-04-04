@@ -1,4 +1,5 @@
 
+import 'package:elite_provider/global/API.dart';
 import 'package:elite_provider/global/AppColours.dart';
 import 'package:elite_provider/global/CommonWidgets.dart';
 import 'package:elite_provider/global/Constants.dart';
@@ -52,9 +53,9 @@ class _JobDetailsScreenState extends State<JobDetailsScreen> {
 
               CommonWidgets.requestTextContainer("Price","${isGuard?guardianBooking.price:journeyBooking.price}",Icons.attach_money),
               SizedBox(height: 10),
-              CommonWidgets.goldenFullWidthButton("Start Job",onClick: (){
-
-                Navigator.pop(context,true);
+              CommonWidgets.goldenFullWidthButton("Start Job",onClick: ()
+              {
+                startJob();
               })
             ],
           ),
@@ -62,22 +63,38 @@ class _JobDetailsScreenState extends State<JobDetailsScreen> {
       )
     );
   }
-  String commentBoxText(){
-    if(isGuard){
-      if(guardianBooking.comment!=null && guardianBooking.comment.isNotEmpty){
+
+  String commentBoxText()
+  {
+    if(isGuard)
+    {
+      if(guardianBooking.comment!=null && guardianBooking.comment.isNotEmpty)
+      {
         return guardianBooking.comment;
       }
-      else{
+      else
+      {
         return null;
       }
     }
-    else{
-      if(journeyBooking.comment!=null && journeyBooking.comment.isNotEmpty){
+    else
+      {
+      if(journeyBooking.comment!=null && journeyBooking.comment.isNotEmpty)
+      {
         return journeyBooking.comment;
       }
-      else{
+      else
+      {
         return null;
       }
     }
+  }
+
+  startJob()
+  {
+      API(context).jobStartComplete(true, isGuard,isGuard?guardianBooking.userId:journeyBooking.userId,isGuard?guardianBooking.id:journeyBooking.id,onSuccess: ()
+      {
+        Navigator.pop(context,true);
+      });
   }
 }

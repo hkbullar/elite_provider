@@ -21,6 +21,7 @@ class CommonWidgets{
       hintText: text,
     );
   }
+
  //check the validation
  static bool isValidate(GlobalKey<FormState> formKey) {
    final FormState form = formKey.currentState;
@@ -31,16 +32,14 @@ class CommonWidgets{
    }
  }
 
-  static Widget settingsIcon(IconData icon){
+  static Widget settingsIcon(IconData icon)
+  {
    return Container(
        padding: EdgeInsets.all(10),
        decoration: BoxDecoration(
          color: AppColours.black,
-         borderRadius: BorderRadius.circular(100),),
-       child: Icon(
-         icon,
-         color: AppColours.golden_button_bg,
-       ));
+         borderRadius: BorderRadius.circular(100)),
+       child: Icon(icon,color: AppColours.golden_button_bg));
   }
 
  static Widget networkImage(String image){
@@ -50,19 +49,20 @@ class CommonWidgets{
        return Center(
          child: CircularProgressIndicator(
            value: loadingProgress.expectedTotalBytes != null ?
-           loadingProgress.cumulativeBytesLoaded / loadingProgress.expectedTotalBytes
-               : null,
+           loadingProgress.cumulativeBytesLoaded / loadingProgress.expectedTotalBytes: null,
          ),
        );
      },
    );
  }
+
 static Widget loader(BuildContext context)
  {
    return  CircularProgressIndicator(
      valueColor: AlwaysStoppedAnimation<Color>(AppColours.golden_button_bg),
    );
  }
+
  static Widget goldenFullWidthButton(String text,{Function onClick})
  {
    return Row(
@@ -88,9 +88,8 @@ static Widget loader(BuildContext context)
    // Create button
    Widget okButton = TextButton(
      child: Text("OK",style: TextStyle(color: AppColours.golden_button_bg,fontSize: 16)),
-     onPressed: () {
-       Navigator.of(context).pop();
-     },
+     onPressed: ()
+     {Navigator.of(context).pop();},
    );
    // Create AlertDialog
    AlertDialog alert = AlertDialog(
@@ -105,6 +104,7 @@ static Widget loader(BuildContext context)
      },
    );
  }
+
  static Widget blackFullWidthButton(String text,{Function onClick})
  {
    return Row(
@@ -119,11 +119,12 @@ static Widget loader(BuildContext context)
                onPressed: onClick),
          )]);
  }
+
  static Widget requestTextContainer(String title,String text,IconData icon){
    return Column(
      crossAxisAlignment: CrossAxisAlignment.start,
      children: [
-       SizedBox(height: 10,),
+       SizedBox(height: 10),
        Padding(
          padding: const EdgeInsets.only(left: 6,bottom: 6),
          child: Text(title,style: TextStyle(color: AppColours.white,fontSize: 16),),
@@ -154,7 +155,4 @@ static Widget loader(BuildContext context)
    return Text(title, style: new TextStyle( fontSize: fontSize,color: textColor,
        fontFamily: "Lato",fontWeight: _boldOrNot));
  }
-
-
-
 }

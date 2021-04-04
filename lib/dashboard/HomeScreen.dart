@@ -6,12 +6,15 @@ import 'package:elite_provider/global/AppColours.dart';
 import 'package:elite_provider/global/CommonWidgets.dart';
 import 'package:elite_provider/global/Constants.dart';
 import 'package:elite_provider/global/Global.dart';
+import 'package:elite_provider/pojo/CurrentJobPojo.dart';
+import 'package:elite_provider/pojo/CurrentJourneyPojo.dart';
 import 'package:elite_provider/pojo/DriverBookingsPojo.dart';
 import 'package:elite_provider/pojo/GuardianBookingsPojo.dart';
 import 'package:elite_provider/pojo/User.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:location/location.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sliding_sheet/sliding_sheet.dart';
 
@@ -25,63 +28,96 @@ class HomeScreen extends StatefulWidget
 }
 
 class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
-bool ifOnline=false;
-
-JourneyBooking liveJourneyBooking;
-GuardianBooking liveGuardianBooking;
 
 JourneyBooking journeyBooking;
 GuardianBooking guardianBooking;
 
+CurrentJobPojo _currentJobPojo;
+CurrentJourneyPojo _currentJourneyPojo;
+
 bool isBooking=false;
 bool isGuard=false;
 bool isDisposed=false;
+bool isCurrentJob=false;
 bool isSheetLoading=false;
+bool ifOnline=false;
 
 LatLng currentPostion;
 
 SheetController controller = SheetController();
-  SheetController currentJobController = SheetController();
+SheetController currentJobController = SheetController();
+
 CameraPosition _kGooglePlex = CameraPosition(
-  target: LatLng(37.42796133580664, -122.085749655962),
+  target: LatLng(37.42796133580664,-122.085749655962),
   zoom: 14.4746,
 );
 
 Completer<GoogleMapController> _controller = Completer();
 Timer timer;
 
-@override
-  void initState() {
+  @override
+  void initState()
+  {
   isDisposed=false;
-  Global.isOnline().then((isOnline) {
+  Global.isOnline().then((isOnline)
+  {
     if(isOnline)
-      setState(() {
-        ifOnline=isOnline;
-        startTimer();
+    {
+      Location().onLocationChanged.listen((LocationData currentLocation)
+      {
+        API(context).updateUserLocation(currentLocation);
       });
+
+      Global.userType().then((value)
+      {
+        if(value==Constants.USER_ROLE_DRIVER)
+        {
+          setState(()
+          {
+            isGuard=false;
+            ifOnline=isOnline;
+            startTimer();
+            getCurrentJob();
+          });
+        }
+        if(value==Constants.USER_ROLE_GUARD)
+        {
+          isGuard=true;
+          ifOnline=isOnline;
+          startTimer();
+          getCurrentJob();
+        }
+      });
+    }
   });
   WidgetsBinding.instance.addObserver(this);
     super.initState();
 }
-
-startTimer(){
-  timer= Timer.periodic(Duration(seconds: 5), (timer) {
-    Global.isOnline().then((isOnline) {
-      if(isOnline){
+startTimer()
+{
+  timer= Timer.periodic(Duration(seconds: 5), (timer)
+  {
+    Global.isOnline().then((isOnline)
+    {
+      if(isOnline)
+      {
         getRequests();
       }
     });
   });
 }
 
-stopTimer(){
-  if(timer!=null){
+stopTimer()
+{
+  if(timer!=null)
+  {
     timer.cancel();
   }
 }
 
   @override
-  void dispose() {
+  void dispose()
+  {
     isDisposed=true;
     stopTimer();
     WidgetsBinding.instance.removeObserver(this);
@@ -92,7 +128,7 @@ stopTimer(){
 void didChangeAppLifecycleState(AppLifecycleState state)
 {
   print('state = $state');
-  if( state==AppLifecycleState.resumed)
+  if(state==AppLifecycleState.resumed)
  {
    startTimer();
  }
@@ -103,7 +139,8 @@ void didChangeAppLifecycleState(AppLifecycleState state)
 }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context)
+  {
     return Scaffold(
         resizeToAvoidBottomInset: false,
         body: Stack(
@@ -111,7 +148,8 @@ void didChangeAppLifecycleState(AppLifecycleState state)
           GoogleMap(
             mapType: MapType.normal,
             initialCameraPosition: _kGooglePlex,
-            onMapCreated: (GoogleMapController controller) {
+            onMapCreated: (GoogleMapController controller)
+            {
               _controller.complete(controller);
               _getUserLocation();
             },
@@ -140,14 +178,15 @@ void didChangeAppLifecycleState(AppLifecycleState state)
                     });
                 }),
           ),
-          liveJourneyBooking!=null || liveGuardianBooking!=null?currentJobSheet():SizedBox(),
+          isCurrentJob?currentJobSheet():SizedBox(),
           isBooking?buildSheet():SizedBox()
         ],
       )
     );
   }
 
-Widget buildSheet() {
+Widget buildSheet()
+{
   return SlidingSheet(
     duration: Duration(milliseconds: 600),
     color: Colors.white,
@@ -162,11 +201,13 @@ Widget buildSheet() {
       snap: true,
       positioning: SnapPositioning.relativeToAvailableSpace,
       snappings: const [SnapSpec.headerFooterSnap,0.6,SnapSpec.expanded],
-      onSnap: (state, snap) {
-       // print('Snapped to $snap');
+      onSnap: (state, snap)
+      {
+        print('Snapped to $snap');
       },
     ),
-    headerBuilder: (context, state) {
+    headerBuilder: (context, state)
+    {
       return Container(
         height: 70,
         color: AppColours.golden_button_bg,
@@ -194,7 +235,7 @@ Widget buildSheet() {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [
-                      Icon(Icons.keyboard_arrow_up,color: AppColours.white,size: 35,),
+                      Icon(Icons.keyboard_arrow_up,color: AppColours.white,size: 35),
                       SizedBox(width: 10)
                     ],
                   ),
@@ -208,7 +249,9 @@ Widget buildSheet() {
     builder: buildChild,
   );
 }
-  Widget currentJobSheet() {
+
+  Widget currentJobSheet()
+  {
     return SlidingSheet(
       duration: Duration(milliseconds: 600),
       color: Colors.white,
@@ -227,7 +270,8 @@ Widget buildSheet() {
           // print('Snapped to $snap');
         },
       ),
-      headerBuilder: (context, state) {
+      headerBuilder: (context, state)
+      {
         return Container(
           height: 140,
           color: AppColours.golden_button_bg,
@@ -235,10 +279,19 @@ Widget buildSheet() {
           child: Padding(
             padding: EdgeInsets.all(20),
             child: Column(
-              children: [
-                Text("${isGuard?"Location":"Source"}: ${isGuard?liveGuardianBooking.location:liveJourneyBooking.destinationLocation}",style: TextStyle(color: AppColours.black,fontSize: 16,fontWeight: FontWeight.bold)),
+              children:
+              [
+                Text("${isGuard?"Location":"Source"}: ${isGuard?_currentJobPojo.currentJob.bookings.destinationLocation:_currentJourneyPojo.currentJob.bookings.destinationLocation}",style: TextStyle(color: AppColours.black,fontSize: 16,fontWeight: FontWeight.bold)),
                 SizedBox(height: 10),
-                isGuard?SizedBox(): Text("Destination: ${liveJourneyBooking.arrivalLocation}",style: TextStyle(color: AppColours.black,fontSize: 16,fontWeight: FontWeight.bold)),
+                isGuard?SizedBox(): Text("Destination: ${_currentJourneyPojo.currentJob.bookings.destinationLocation}",style: TextStyle(color: AppColours.black,fontSize: 16,fontWeight: FontWeight.bold)),
+                SizedBox(height: 10),
+                CommonWidgets.goldenFullWidthButton("Complete Job",onClick: (){
+
+                    API(context).jobStartComplete(false, isGuard,isGuard?_currentJobPojo.currentJob.bookings.userId:_currentJourneyPojo.currentJob.bookings.userId,isGuard?_currentJobPojo.currentJob.bookings.id:_currentJourneyPojo.currentJob.bookings.id,onSuccess: ()
+                    {
+                      getCurrentJob();
+                    });
+                })
               ],
             ),
           ),
@@ -248,21 +301,22 @@ Widget buildSheet() {
     );
   }
 
-  Widget currentJobSheetChild(BuildContext context, SheetState state) {
+  Widget currentJobSheetChild(BuildContext context, SheetState state)
+  {
   return Container(
     color: AppColours.golden_button_bg,
     padding: EdgeInsets.all(20),
     child: Column(
-      children: [
-        CommonWidgets.blackFullWidthButton("COMPLETE JOB",onClick: ()
-        {
-
-        }),
+      children:
+      [
+        CommonWidgets.blackFullWidthButton("COMPLETE JOB",onClick: (){}),
       ],
     ),
   );
-  }
-Widget buildChild(BuildContext context, SheetState state) {
+}
+
+Widget buildChild(BuildContext context, SheetState state)
+{
   return Container(
     color: AppColours.black,
     child: Padding(
@@ -299,12 +353,14 @@ Widget buildChild(BuildContext context, SheetState state) {
                     padding: EdgeInsets.all(12.0),
                     child: Text("Reject",style: TextStyle(color: AppColours.white,fontSize: 18),),
                   ),
-                  onPressed: (){
+                  onPressed: ()
+                  {
                     Global.getUser().then((value) async {
                       User user = User.fromJson(json.decode(value));
                       driverGuardAcceptReject(true, isGuard, isGuard?guardianBooking.id:journeyBooking.id,user.id);
                     });
                   })),
+
               SizedBox(width: 20),
               Expanded(child: RaisedButton(
                   color: Colors.green,
@@ -314,7 +370,8 @@ Widget buildChild(BuildContext context, SheetState state) {
                   child: Padding(
                     padding: EdgeInsets.all(12.0),
                     child: Text("Accept",style: TextStyle(color: AppColours.white,fontSize: 18))),
-                  onPressed: (){
+                  onPressed: ()
+                  {
                     driverGuardAcceptReject(false, isGuard, isGuard?guardianBooking.id:journeyBooking.id,0);
                   })),
             ],
@@ -325,49 +382,67 @@ Widget buildChild(BuildContext context, SheetState state) {
   );
 }
 
-driverGuardAcceptReject(bool isRejected,bool isGuardian,int bookingId,int id){
-  setState(() {
+driverGuardAcceptReject(bool isRejected,bool isGuardian,int bookingId,int id)
+{
+  setState(()
+  {
     isSheetLoading=true;
   });
-  API(context).journeyAcceptReject(isRejected, isGuardian, bookingId,driverGuardID: id,onSuccess: (){
+
+  API(context).journeyAcceptReject(isRejected, isGuardian, bookingId,driverGuardID: id,onSuccess: ()
+  {
     controller.hide();
-    setState(() {
+    setState(()
+    {
       isSheetLoading=false;
     });
     getRequests();
   });
 }
-String commentBoxText(){
-  if(isGuard){
-    if(guardianBooking.comment!=null && guardianBooking.comment.isNotEmpty){
+
+String commentBoxText()
+{
+  if(isGuard)
+  {
+    if(guardianBooking.comment!=null && guardianBooking.comment.isNotEmpty)
+    {
       return guardianBooking.comment;
     }
-    else{
+    else
+    {
       return null;
     }
   }
-  else{
-    if(journeyBooking.comment!=null && journeyBooking.comment.isNotEmpty){
+  else
+    {
+    if(journeyBooking.comment!=null && journeyBooking.comment.isNotEmpty)
+    {
       return journeyBooking.comment;
     }
-    else{
-      return null;
-    }
+    else
+      {
+        return null;
+      }
   }
 }
-showServiceDialog(BuildContext context) {
+
+showServiceDialog(BuildContext context)
+{
   // Create button
   Widget okButton = TextButton(
     child: Text(ifOnline?"Go Offline":"Go Online",style: TextStyle(color: AppColours.golden_button_bg,fontSize: 16)),
-    onPressed: () {
-      setState(() {
+    onPressed: ()
+    {
+      setState(()
+      {
         ifOnline=!ifOnline;
         API(context).goOnlineOffline(ifOnline,onSuccess: (isOnline) async
         {
             SharedPreferences preferences =await Global.getSharedPref();
             preferences.setBool(Constants.ISONLINE, isOnline);
         });
-        if(timer==null){
+        if(timer==null)
+        {
           startTimer();
         }
         Navigator.of(context).pop();
@@ -377,7 +452,8 @@ showServiceDialog(BuildContext context) {
 
   Widget cancelButton = TextButton(
     child: Text("Cancel",style: TextStyle(color: AppColours.golden_button_bg,fontSize: 16)),
-    onPressed: () {
+    onPressed: ()
+    {
       Navigator.of(context).pop();
     },
   );
@@ -390,43 +466,93 @@ showServiceDialog(BuildContext context) {
       actions: [cancelButton,okButton]);
   showDialog(
     context: context,
-    builder: (BuildContext context) {
+    builder: (BuildContext context)
+    {
       return alert;
     },
   );
 }
 
-getRequests(){
-  Global.userType().then((value){
-    if(value==Constants.USER_ROLE_DRIVER){
-      isGuard=false;
-      API(context).getDriverRequests(false,onSuccess: (value){
-        if(value!=null){
-          if(value.isNotEmpty){
-            if(!isDisposed){
-              setState(() {
+getCurrentJob()
+{
+    if(!isGuard)
+    {
+      API(context).getJourneyDetails(onSuccess: (value)
+      {
+        if(value.currentJob!=null)
+        {
+          if(value.currentJob.startJob==1)
+          {
+            setState(()
+            {
+              isCurrentJob=true;
+              _currentJourneyPojo=value;
+            });
+          }
+        }
+      });
+    }
+    if(isGuard)
+    {
+      API(context).getJobDetails(onSuccess: (value)
+      {
+        if(value.currentJob!=null)
+        {
+          if(value.currentJob.startJob==1)
+          {
+            setState(()
+            {
+              isCurrentJob=true;
+              _currentJobPojo=value;
+            });
+          }
+        }
+      });
+    }
+}
 
+getRequests()
+{
+    if(!isGuard)
+    {
+      API(context).getDriverRequests(false,onSuccess: (value)
+      {
+        if(value!=null)
+        {
+          if(value.isNotEmpty)
+          {
+            if(!isDisposed)
+            {
+              setState(()
+              {
                 journeyBooking=value[0].bookings[0];
                 isBooking=true;
                 controller.show();
               });
             }
           }
-          else{
-            setState(() {
+          else
+            {
+            setState(()
+            {
               isBooking=false;
             });
           }
         }
       });
     }
-    else if(value==Constants.USER_ROLE_GUARD){
-      isGuard=true;
-      API(context).getGuardianRequests(false,onSuccess: (value){
-        if(value!=null){
-          if(value.isNotEmpty){
-            if(!isDisposed){
-              setState(() {
+    else if(isGuard)
+    {
+      API(context).getGuardianRequests(false,onSuccess: (value)
+      {
+        if(value!=null)
+        {
+          if(value.isNotEmpty)
+          {
+            if(!isDisposed)
+            {
+              setState(()
+              {
                 guardianBooking=value[0].bookings[0];
                 isBooking=true;
                 controller.show();
@@ -435,18 +561,23 @@ getRequests(){
           }
           else
             {
-            setState(() {
+            setState(()
+            {
               isBooking=false;
             });
           }
         }
       });
     }
+}
+completeJob()
+{
+  API(context).jobStartComplete(false, isGuard,isGuard?_currentJobPojo.currentJob.bookingId:_currentJourneyPojo.currentJob.bookingId,isGuard?_currentJobPojo.currentJob.guradId:_currentJourneyPojo.currentJob.driverId,onSuccess: ()
+  {
+    Navigator.pop(context,true);
   });
 }
-
 void _getUserLocation() async {
-
    /* CameraPosition cc = CameraPosition(
     //  target: LatLng(position.latitude, position.longitude),
       zoom: 14.4746);
