@@ -273,7 +273,7 @@ Widget buildSheet()
       headerBuilder: (context, state)
       {
         return Container(
-          height: 140,
+          height: 190,
           color: AppColours.golden_button_bg,
           alignment: Alignment.centerLeft,
           child: Padding(
@@ -285,13 +285,6 @@ Widget buildSheet()
                 SizedBox(height: 10),
                 isGuard?SizedBox(): Text("Destination: ${_currentJourneyPojo.currentJob.bookings.destinationLocation}",style: TextStyle(color: AppColours.black,fontSize: 16,fontWeight: FontWeight.bold)),
                 SizedBox(height: 10),
-                CommonWidgets.goldenFullWidthButton("Complete Job",onClick: (){
-
-                    API(context).jobStartComplete(false, isGuard,isGuard?_currentJobPojo.currentJob.bookings.userId:_currentJourneyPojo.currentJob.bookings.userId,isGuard?_currentJobPojo.currentJob.bookings.id:_currentJourneyPojo.currentJob.bookings.id,onSuccess: ()
-                    {
-                      getCurrentJob();
-                    });
-                })
               ],
             ),
           ),
@@ -309,7 +302,15 @@ Widget buildSheet()
     child: Column(
       children:
       [
-        CommonWidgets.blackFullWidthButton("COMPLETE JOB",onClick: (){}),
+        CommonWidgets.blackFullWidthButton("COMPLETE JOB",onClick: (){
+          Global.getUser().then((value) async {
+            User userinfo = User.fromJson(json.decode(value));
+            API(context).jobStartComplete(false, isGuard,userinfo.id,isGuard?_currentJobPojo.currentJob.id:_currentJourneyPojo.currentJob.id,onSuccess: ()
+            {
+              getCurrentJob();
+            });
+          });
+        }),
       ],
     ),
   );
@@ -479,9 +480,11 @@ getCurrentJob()
     {
       API(context).getJourneyDetails(onSuccess: (value)
       {
-        if(value.currentJob!=null)
+        CurrentJourneyPojo bookingsPojo= CurrentJourneyPojo.fromJson(json.decode(value));
+
+        if(bookingsPojo.currentJob!=null)
         {
-          if(value.currentJob.startJob==1)
+          if(bookingsPojo.currentJob.startJob==1)
           {
             setState(()
             {
@@ -490,15 +493,22 @@ getCurrentJob()
             });
           }
         }
+        else{
+          setState(() {
+            isCurrentJob=false;
+            _currentJourneyPojo=null;
+          });
+        }
       });
     }
     if(isGuard)
     {
       API(context).getJobDetails(onSuccess: (value)
       {
+        CurrentJobPojo bookingsPojo= CurrentJobPojo.fromJson(json.decode(value));
         if(value.currentJob!=null)
         {
-          if(value.currentJob.startJob==1)
+          if(bookingsPojo.currentJob.startJob==1)
           {
             setState(()
             {
@@ -506,6 +516,10 @@ getCurrentJob()
               _currentJobPojo=value;
             });
           }
+        }
+        else{
+          isCurrentJob=false;
+          _currentJobPojo=null;
         }
       });
     }
@@ -570,13 +584,7 @@ getRequests()
       });
     }
 }
-completeJob()
-{
-  API(context).jobStartComplete(false, isGuard,isGuard?_currentJobPojo.currentJob.bookingId:_currentJourneyPojo.currentJob.bookingId,isGuard?_currentJobPojo.currentJob.guradId:_currentJourneyPojo.currentJob.driverId,onSuccess: ()
-  {
-    Navigator.pop(context,true);
-  });
-}
+
 void _getUserLocation() async {
    /* CameraPosition cc = CameraPosition(
     //  target: LatLng(position.latitude, position.longitude),

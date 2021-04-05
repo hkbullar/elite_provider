@@ -222,23 +222,23 @@ else{
         CommonWidgets.showMessage(context, ErrorPojo.fromJson(json.decode(value)).errors.error[0]);
       });
 }
-getJourneyDetails({void onSuccess(CurrentJourneyPojo booking)}){
+getJourneyDetails({void onSuccess(dynamic booking)}){
   ServiceHttp().httpRequestGet("get_current_driver_job",
       onSuccess: (value){
     print(value);
-        CurrentJourneyPojo bookingsPojo= CurrentJourneyPojo.fromJson(json.decode(value));
-        onSuccess(bookingsPojo);
+        onSuccess(value);
       }, onError: (value) {
         CommonWidgets.showMessage(context, ErrorPojo.fromJson(json.decode(value)).errors.error[0]);
       });
 }
 
-getJobDetails({void onSuccess(CurrentJobPojo booking)}){
+getJobDetails({void onSuccess(dynamic booking)})
+{
   ServiceHttp().httpRequestGet("get_current_guard_job",
       onSuccess: (value){
-        CurrentJobPojo bookingsPojo= CurrentJobPojo.fromJson(json.decode(value));
-        onSuccess(bookingsPojo);
-      }, onError: (value) {
+        onSuccess(value);
+      }, onError: (value)
+      {
         CommonWidgets.showMessage(context, ErrorPojo.fromJson(json.decode(value)).errors.error[0]);
       });
 }

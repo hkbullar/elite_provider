@@ -182,7 +182,7 @@ permissionCode(Map jsonPost) async {
                                 SizedBox(height: 30,),
                                 CommonWidgets.blackFullWidthButton("DRIVER",onClick: (){navigationToSignUp(1);}),
                                 SizedBox(height: 30,),
-                                CommonWidgets.blackFullWidthButton("GUARD",onClick: (){navigationToSignUp(2);}),
+                                CommonWidgets.blackFullWidthButton("GUARDIAN",onClick: (){navigationToSignUp(2);}),
                                 SizedBox(height: 30,),
                                 CommonWidgets.blackFullWidthButton("SECURITY OFFICER",onClick: (){selectSecurityOfficerTypeUI();}),
             ],

@@ -1,4 +1,6 @@
 
+import 'dart:convert';
+
 import 'package:elite_provider/global/API.dart';
 import 'package:elite_provider/global/AppColours.dart';
 import 'package:elite_provider/global/CommonWidgets.dart';
@@ -7,6 +9,7 @@ import 'package:elite_provider/global/EliteAppBar.dart';
 import 'package:elite_provider/global/Global.dart';
 import 'package:elite_provider/pojo/DriverBookingsPojo.dart';
 import 'package:elite_provider/pojo/GuardianBookingsPojo.dart';
+import 'package:elite_provider/pojo/User.dart';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -17,14 +20,17 @@ class JobDetailsScreen extends StatefulWidget
   JourneyBooking journeyBooking;
   GuardianBooking guardianBooking;
   bool isGuard=false;
+
   @override
   _JobDetailsScreenState createState() => _JobDetailsScreenState(guardianBooking: guardianBooking,journeyBooking: journeyBooking,isGuard: isGuard);
 }
 
 class _JobDetailsScreenState extends State<JobDetailsScreen> {
   _JobDetailsScreenState({this.journeyBooking,this.guardianBooking,this.isGuard});
+
   JourneyBooking journeyBooking;
   GuardianBooking guardianBooking;
+
   bool isGuard=false;
 
   @override
@@ -37,6 +43,7 @@ class _JobDetailsScreenState extends State<JobDetailsScreen> {
         child: SingleChildScrollView(
           child: Column(
             children: [
+
               isGuard?CommonWidgets.requestTextContainer("For",guardianBooking.location,Icons.location_on_outlined):
               CommonWidgets.requestTextContainer("From",journeyBooking.destinationLocation,Icons.location_on_outlined),
               !isGuard?CommonWidgets.requestTextContainer("To",journeyBooking.arrivalLocation,Icons.location_on_outlined):SizedBox(),
@@ -92,9 +99,12 @@ class _JobDetailsScreenState extends State<JobDetailsScreen> {
 
   startJob()
   {
-      API(context).jobStartComplete(true, isGuard,isGuard?guardianBooking.userId:journeyBooking.userId,isGuard?guardianBooking.id:journeyBooking.id,onSuccess: ()
+    Global.getUser().then((value) async {
+      User userinfo = User.fromJson(json.decode(value));
+      API(context).jobStartComplete(true, isGuard,userinfo.id,isGuard?guardianBooking.id:journeyBooking.id,onSuccess: ()
       {
         Navigator.pop(context,true);
       });
+    });
   }
 }

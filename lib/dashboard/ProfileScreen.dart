@@ -185,17 +185,21 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   editProfileClick() async {
     String gender="";
+
     PLoader loader=PLoader(context);
     loader.show();
+
     if(maleBoxVal==0)gender=Constants.USER_MALE;
     if(maleBoxVal==1)gender=Constants.USER_FEMALE;
     if(maleBoxVal==2)gender=Constants.USER_ME;
+
     Map<String, dynamic> jsonPost = {
       Constants.EDIT_PROFILE_NAME: _nameController.text,
       Constants.EDIT_PROFILE_GENDER: gender,
-      Constants.EDIT_PROFILE_PHONE_NUMBER: int.parse(_phoneController.text),
+      Constants.EDIT_PROFILE_PHONE_NUMBER: _phoneController.text!="null"?int.parse(_phoneController.text):"",
       Constants.EDIT_PROFILE_IMAGE:_profileImage!=null?await MultipartFile.fromFile(_profileImage.path):""
     };
+
     FormData formData=FormData.fromMap(jsonPost);
     var token = await Global.getToken();
     Dio dio = new Dio();
