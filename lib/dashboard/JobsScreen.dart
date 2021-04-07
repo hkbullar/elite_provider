@@ -3,6 +3,7 @@ import 'package:elite_provider/global/API.dart';
 import 'package:elite_provider/global/AppColours.dart';
 import 'package:elite_provider/global/Constants.dart';
 import 'package:elite_provider/global/Global.dart';
+import 'package:elite_provider/global/TimeAgo.dart';
 import 'package:elite_provider/pojo/DriverBookingsPojo.dart';
 import 'package:elite_provider/pojo/GuardianBookingsPojo.dart';
 import 'package:elite_provider/screens/JobDetailsScreen.dart';
@@ -72,7 +73,18 @@ class _JobsScreenState extends State<JobsScreen> {
                       Row(
                         children: [
                           Expanded(
+                            child: Text (TimeAgo.timeAgoSinceDate(isGuard?guardianBooking[0].createdAt:journeyBooking[0].createdAt), textAlign: TextAlign.right,style: new TextStyle(
+                                fontSize: 10.0,  color: AppColours.black)),
+                          ),
+                        ],
+                      ),
+                      SizedBox(height: 5.0),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          Expanded(
                             child: Column(
+
                               children: [
                                 isGuard?CommonWidgets.selectedFontWidget("From: ${Global.generateDate(guardianBooking[index].bookings[0].fromDate)} "
                                     "To: ${Global.generateDate(guardianBooking[index].bookings[0].toDate)}\n"
@@ -83,6 +95,7 @@ class _JobsScreenState extends State<JobsScreen> {
                               ],
                             ),
                           ),
+                          SizedBox(width: 10,),
                           CommonWidgets.selectedFontWidget("${isGuard?guardianBooking[index].bookings[0].price:journeyBooking[index].bookings[0].price} Pounds", AppColours.white, 15.0,FontWeight.bold),
                         ],
                       ),
@@ -95,16 +108,20 @@ class _JobsScreenState extends State<JobsScreen> {
                       isGuard?SizedBox():SizedBox(height: 20.0),
                       isGuard?SizedBox():CommonWidgets.selectedFontWidget("To:",AppColours.black, 15.0, FontWeight.bold),
                       isGuard?SizedBox():CommonWidgets.selectedFontWidget(journeyBooking[index].bookings[0].arrivalLocation,AppColours.black, 13.0, FontWeight.w500),
-                      SizedBox(height: 20.0),
+                      SizedBox(height: 10.0),
+
+
                       CommonWidgets.blackFullWidthButton("JOB DETAILS",onClick: ()
                       {
-                        listItemClick(isGuard?null:journeyBooking[index].bookings[0], isGuard?guardianBooking[0].bookings[0]:null);
+                        listItemClick(isGuard?null:journeyBooking[index], isGuard?guardianBooking[0]:null);
                       })
                     ],
                   ),
                 ));
           }
-listItemClick(JourneyBooking journeyBooking,GuardianBooking guardianBooking) async {
+
+
+listItemClick(DriverBookingPojo journeyBooking,GuardianBookingPojo guardianBooking) async {
 
   if(isGuard){
     await  Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) => JobDetailsScreen(null,guardianBooking,isGuard))).then((value) =>

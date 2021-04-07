@@ -23,7 +23,7 @@ class DriverBookingsPojo {
   );
 
   Map<String, dynamic> toJson() => {
-    "booking": List<dynamic>.from(booking.map((x) => x.toJson())),
+    "booking": List<DriverBookingPojo>.from(booking.map((x) => x.toJson())),
     "message": message,
   };
 }
@@ -34,6 +34,7 @@ class DriverBookingPojo {
     this.bookingId,
     this.driverId,
     this.status,
+    this.startJob,
     this.createdAt,
     this.updatedAt,
     this.bookings,
@@ -43,6 +44,7 @@ class DriverBookingPojo {
   int bookingId;
   int driverId;
   int status;
+  int startJob;
   DateTime createdAt;
   DateTime updatedAt;
   List<JourneyBooking> bookings;
@@ -52,6 +54,7 @@ class DriverBookingPojo {
     bookingId: json["booking_id"],
     driverId: json["driver_id"],
     status: json["status"],
+    startJob: json["start_job"],
     createdAt: DateTime.parse(json["created_at"]),
     updatedAt: DateTime.parse(json["updated_at"]),
     bookings: List<JourneyBooking>.from(json["bookings"].map((x) => JourneyBooking.fromJson(x))),
@@ -62,6 +65,7 @@ class DriverBookingPojo {
     "booking_id": bookingId,
     "driver_id": driverId,
     "status": status,
+    "start_job": startJob,
     "created_at": createdAt.toIso8601String(),
     "updated_at": updatedAt.toIso8601String(),
     "bookings": List<dynamic>.from(bookings.map((x) => x.toJson())),
@@ -74,6 +78,10 @@ class JourneyBooking {
     this.userId,
     this.destinationLocation,
     this.arrivalLocation,
+    this.destinationLat,
+    this.destinationLong,
+    this.arrivalLat,
+    this.arrivalLong,
     this.date,
     this.time,
     this.isAdmin,
@@ -90,6 +98,10 @@ class JourneyBooking {
   int userId;
   String destinationLocation;
   String arrivalLocation;
+  String destinationLat;
+  String destinationLong;
+  String arrivalLat;
+  String arrivalLong;
   DateTime date;
   String time;
   int isAdmin;
@@ -106,6 +118,10 @@ class JourneyBooking {
     userId: json["user_id"],
     destinationLocation: json["destination_location"],
     arrivalLocation: json["arrival_location"],
+    destinationLat: json["destination_lat"] == null ? null : json["destination_lat"],
+    destinationLong: json["destination_long"] == null ? null : json["destination_long"],
+    arrivalLat: json["arrival_lat"] == null ? null : json["arrival_lat"],
+    arrivalLong: json["arrival_long"] == null ? null : json["arrival_long"],
     date: DateTime.parse(json["date"]),
     time: json["time"],
     isAdmin: json["is_admin"],
@@ -123,6 +139,10 @@ class JourneyBooking {
     "user_id": userId,
     "destination_location": destinationLocation,
     "arrival_location": arrivalLocation,
+    "destination_lat": destinationLat == null ? null : destinationLat,
+    "destination_long": destinationLong == null ? null : destinationLong,
+    "arrival_lat": arrivalLat == null ? null : arrivalLat,
+    "arrival_long": arrivalLong == null ? null : arrivalLong,
     "date": "${date.year.toString().padLeft(4, '0')}-${date.month.toString().padLeft(2, '0')}-${date.day.toString().padLeft(2, '0')}",
     "time": time,
     "is_admin": isAdmin,

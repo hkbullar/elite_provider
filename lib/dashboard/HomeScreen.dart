@@ -478,49 +478,54 @@ getCurrentJob()
 {
     if(!isGuard)
     {
-      API(context).getJourneyDetails(onSuccess: (value)
-      {
-        CurrentJourneyPojo bookingsPojo= CurrentJourneyPojo.fromJson(json.decode(value));
-
-        if(bookingsPojo.currentJob!=null)
-        {
-          if(bookingsPojo.currentJob.startJob==1)
-          {
-            setState(()
+      API(context).getJourneyDetails(onSuccess: (value) {
+        CurrentJourneyPojo bookingsPojo = CurrentJourneyPojo.fromJson(
+            json.decode(value));
+        setState(() {
+          if (bookingsPojo.currentJob != null) {
+            if (bookingsPojo.currentJob.startJob == 1)
             {
-              isCurrentJob=true;
-              _currentJourneyPojo=value;
-            });
+              isCurrentJob = true;
+              _currentJourneyPojo = value;
+            }
+            else
+              {
+              isCurrentJob = false;
+              _currentJourneyPojo = null;
+            }
           }
-        }
-        else{
-          setState(() {
+          else{
             isCurrentJob=false;
             _currentJourneyPojo=null;
-          });
-        }
+          }
       });
-    }
-    if(isGuard)
+      });}
+
+   else
     {
       API(context).getJobDetails(onSuccess: (value)
       {
         CurrentJobPojo bookingsPojo= CurrentJobPojo.fromJson(json.decode(value));
-        if(value.currentJob!=null)
-        {
-          if(bookingsPojo.currentJob.startJob==1)
+        setState(() {
+          if(value.currentJob!=null)
           {
-            setState(()
+            if(bookingsPojo.currentJob.startJob==1)
             {
               isCurrentJob=true;
               _currentJobPojo=value;
-            });
+            }
+            else
+              {
+              isCurrentJob=false;
+              _currentJobPojo=null;
+            }
           }
-        }
-        else{
-          isCurrentJob=false;
-          _currentJobPojo=null;
-        }
+          else{
+            isCurrentJob=false;
+            _currentJobPojo=null;
+          }
+        });
+
       });
     }
 }

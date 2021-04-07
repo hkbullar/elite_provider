@@ -4,7 +4,6 @@ import 'dart:convert';
 import 'package:elite_provider/global/API.dart';
 import 'package:elite_provider/global/AppColours.dart';
 import 'package:elite_provider/global/CommonWidgets.dart';
-import 'package:elite_provider/global/Constants.dart';
 import 'package:elite_provider/global/EliteAppBar.dart';
 import 'package:elite_provider/global/Global.dart';
 import 'package:elite_provider/pojo/DriverBookingsPojo.dart';
@@ -17,21 +16,37 @@ import 'package:flutter/material.dart';
 class JobDetailsScreen extends StatefulWidget
 {
   JobDetailsScreen(this.journeyBooking,this.guardianBooking,this.isGuard);
-  JourneyBooking journeyBooking;
-  GuardianBooking guardianBooking;
+
+  DriverBookingPojo journeyBooking;
+  GuardianBookingPojo guardianBooking;
+
   bool isGuard=false;
 
   @override
-  _JobDetailsScreenState createState() => _JobDetailsScreenState(guardianBooking: guardianBooking,journeyBooking: journeyBooking,isGuard: isGuard);
+  _JobDetailsScreenState createState() => _JobDetailsScreenState(guardianBookingPojo: guardianBooking,driverBookingPojo: journeyBooking,isGuard: isGuard);
 }
 
 class _JobDetailsScreenState extends State<JobDetailsScreen> {
-  _JobDetailsScreenState({this.journeyBooking,this.guardianBooking,this.isGuard});
+
+  _JobDetailsScreenState({this.driverBookingPojo,this.guardianBookingPojo,this.isGuard});
+
+  GuardianBookingPojo guardianBookingPojo;
+  DriverBookingPojo driverBookingPojo;
 
   JourneyBooking journeyBooking;
   GuardianBooking guardianBooking;
 
   bool isGuard=false;
+
+  @override
+  void initState() {
+    if(isGuard){
+      guardianBooking=guardianBookingPojo.bookings[0];
+    }else{
+      journeyBooking=driverBookingPojo.bookings[0];
+    }
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -43,7 +58,6 @@ class _JobDetailsScreenState extends State<JobDetailsScreen> {
         child: SingleChildScrollView(
           child: Column(
             children: [
-
               isGuard?CommonWidgets.requestTextContainer("For",guardianBooking.location,Icons.location_on_outlined):
               CommonWidgets.requestTextContainer("From",journeyBooking.destinationLocation,Icons.location_on_outlined),
               !isGuard?CommonWidgets.requestTextContainer("To",journeyBooking.arrivalLocation,Icons.location_on_outlined):SizedBox(),
@@ -60,9 +74,24 @@ class _JobDetailsScreenState extends State<JobDetailsScreen> {
 
               CommonWidgets.requestTextContainer("Price","${isGuard?guardianBooking.price:journeyBooking.price}",Icons.attach_money),
               SizedBox(height: 10),
-              CommonWidgets.goldenFullWidthButton("Start Job",onClick: ()
+              CommonWidgets.goldenFullWidthButton(generateText(),onClick: ()
               {
-                startJob();
+                if(isGuard){
+                  if(guardianBookingPojo.status==0){
+                    startJob();
+                  }
+                  else if(guardianBookingPojo.status==1){
+                    Navigator.pop(context,true);
+                  }
+                }
+                else{
+                  if(driverBookingPojo.startJob==0){
+                    startJob();
+                  }
+                  else if(driverBookingPojo.startJob==1){
+                    Navigator.pop(context,true);
+                  }
+                }
               })
             ],
           ),
@@ -70,7 +99,30 @@ class _JobDetailsScreenState extends State<JobDetailsScreen> {
       )
     );
   }
-
+String generateText(){
+    if(isGuard){
+      if(guardianBookingPojo.status==0){
+        return "Start Job";
+      }
+      else if(guardianBookingPojo.status==1){
+        return "Job in Progress";
+      }
+      else{
+        return "Completed Job :)";
+      }
+    }
+    else{
+      if(driverBookingPojo.startJob==0){
+        return "Start Journey";
+      }
+      else if(driverBookingPojo.startJob==1){
+        return "On a Journey";
+      }
+      else {
+        return "Completed Journey :)";
+      }
+    }
+}
   String commentBoxText()
   {
     if(isGuard)
@@ -101,7 +153,7 @@ class _JobDetailsScreenState extends State<JobDetailsScreen> {
   {
     Global.getUser().then((value) async {
       User userinfo = User.fromJson(json.decode(value));
-      API(context).jobStartComplete(true, isGuard,userinfo.id,isGuard?guardianBooking.id:journeyBooking.id,onSuccess: ()
+      API(context).jobStartComplete(true, isGuard,userinfo.id,isGuard?guardianBookingPojo.id:driverBookingPojo.id,onSuccess: ()
       {
         Navigator.pop(context,true);
       });
