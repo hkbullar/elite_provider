@@ -153,7 +153,7 @@ String generateText(){
   {
     Global.getUser().then((value) async {
       User userinfo = User.fromJson(json.decode(value));
-      API(context).jobStartComplete(true, isGuard,userinfo.id,isGuard?guardianBookingPojo.id:driverBookingPojo.id,onSuccess: ()
+      API(context).jobStartComplete(true, isGuard,userinfo.id,isGuard?guardianBookingPojo.bookingId:driverBookingPojo.bookingId,onSuccess: ()
       {
         Navigator.pop(context,true);
       });

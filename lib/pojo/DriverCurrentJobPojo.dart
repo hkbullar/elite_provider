@@ -1,24 +1,24 @@
 // To parse this JSON data, do
 //
-//     final currentJourneyPojo = currentJourneyPojoFromJson(jsonString);
+//     final driverCurrentJobPojo = driverCurrentJobPojoFromJson(jsonString);
 
 import 'dart:convert';
 
-CurrentJourneyPojo currentJourneyPojoFromJson(String str) => CurrentJourneyPojo.fromJson(json.decode(str));
+DriverCurrentJobPojo driverCurrentJobPojoFromJson(String str) => DriverCurrentJobPojo.fromJson(json.decode(str));
 
-String currentJourneyPojoToJson(CurrentJourneyPojo data) => json.encode(data.toJson());
+String driverCurrentJobPojoToJson(DriverCurrentJobPojo data) => json.encode(data.toJson());
 
-class CurrentJourneyPojo {
-  CurrentJourneyPojo({
+class DriverCurrentJobPojo {
+  DriverCurrentJobPojo({
     this.currentJob,
     this.message,
   });
 
-  CurrentJob currentJob;
+  CurrentJourneyPojo currentJob;
   String message;
 
-  factory CurrentJourneyPojo.fromJson(Map<String, dynamic> json) => CurrentJourneyPojo(
-    currentJob: CurrentJob.fromJson(json["current_job"]),
+  factory DriverCurrentJobPojo.fromJson(Map<String, dynamic> json) => DriverCurrentJobPojo(
+    currentJob: CurrentJourneyPojo.fromJson(json["current_job"]),
     message: json["message"],
   );
 
@@ -28,8 +28,8 @@ class CurrentJourneyPojo {
   };
 }
 
-class CurrentJob {
-  CurrentJob({
+class CurrentJourneyPojo {
+  CurrentJourneyPojo({
     this.id,
     this.createdBy,
     this.driverId,
@@ -47,9 +47,9 @@ class CurrentJob {
   int startJob;
   DateTime createdAt;
   DateTime updatedAt;
-  JBooking bookings;
+  Bookings bookings;
 
-  factory CurrentJob.fromJson(Map<String, dynamic> json) => CurrentJob(
+  factory CurrentJourneyPojo.fromJson(Map<String, dynamic> json) => CurrentJourneyPojo(
     id: json["id"],
     createdBy: json["created_by"],
     driverId: json["driver_id"],
@@ -57,7 +57,7 @@ class CurrentJob {
     startJob: json["start_job"],
     createdAt: DateTime.parse(json["created_at"]),
     updatedAt: DateTime.parse(json["updated_at"]),
-    bookings: JBooking.fromJson(json["bookings"]),
+    bookings: Bookings.fromJson(json["bookings"]),
   );
 
   Map<String, dynamic> toJson() => {
@@ -72,12 +72,16 @@ class CurrentJob {
   };
 }
 
-class JBooking {
-  JBooking({
+class Bookings {
+  Bookings({
     this.id,
     this.userId,
     this.destinationLocation,
     this.arrivalLocation,
+    this.destinationLat,
+    this.destinationLong,
+    this.arrivalLat,
+    this.arrivalLong,
     this.date,
     this.time,
     this.isAdmin,
@@ -96,6 +100,10 @@ class JBooking {
   int userId;
   String destinationLocation;
   String arrivalLocation;
+  String destinationLat;
+  String destinationLong;
+  String arrivalLat;
+  dynamic arrivalLong;
   DateTime date;
   String time;
   int isAdmin;
@@ -109,11 +117,15 @@ class JBooking {
   DateTime createdAt;
   DateTime updatedAt;
 
-  factory JBooking.fromJson(Map<String, dynamic> json) => JBooking(
+  factory Bookings.fromJson(Map<String, dynamic> json) => Bookings(
     id: json["id"],
     userId: json["user_id"],
     destinationLocation: json["destination_location"],
     arrivalLocation: json["arrival_location"],
+    destinationLat: json["destination_lat"],
+    destinationLong: json["destination_long"],
+    arrivalLat: json["arrival_lat"],
+    arrivalLong: json["arrival_long"],
     date: DateTime.parse(json["date"]),
     time: json["time"],
     isAdmin: json["is_admin"],
@@ -133,6 +145,10 @@ class JBooking {
     "user_id": userId,
     "destination_location": destinationLocation,
     "arrival_location": arrivalLocation,
+    "destination_lat": destinationLat,
+    "destination_long": destinationLong,
+    "arrival_lat": arrivalLat,
+    "arrival_long": arrivalLong,
     "date": "${date.year.toString().padLeft(4, '0')}-${date.month.toString().padLeft(2, '0')}-${date.day.toString().padLeft(2, '0')}",
     "time": time,
     "is_admin": isAdmin,

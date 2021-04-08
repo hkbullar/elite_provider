@@ -7,7 +7,7 @@ import 'package:elite_provider/global/CommonWidgets.dart';
 import 'package:elite_provider/global/Constants.dart';
 import 'package:elite_provider/global/Global.dart';
 import 'package:elite_provider/pojo/CurrentJobPojo.dart';
-import 'package:elite_provider/pojo/CurrentJourneyPojo.dart';
+import 'package:elite_provider/pojo/DriverCurrentJobPojo.dart';
 import 'package:elite_provider/pojo/DriverBookingsPojo.dart';
 import 'package:elite_provider/pojo/GuardianBookingsPojo.dart';
 import 'package:elite_provider/pojo/User.dart';
@@ -281,9 +281,9 @@ Widget buildSheet()
             child: Column(
               children:
               [
-                Text("${isGuard?"Location":"Source"}: ${isGuard?_currentJobPojo.currentJob.bookings.destinationLocation:_currentJourneyPojo.currentJob.bookings.destinationLocation}",style: TextStyle(color: AppColours.black,fontSize: 16,fontWeight: FontWeight.bold)),
+                Text("${isGuard?"Location":"Source"}: ${isGuard?_currentJobPojo.currentJob.bookings.destinationLocation:_currentJourneyPojo.bookings.arrivalLocation}",style: TextStyle(color: AppColours.black,fontSize: 16,fontWeight: FontWeight.bold)),
                 SizedBox(height: 10),
-                isGuard?SizedBox(): Text("Destination: ${_currentJourneyPojo.currentJob.bookings.destinationLocation}",style: TextStyle(color: AppColours.black,fontSize: 16,fontWeight: FontWeight.bold)),
+                isGuard?SizedBox(): Text("Destination: ${_currentJourneyPojo.bookings.destinationLocation}",style: TextStyle(color: AppColours.black,fontSize: 16,fontWeight: FontWeight.bold)),
                 SizedBox(height: 10),
               ],
             ),
@@ -305,7 +305,7 @@ Widget buildSheet()
         CommonWidgets.blackFullWidthButton("COMPLETE JOB",onClick: (){
           Global.getUser().then((value) async {
             User userinfo = User.fromJson(json.decode(value));
-            API(context).jobStartComplete(false, isGuard,userinfo.id,isGuard?_currentJobPojo.currentJob.id:_currentJourneyPojo.currentJob.id,onSuccess: ()
+            API(context).jobStartComplete(false, isGuard,userinfo.id,isGuard?_currentJobPojo.currentJob.bookingId:_currentJourneyPojo.bookingId,onSuccess: ()
             {
               getCurrentJob();
             });
@@ -479,26 +479,19 @@ getCurrentJob()
     if(!isGuard)
     {
       API(context).getJourneyDetails(onSuccess: (value) {
-        CurrentJourneyPojo bookingsPojo = CurrentJourneyPojo.fromJson(
-            json.decode(value));
+        Map<String, dynamic> map = json.decode(value);
         setState(() {
-          if (bookingsPojo.currentJob != null) {
-            if (bookingsPojo.currentJob.startJob == 1)
-            {
-              isCurrentJob = true;
-              _currentJourneyPojo = value;
-            }
-            else
-              {
-              isCurrentJob = false;
-              _currentJourneyPojo = null;
-            }
+          if(map["current_job"]!=null){
+            DriverCurrentJobPojo bookingsPojo = DriverCurrentJobPojo.fromJson(json.decode(value));
+            isCurrentJob = true;
+            _currentJourneyPojo = bookingsPojo.currentJob;
           }
           else{
             isCurrentJob=false;
             _currentJourneyPojo=null;
           }
-      });
+        });
+
       });}
 
    else
@@ -525,7 +518,6 @@ getCurrentJob()
             _currentJobPojo=null;
           }
         });
-
       });
     }
 }

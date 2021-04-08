@@ -7,7 +7,7 @@ import 'package:elite_provider/global/Global.dart';
 import 'package:elite_provider/global/PLoader.dart';
 import 'package:elite_provider/global/ServiceHttp.dart';
 import 'package:elite_provider/pojo/CurrentJobPojo.dart';
-import 'package:elite_provider/pojo/CurrentJourneyPojo.dart';
+import 'package:elite_provider/pojo/DriverCurrentJobPojo.dart';
 import 'package:elite_provider/pojo/DriverBookingsPojo.dart';
 import 'package:elite_provider/pojo/ErrorPojo.dart';
 import 'package:elite_provider/pojo/GetDocumentsPojo.dart';
