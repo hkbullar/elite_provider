@@ -84,7 +84,6 @@ class _JobsScreenState extends State<JobsScreen> {
                         children: [
                           Expanded(
                             child: Column(
-
                               children: [
                                 isGuard?CommonWidgets.selectedFontWidget("From: ${Global.generateDate(guardianBooking[index].bookings[0].fromDate)} "
                                     "To: ${Global.generateDate(guardianBooking[index].bookings[0].toDate)}\n"
@@ -109,8 +108,6 @@ class _JobsScreenState extends State<JobsScreen> {
                       isGuard?SizedBox():CommonWidgets.selectedFontWidget("To:",AppColours.black, 15.0, FontWeight.bold),
                       isGuard?SizedBox():CommonWidgets.selectedFontWidget(journeyBooking[index].bookings[0].arrivalLocation,AppColours.black, 13.0, FontWeight.w500),
                       SizedBox(height: 10.0),
-
-
                       CommonWidgets.blackFullWidthButton("JOB DETAILS",onClick: ()
                       {
                         listItemClick(isGuard?null:journeyBooking[index], isGuard?guardianBooking[0]:null);

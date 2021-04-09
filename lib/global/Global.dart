@@ -20,6 +20,15 @@ class Global{
     SharedPreferences prefs = await SharedPreferences.getInstance();
     return prefs.getBool(Constants.ISREGISTERED) ?? false;
   }
+  static Future<bool> isJobInProgress() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    return prefs.getBool(Constants.ISCURRENTJOB) ?? false;
+  }
+
+  static setJobInProgress(bool value) async {
+    SharedPreferences preferences =await Global.getSharedPref();
+    preferences.setBool(Constants.ISCURRENTJOB,value);
+  }
   static Future<bool> isOnline() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     return prefs.getBool(Constants.ISONLINE) ?? false;

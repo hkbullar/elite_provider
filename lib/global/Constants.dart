@@ -14,6 +14,7 @@ class Constants{
   static const String USER_PREF = "userpref";
   static const String FIREBASE_TOKEN = "firebase_token";
   static const String ISREGISTERED = "isRegistered";
+  static const String ISCURRENTJOB = "currentjob";
   static const String ISAPPROVED = "isApproved";
 
   //SP KEYS

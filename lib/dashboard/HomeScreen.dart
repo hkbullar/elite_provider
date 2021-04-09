@@ -1,6 +1,7 @@
 
 import 'dart:async';
 import 'dart:convert';
+import 'dart:math';
 
 import 'package:elite_provider/global/AppColours.dart';
 import 'package:elite_provider/global/CommonWidgets.dart';
@@ -46,10 +47,12 @@ LatLng currentPostion;
 
 SheetController controller = SheetController();
 SheetController currentJobController = SheetController();
+Map<MarkerId, Marker> markers = <MarkerId, Marker>{}; // CLASS MEMBER, MAP OF MARKS
+
 
 CameraPosition _kGooglePlex = CameraPosition(
-  target: LatLng(37.42796133580664,-122.085749655962),
-  zoom: 14.4746,
+  target: LatLng(31.1291578,75.47316822),
+  zoom: 10.0,
 );
 
 Completer<GoogleMapController> _controller = Completer();
@@ -148,9 +151,11 @@ void didChangeAppLifecycleState(AppLifecycleState state)
           GoogleMap(
             mapType: MapType.normal,
             initialCameraPosition: _kGooglePlex,
+            markers: Set<Marker>.of(markers.values),
             onMapCreated: (GoogleMapController controller)
             {
               _controller.complete(controller);
+
               _getUserLocation();
             },
           ),
@@ -315,7 +320,34 @@ Widget buildSheet()
     ),
   );
 }
+void _addLocations(LatLng arrival,LatLng destination) {
+  Map<MarkerId, Marker> markers = <MarkerId, Marker>{};
+  List<LatLng> list=[];
+  list.add(arrival);
+  list.add(destination);
 
+  for(int i=0;i<=list.length;i++){
+      var markerIdVal = "$i";
+      final MarkerId markerId = MarkerId(markerIdVal);
+
+      // creating a new MARKER
+      final Marker marker = Marker(
+        markerId: markerId,
+        position: LatLng(
+          arrival.latitude + sin(i * pi / 6.0) / 20.0,
+          arrival.longitude + cos(i * pi / 6.0) / 20.0,
+        ),
+        infoWindow: InfoWindow(title: markerIdVal, snippet: '*'),
+        onTap: () {
+          //_onMarkerTapped(markerId);
+        },
+      );
+      markers[markerId] = marker;
+  }
+  setState(() {
+    this.markers=markers;
+  });
+}
 Widget buildChild(BuildContext context, SheetState state)
 {
   return Container(
@@ -485,37 +517,34 @@ getCurrentJob()
             DriverCurrentJobPojo bookingsPojo = DriverCurrentJobPojo.fromJson(json.decode(value));
             isCurrentJob = true;
             _currentJourneyPojo = bookingsPojo.currentJob;
+            Global.setJobInProgress(true);
+            _addLocations(LatLng(double.parse(_currentJourneyPojo.bookings.arrivalLat),double.parse(_currentJourneyPojo.bookings.arrivalLat)), LatLng(double.parse(_currentJourneyPojo.bookings.destinationLat),double.parse(_currentJourneyPojo.bookings.destinationLong)));
           }
           else{
             isCurrentJob=false;
             _currentJourneyPojo=null;
+            Global.setJobInProgress(false);
           }
         });
-
       });}
 
    else
     {
       API(context).getJobDetails(onSuccess: (value)
       {
-        CurrentJobPojo bookingsPojo= CurrentJobPojo.fromJson(json.decode(value));
+
+        Map<String, dynamic> map = json.decode(value);
         setState(() {
-          if(value.currentJob!=null)
-          {
-            if(bookingsPojo.currentJob.startJob==1)
-            {
-              isCurrentJob=true;
-              _currentJobPojo=value;
-            }
-            else
-              {
-              isCurrentJob=false;
-              _currentJobPojo=null;
-            }
+          CurrentJobPojo bookingsPojo= CurrentJobPojo.fromJson(json.decode(value));
+          if(map["current_job"]!=null){
+            isCurrentJob=true;
+            _currentJobPojo=value;
+            Global.setJobInProgress(true);
           }
           else{
             isCurrentJob=false;
             _currentJobPojo=null;
+            Global.setJobInProgress(false);
           }
         });
       });

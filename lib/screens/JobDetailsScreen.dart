@@ -12,6 +12,7 @@ import 'package:elite_provider/pojo/User.dart';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 class JobDetailsScreen extends StatefulWidget
 {
@@ -75,10 +76,16 @@ class _JobDetailsScreenState extends State<JobDetailsScreen> {
               CommonWidgets.requestTextContainer("Price","${isGuard?guardianBooking.price:journeyBooking.price}",Icons.attach_money),
               SizedBox(height: 10),
               CommonWidgets.goldenFullWidthButton(generateText(),onClick: ()
-              {
+              async {
                 if(isGuard){
                   if(guardianBookingPojo.status==0){
-                    startJob();
+                    if(await Global.isJobInProgress()){
+                      Global.toast(context, "Job already in progress");
+                    }
+                    else{
+                      startJob();
+                    }
+
                   }
                   else if(guardianBookingPojo.status==1){
                     Navigator.pop(context,true);
@@ -86,9 +93,16 @@ class _JobDetailsScreenState extends State<JobDetailsScreen> {
                 }
                 else{
                   if(driverBookingPojo.startJob==0){
-                    startJob();
+                    if(await Global.isJobInProgress()){
+                      Global.toast(context, "Job already in progress");
+                    }
+                    else{
+                      startJob();
+                    }
+
                   }
-                  else if(driverBookingPojo.startJob==1){
+                  else if(driverBookingPojo.startJob==1)
+                  {
                     Navigator.pop(context,true);
                   }
                 }
@@ -99,6 +113,7 @@ class _JobDetailsScreenState extends State<JobDetailsScreen> {
       )
     );
   }
+
 String generateText(){
     if(isGuard){
       if(guardianBookingPojo.status==0){
@@ -123,6 +138,7 @@ String generateText(){
       }
     }
 }
+
   String commentBoxText()
   {
     if(isGuard)
