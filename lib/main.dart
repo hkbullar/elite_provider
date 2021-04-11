@@ -1,5 +1,8 @@
 
+import 'package:elite_provider/dashboard/DashBoardScreen.dart';
+import 'package:elite_provider/dashboard/HomeScreen.dart';
 import 'package:elite_provider/loginpages/SplashScreen.dart';
+import 'package:elite_provider/screens/MapCheck.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 

@@ -188,5 +188,7 @@ class Constants{
   static const String IMAGE_BASE_URL_2="https://geeniuz.co/public/";
 
   //GOOGLE PLACE API KEY
-  static const String API_KEY ="AIzaSyCXNju8F2rp5rhRp1W4igjTVDY8SpsdJQg";
+  static const String API_KEY ="AIzaSyD3hJNvatQ8W1cPBS4ZeLS8U8T5x0YQqMY";
+
+
 }

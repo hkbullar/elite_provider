@@ -35,7 +35,8 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
   User userinfo;
 
   @override
-  void initState() {
+  void initState()
+  {
     jobsScreen=JobsScreen(onClick: (journeyBooking,guardianBooking,isGuard){
       setState(() {
         _onItemTapped(0,noPop: true);

@@ -2,7 +2,8 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:math';
-
+import 'dart:typed_data';
+import 'dart:ui' as ui;
 import 'package:elite_provider/global/AppColours.dart';
 import 'package:elite_provider/global/CommonWidgets.dart';
 import 'package:elite_provider/global/Constants.dart';
@@ -14,13 +15,18 @@ import 'package:elite_provider/pojo/GuardianBookingsPojo.dart';
 import 'package:elite_provider/pojo/User.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_polyline_points/flutter_polyline_points.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:location/location.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sliding_sheet/sliding_sheet.dart';
 
 import '../global/API.dart';
-
+const double CAMERA_ZOOM = 16;
+const double CAMERA_TILT = 80;
+const double CAMERA_BEARING = 30;
+const LatLng SOURCE_LOCATION = LatLng(30.5882408,76.8438542);
 class HomeScreen extends StatefulWidget
 {
   HomeScreen();
@@ -42,71 +48,56 @@ bool isDisposed=false;
 bool isCurrentJob=false;
 bool isSheetLoading=false;
 bool ifOnline=false;
-
-LatLng currentPostion;
+bool isResumed=true;
 
 SheetController controller = SheetController();
 SheetController currentJobController = SheetController();
-Map<MarkerId, Marker> markers = <MarkerId, Marker>{}; // CLASS MEMBER, MAP OF MARKS
 
+Location location;
 
-CameraPosition _kGooglePlex = CameraPosition(
-  target: LatLng(31.1291578,75.47316822),
-  zoom: 10.0,
-);
-
-Completer<GoogleMapController> _controller = Completer();
 Timer timer;
 
-  @override
-  void initState()
-  {
-  isDisposed=false;
-  Global.isOnline().then((isOnline)
-  {
-    if(isOnline)
-    {
-      Location().onLocationChanged.listen((LocationData currentLocation)
-      {
-        API(context).updateUserLocation(currentLocation);
-      });
+//MAP AND TRACKING KEYS AND DATA
+Completer<GoogleMapController> _controller = Completer();
+Set<Marker> _markers = Set<Marker>();
+Set<Polyline> _polylines = Set<Polyline>();
+List<LatLng> polylineCoordinates = [];
+PolylinePoints polylinePoints;
+String googleAPIKey = "AIzaSyD3hJNvatQ8W1cPBS4ZeLS8U8T5x0YQqMY";
+double requestSheetTitleHeight=0;
+LocationData currentLocation;
 
-      Global.userType().then((value)
-      {
-        if(value==Constants.USER_ROLE_DRIVER)
-        {
-          setState(()
-          {
-            isGuard=false;
-            ifOnline=isOnline;
-            startTimer();
-            getCurrentJob();
-          });
-        }
-        if(value==Constants.USER_ROLE_GUARD)
-        {
-          isGuard=true;
-          ifOnline=isOnline;
-          startTimer();
-          getCurrentJob();
-        }
-      });
-    }
-  });
+@override
+void initState()
+{
+    location = new Location();
+    polylinePoints = PolylinePoints();
+
   WidgetsBinding.instance.addObserver(this);
     super.initState();
 }
+
+registerOnChangeListener()
+{
+  if(isCurrentJob){
+    Location().onLocationChanged.listen((LocationData currentLocation)
+    {
+      API(context).updateUserLocation(currentLocation);
+      this.currentLocation = currentLocation;
+      if(isCurrentJob)
+        updatePinOnMap();
+    });
+  }
+}
+
 startTimer()
 {
-  timer= Timer.periodic(Duration(seconds: 5), (timer)
+  timer= Timer.periodic(Duration(seconds: 10), (timer)
   {
-    Global.isOnline().then((isOnline)
-    {
-      if(isOnline)
+      if(ifOnline)
       {
         getRequests();
       }
-    });
   });
 }
 
@@ -118,14 +109,14 @@ stopTimer()
   }
 }
 
-  @override
-  void dispose()
-  {
+@override
+void dispose()
+{
     isDisposed=true;
     stopTimer();
     WidgetsBinding.instance.removeObserver(this);
     super.dispose();
-  }
+}
 
 @override
 void didChangeAppLifecycleState(AppLifecycleState state)
@@ -133,32 +124,71 @@ void didChangeAppLifecycleState(AppLifecycleState state)
   print('state = $state');
   if(state==AppLifecycleState.resumed)
  {
-   startTimer();
+   isResumed=true;
  }
   if(state==AppLifecycleState.paused)
   {
-    stopTimer();
+  isResumed=false;
   }
 }
 
-  @override
-  Widget build(BuildContext context)
-  {
-    return Scaffold(
+@override
+Widget build(BuildContext context)
+{
+  CameraPosition initialCameraPosition = CameraPosition(
+      zoom: CAMERA_ZOOM,
+      tilt: CAMERA_TILT,
+      bearing: CAMERA_BEARING,
+      target: SOURCE_LOCATION
+  );
+  if (currentLocation != null) {
+    initialCameraPosition = CameraPosition(
+        target: LatLng(currentLocation.latitude,
+            currentLocation.longitude),
+        zoom: CAMERA_ZOOM,
+        tilt: CAMERA_TILT,
+        bearing: CAMERA_BEARING
+    );
+  }
+  return Scaffold(
         resizeToAvoidBottomInset: false,
         body: Stack(
         children: [
           GoogleMap(
-            mapType: MapType.normal,
-            initialCameraPosition: _kGooglePlex,
-            markers: Set<Marker>.of(markers.values),
-            onMapCreated: (GoogleMapController controller)
-            {
-              _controller.complete(controller);
+              myLocationEnabled: true,
+              compassEnabled: true,
+              tiltGesturesEnabled: false,
+              markers: _markers,
+              polylines: _polylines,
+              mapType: MapType.normal,
+              initialCameraPosition: initialCameraPosition,
+              onMapCreated: (GoogleMapController controller) {
+                if(!_controller.isCompleted){
+                  _controller.complete(controller);
+                }
+                Global.isOnline().then((isOnline)
+                {
 
-              _getUserLocation();
-            },
-          ),
+                  setState(() {
+                    this.ifOnline=isOnline;
+                  });
+                });
+                Global.userType().then((value)
+                {
+
+                  if(value==Constants.USER_ROLE_DRIVER)
+                  {
+                    isGuard=false;
+                  }
+                  if(value==Constants.USER_ROLE_GUARD)
+                  {
+
+                    isGuard=true;
+                  }
+                  getCurrentLocation();
+                });
+
+              }),
           Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [],
@@ -179,7 +209,7 @@ void didChangeAppLifecycleState(AppLifecycleState state)
                 ),
                 onPressed: (){
                     setState(() {
-                      showServiceDialog(context);
+                      showOnlineOfflineDialogue(context);
                     });
                 }),
           ),
@@ -188,7 +218,7 @@ void didChangeAppLifecycleState(AppLifecycleState state)
         ],
       )
     );
-  }
+}
 
 Widget buildSheet()
 {
@@ -208,7 +238,7 @@ Widget buildSheet()
       snappings: const [SnapSpec.headerFooterSnap,0.6,SnapSpec.expanded],
       onSnap: (state, snap)
       {
-        print('Snapped to $snap');
+       // print('Snapped to $snap');
       },
     ),
     headerBuilder: (context, state)
@@ -255,14 +285,14 @@ Widget buildSheet()
   );
 }
 
-  Widget currentJobSheet()
-  {
+Widget currentJobSheet()
+{
     return SlidingSheet(
       duration: Duration(milliseconds: 600),
       color: Colors.white,
       shadowColor: Colors.black26,
       elevation: 12,
-      controller: controller,
+      controller: currentJobController,
       cornerRadius: 16,
       cornerRadiusOnFullscreen: 0.0,
       addTopViewPaddingOnFullscreen: true,
@@ -278,7 +308,7 @@ Widget buildSheet()
       headerBuilder: (context, state)
       {
         return Container(
-          height: 190,
+          height: 190+requestSheetTitleHeight,
           color: AppColours.golden_button_bg,
           alignment: Alignment.centerLeft,
           child: Padding(
@@ -299,8 +329,8 @@ Widget buildSheet()
     );
   }
 
-  Widget currentJobSheetChild(BuildContext context, SheetState state)
-  {
+Widget currentJobSheetChild(BuildContext context, SheetState state)
+{
   return Container(
     color: AppColours.golden_button_bg,
     padding: EdgeInsets.all(20),
@@ -316,38 +346,12 @@ Widget buildSheet()
             });
           });
         }),
+        SizedBox(height: requestSheetTitleHeight)
       ],
     ),
   );
 }
-void _addLocations(LatLng arrival,LatLng destination) {
-  Map<MarkerId, Marker> markers = <MarkerId, Marker>{};
-  List<LatLng> list=[];
-  list.add(arrival);
-  list.add(destination);
 
-  for(int i=0;i<=list.length;i++){
-      var markerIdVal = "$i";
-      final MarkerId markerId = MarkerId(markerIdVal);
-
-      // creating a new MARKER
-      final Marker marker = Marker(
-        markerId: markerId,
-        position: LatLng(
-          arrival.latitude + sin(i * pi / 6.0) / 20.0,
-          arrival.longitude + cos(i * pi / 6.0) / 20.0,
-        ),
-        infoWindow: InfoWindow(title: markerIdVal, snippet: '*'),
-        onTap: () {
-          //_onMarkerTapped(markerId);
-        },
-      );
-      markers[markerId] = marker;
-  }
-  setState(() {
-    this.markers=markers;
-  });
-}
 Widget buildChild(BuildContext context, SheetState state)
 {
   return Container(
@@ -459,29 +463,18 @@ String commentBoxText()
   }
 }
 
-showServiceDialog(BuildContext context)
+showOnlineOfflineDialogue(BuildContext context)
 {
   // Create button
   Widget okButton = TextButton(
     child: Text(ifOnline?"Go Offline":"Go Online",style: TextStyle(color: AppColours.golden_button_bg,fontSize: 16)),
     onPressed: ()
     {
-      setState(()
-      {
-        ifOnline=!ifOnline;
-        API(context).goOnlineOffline(ifOnline,onSuccess: (isOnline) async
-        {
-            SharedPreferences preferences =await Global.getSharedPref();
-            preferences.setBool(Constants.ISONLINE, isOnline);
-        });
-        if(timer==null)
-        {
-          startTimer();
-        }
-        Navigator.of(context).pop();
-      });
+      userOnlineOfflineAPI();
+      Navigator.of(context).pop();
     },
   );
+
 
   Widget cancelButton = TextButton(
     child: Text("Cancel",style: TextStyle(color: AppColours.golden_button_bg,fontSize: 16)),
@@ -506,49 +499,133 @@ showServiceDialog(BuildContext context)
   );
 }
 
+userOnlineOfflineAPI()
+{
+    API(context).goOnlineOffline(!ifOnline,onSuccess: (isOnline) async
+    {
+      bool newStatus=!ifOnline;
+      SharedPreferences preferences =await Global.getSharedPref();
+      preferences.setBool(Constants.ISONLINE, newStatus);
+      if(newStatus){
+        if(timer==null)
+        {
+          startTimer();
+        }
+      }
+      else{
+        stopTimer();
+      }
+      setState((){
+        ifOnline=newStatus;
+      });
+    });
+  }
+
+void updatePinOnMap() async
+{
+    CameraPosition cPosition = CameraPosition(
+      zoom: CAMERA_ZOOM,
+      tilt: CAMERA_TILT,
+      bearing: CAMERA_BEARING,
+      target: LatLng(currentLocation.latitude,
+          currentLocation.longitude),
+    );
+    final GoogleMapController controller = await _controller.future;
+    controller.animateCamera(CameraUpdate.newCameraPosition(cPosition));
+
+    setState(() async {
+      // updated position
+      var pinPosition = LatLng(currentLocation.latitude,currentLocation.longitude);
+
+      _markers.removeWhere((m) => m.markerId.value == "current");
+      _markers.add(Marker(
+        markerId: MarkerId("current"),
+        position: pinPosition,
+          icon: BitmapDescriptor.fromBytes(await getCurrentMarkerIcon())// updated position
+      ));
+    });
+  }
+
 getCurrentJob()
 {
     if(!isGuard)
     {
       API(context).getJourneyDetails(onSuccess: (value) {
+
         Map<String, dynamic> map = json.decode(value);
-        setState(() {
           if(map["current_job"]!=null){
             DriverCurrentJobPojo bookingsPojo = DriverCurrentJobPojo.fromJson(json.decode(value));
             isCurrentJob = true;
             _currentJourneyPojo = bookingsPojo.currentJob;
+            showPinsOnMapForJourney(bookingsPojo.currentJob.bookings.arrivalLat, bookingsPojo.currentJob.bookings.arrivalLong, bookingsPojo.currentJob.bookings.destinationLat, bookingsPojo.currentJob.bookings.destinationLong);
             Global.setJobInProgress(true);
-            _addLocations(LatLng(double.parse(_currentJourneyPojo.bookings.arrivalLat),double.parse(_currentJourneyPojo.bookings.arrivalLat)), LatLng(double.parse(_currentJourneyPojo.bookings.destinationLat),double.parse(_currentJourneyPojo.bookings.destinationLong)));
+            currentJobController.show();
+            if(!ifOnline){
+              userOnlineOfflineAPI();
+            }
+            else{
+              startTimer();
+            }
+            registerOnChangeListener();
           }
           else{
+            _markers = Set<Marker>();
+            _polylines = Set<Polyline>();
+
             isCurrentJob=false;
             _currentJourneyPojo=null;
             Global.setJobInProgress(false);
+            startTimer();
           }
-        });
       });}
 
-   else
+    else
     {
       API(context).getJobDetails(onSuccess: (value)
       {
-
+        startTimer();
         Map<String, dynamic> map = json.decode(value);
         setState(() {
           CurrentJobPojo bookingsPojo= CurrentJobPojo.fromJson(json.decode(value));
           if(map["current_job"]!=null){
             isCurrentJob=true;
-            _currentJobPojo=value;
+            _currentJobPojo=bookingsPojo;
             Global.setJobInProgress(true);
+            showPinOnMapForGuardian();
+            if(!ifOnline){
+              userOnlineOfflineAPI();
+            }
+            else{
+              startTimer();
+            }
+            registerOnChangeListener();
           }
           else{
             isCurrentJob=false;
             _currentJobPojo=null;
             Global.setJobInProgress(false);
+            startTimer();
           }
         });
       });
     }
+  }
+
+getCurrentLocation() async
+{
+  await location.getLocation().then((value) async {
+    currentLocation =value;
+    CameraPosition cPosition = CameraPosition(
+      zoom: CAMERA_ZOOM,
+      tilt: CAMERA_TILT,
+      bearing: CAMERA_BEARING,
+      target: LatLng(currentLocation.latitude,
+          currentLocation.longitude),
+    );
+    final GoogleMapController controller = await _controller.future;
+    controller.animateCamera(CameraUpdate.newCameraPosition(cPosition));
+    getCurrentJob();
+  });
 }
 
 getRequests()
@@ -557,25 +634,20 @@ getRequests()
     {
       API(context).getDriverRequests(false,onSuccess: (value)
       {
-        if(value!=null)
-        {
-          if(value.isNotEmpty)
-          {
-            if(!isDisposed)
-            {
-              setState(()
-              {
-                journeyBooking=value[0].bookings[0];
-                isBooking=true;
-                controller.show();
-              });
-            }
+        if (!isDisposed && isResumed){
+          if(value!=null && value.isNotEmpty) {
+            setState(() {
+              journeyBooking = value[0].bookings[0];
+              isBooking = true;
+              controller.show();
+              requestSheetTitleHeight = 70;
+            });
           }
           else
-            {
-            setState(()
-            {
+          {
+            setState((){
               isBooking=false;
+              requestSheetTitleHeight=0;
             });
           }
         }
@@ -596,14 +668,16 @@ getRequests()
                 guardianBooking=value[0].bookings[0];
                 isBooking=true;
                 controller.show();
+                requestSheetTitleHeight=70;
               });
             }
           }
           else
             {
-            setState(()
+              setState(()
             {
               isBooking=false;
+              requestSheetTitleHeight=0;
             });
           }
         }
@@ -611,11 +685,86 @@ getRequests()
     }
 }
 
-void _getUserLocation() async {
-   /* CameraPosition cc = CameraPosition(
-    //  target: LatLng(position.latitude, position.longitude),
-      zoom: 14.4746);
-    final GoogleMapController controller = await _controller.future;
-    controller.animateCamera(CameraUpdate.newCameraPosition(cc));*/
+showPinsOnMapForJourney(String aLat,String aLng,String dLat,dLng)async
+{
+  if(currentLocation!=null){
+    var currentPosition = LatLng(currentLocation.latitude,currentLocation.longitude);
+    _markers.add(Marker(
+        markerId: MarkerId('current'),
+        position: currentPosition,
+        icon: BitmapDescriptor.fromBytes(await getCurrentMarkerIcon())
+    ));
+  }
+    // get a LatLng for the source location
+    // from the LocationData currentLocation object
+    var pinPosition = LatLng(double.tryParse(aLat),
+        double.tryParse(aLng));
+    // get a LatLng out of the LocationData object
+    var destPosition = LatLng(double.tryParse(dLat),
+        double.tryParse(dLng));
+    // add the initial source location pin
+    _markers.add(Marker(
+        markerId: MarkerId('sourcePin'),
+        position: pinPosition
+    ));
+    // destination pin
+    _markers.add(Marker(
+      markerId: MarkerId('destPin'),
+      position: destPosition,
+    ));
+    // set the route lines on the map from source to destination
+    // for more info follow this tutorial
+    setPolylines(aLat,aLng,dLat,dLng);
+  }
+
+Future<Uint8List> getCurrentMarkerIcon() async
+{
+  return  await getBytesFromAsset('assets/images/ic_car_black.png',120);
 }
+
+void showPinOnMapForGuardian()
+{
+    if(currentLocation!=null){
+      setState(() {
+        var currentPosition = LatLng(currentLocation.latitude,currentLocation.longitude);
+        _markers.add(Marker(
+            markerId: MarkerId('current'),
+            position: currentPosition
+        ));
+      });
+    }
+  }
+
+void setPolylines(String aLat,String aLng,String dLat,dLng) async
+{
+    PolylineResult result = await polylinePoints.getRouteBetweenCoordinates(
+        googleAPIKey,PointLatLng(
+        double.tryParse(aLat),
+        double.tryParse(aLng)),PointLatLng(
+        double.tryParse(dLat),
+        double.tryParse(dLng)));
+    if(result.points.isNotEmpty){
+      result.points.forEach((PointLatLng point){
+        polylineCoordinates.add(
+            LatLng(point.latitude,point.longitude)
+        );
+      });
+      setState(() {
+        _polylines.add(Polyline(
+            width: 5, // set the width of the polylines
+            polylineId: PolylineId("poly"),
+            color: AppColours.textFeildBG,
+            points: polylineCoordinates
+        ));
+      });
+    }
+  }
+
+Future<Uint8List> getBytesFromAsset(String path, int width) async
+{
+    ByteData data = await rootBundle.load(path);
+    ui.Codec codec = await ui.instantiateImageCodec(data.buffer.asUint8List(), targetWidth: width);
+    ui.FrameInfo fi = await codec.getNextFrame();
+    return (await fi.image.toByteData(format: ui.ImageByteFormat.png)).buffer.asUint8List();
+  }
 }
