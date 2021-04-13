@@ -88,7 +88,7 @@ class _JobsScreenState extends State<JobsScreen> {
                                 isGuard?CommonWidgets.selectedFontWidget("From: ${Global.generateDate(guardianBooking[index].bookings[0].fromDate)} "
                                     "To: ${Global.generateDate(guardianBooking[index].bookings[0].toDate)}\n"
                                     "Timings: ${Global.formatTime(guardianBooking[index].bookings[0].fromTime)}To"
-                                    " ${Global.formatTime(guardianBooking[index].bookings[0].toTime)}\n${guardianBooking[index].bookings[0].selectDays.toString()}",
+                                    " ${Global.formatTime(guardianBooking[index].bookings[0].toTime)}\nDays: ${getDaysString(guardianBooking[index].bookings[0].selectDays)}",
                                     AppColours.black, 15.0,FontWeight.bold):
                                 CommonWidgets.selectedFontWidget("${Global.generateDate(journeyBooking[index].bookings[0].date)} at ${Global.formatTime(journeyBooking[index].bookings[0].time)}", AppColours.black, 15.0,FontWeight.bold),
                               ],
@@ -174,6 +174,21 @@ listItemClick(DriverBookingPojo journeyBooking,GuardianBookingPojo guardianBooki
         });
       }
     });
+  }
+  String getDaysString(List<String> daysList){
+    String days="";
+    if(daysList.isNotEmpty){
+      for(int i=0;i<daysList.length;i++){
+        if(i==0){
+          days="${daysList[i]}";
+        }
+        else{
+          days="$days,${daysList[i]}";
+        }
+      }
+    }
+
+    return days;
   }
   }
 

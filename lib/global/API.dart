@@ -78,6 +78,7 @@ class API{
           addUserForChat(loginPojo.user);
         Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) => DashBoardScreen()));
         }, onError: (value) {
+      print(value);
           loader.hide();
           CommonWidgets.showMessage(context, ErrorPojo.fromJson(json.decode(value)).errors.error[0]);
         });
@@ -127,15 +128,17 @@ class API{
         });
   }
 
-  getGuardianRequests(bool isAccepted,{void onSuccess(List<GuardianBookingPojo> booking)}){
-
+  getGuardianRequests(bool isAccepted,{void onSuccess(List<GuardianBookingPojo> booking)})
+  {
     Map<String, dynamic> jsonPost = {"status": isAccepted?1:0};
 
     ServiceHttp().httpRequestPost("getGuardBooking",map: jsonPost,
-        onSuccess: (value){
+        onSuccess: (value)
+        {
           GuardianBookingsPojo bookingsPojo= GuardianBookingsPojo.fromJson(json.decode(value));
           onSuccess(bookingsPojo.booking);
-        }, onError: (value) {
+        }, onError: (value)
+        {
           CommonWidgets.showMessage(context, ErrorPojo.fromJson(json.decode(value)).errors.error[0]);
         });
   }
@@ -244,7 +247,7 @@ getJobDetails({void onSuccess(dynamic booking)})
       });
 }
 
-  addUserForChat(User user) async {
+addUserForChat(User user) async {
     await Location().getLocation().then((loc) async => {
     await FirebaseFirestore.instance.collection(Constants.USER_TABLE).where(Constants.USER_ID_F, isEqualTo: user.id).get().then((value) async {
     if(value.size==0) {

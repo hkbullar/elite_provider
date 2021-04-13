@@ -1,7 +1,6 @@
 
 import 'dart:async';
 import 'dart:convert';
-import 'dart:math';
 import 'dart:typed_data';
 import 'dart:ui' as ui;
 import 'package:elite_provider/global/AppColours.dart';
@@ -121,10 +120,10 @@ void dispose()
 @override
 void didChangeAppLifecycleState(AppLifecycleState state)
 {
-  print('state = $state');
   if(state==AppLifecycleState.resumed)
  {
    isResumed=true;
+   startTimer();
  }
   if(state==AppLifecycleState.paused)
   {
@@ -374,7 +373,7 @@ Widget buildChild(BuildContext context, SheetState state)
 
           isGuard?CommonWidgets.requestTextContainer("Date","From: ${Global.generateDate(guardianBooking.fromDate)}\nTo: ${Global.generateDate(guardianBooking.toDate)}",Icons.date_range_outlined):SizedBox(),
           isGuard?CommonWidgets.requestTextContainer("Timing","${Global.formatTime(guardianBooking.fromTime)} To: ${Global.formatTime(guardianBooking.toTime)}",Icons.time_to_leave_outlined):SizedBox(),
-          isGuard?CommonWidgets.requestTextContainer("Working Days","${guardianBooking.selectDays}",Icons.view_week_outlined):SizedBox(),
+          isGuard?CommonWidgets.requestTextContainer("Working Days",getDaysString(guardianBooking.selectDays),Icons.view_week_outlined):SizedBox(),
 
           commentBoxText()!=null?CommonWidgets.requestTextContainer("Comments",commentBoxText(),Icons.comment_bank_outlined):SizedBox(),
 
@@ -551,7 +550,6 @@ getCurrentJob()
     if(!isGuard)
     {
       API(context).getJourneyDetails(onSuccess: (value) {
-
         Map<String, dynamic> map = json.decode(value);
           if(map["current_job"]!=null){
             DriverCurrentJobPojo bookingsPojo = DriverCurrentJobPojo.fromJson(json.decode(value));
@@ -583,11 +581,10 @@ getCurrentJob()
     {
       API(context).getJobDetails(onSuccess: (value)
       {
-        startTimer();
         Map<String, dynamic> map = json.decode(value);
         setState(() {
-          CurrentJobPojo bookingsPojo= CurrentJobPojo.fromJson(json.decode(value));
           if(map["current_job"]!=null){
+            CurrentJobPojo bookingsPojo= CurrentJobPojo.fromJson(json.decode(value));
             isCurrentJob=true;
             _currentJobPojo=bookingsPojo;
             Global.setJobInProgress(true);
@@ -766,5 +763,21 @@ Future<Uint8List> getBytesFromAsset(String path, int width) async
     ui.Codec codec = await ui.instantiateImageCodec(data.buffer.asUint8List(), targetWidth: width);
     ui.FrameInfo fi = await codec.getNextFrame();
     return (await fi.image.toByteData(format: ui.ImageByteFormat.png)).buffer.asUint8List();
+  }
+
+String getDaysString(List<String> daysList){
+    String days="";
+    if(daysList.isNotEmpty){
+      for(int i=0;i<daysList.length;i++){
+        if(i==0){
+          days="${daysList[i]}";
+        }
+        else{
+          days="$days,${daysList[i]}";
+        }
+      }
+    }
+
+    return days;
   }
 }

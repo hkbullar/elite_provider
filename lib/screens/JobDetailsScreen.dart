@@ -21,6 +21,8 @@ class JobDetailsScreen extends StatefulWidget
   DriverBookingPojo journeyBooking;
   GuardianBookingPojo guardianBooking;
 
+
+
   bool isGuard=false;
 
   @override
@@ -36,13 +38,14 @@ class _JobDetailsScreenState extends State<JobDetailsScreen> {
 
   JourneyBooking journeyBooking;
   GuardianBooking guardianBooking;
-
+  List<String> daysList=[];
   bool isGuard=false;
 
   @override
   void initState() {
     if(isGuard){
       guardianBooking=guardianBookingPojo.bookings[0];
+      daysList=guardianBooking.selectDays;
     }else{
       journeyBooking=driverBookingPojo.bookings[0];
     }
@@ -69,7 +72,7 @@ class _JobDetailsScreenState extends State<JobDetailsScreen> {
               isGuard?CommonWidgets.requestTextContainer("Timings","${Global.formatTime(guardianBooking.fromTime)} To ${Global.formatTime(guardianBooking.toTime)}",Icons.time_to_leave_outlined):
               CommonWidgets.requestTextContainer("Time","${Global.formatTime(journeyBooking.time)}",Icons.time_to_leave_outlined),
 
-              isGuard?CommonWidgets.requestTextContainer("Working Days:","${guardianBooking.selectDays.toString()}",Icons.view_week_outlined):
+              isGuard?CommonWidgets.requestTextContainer("Working Days:",getDaysString(),Icons.view_week_outlined):
 
               commentBoxText()!=null?CommonWidgets.requestTextContainer("Comments",commentBoxText(),Icons.comment_bank_outlined):SizedBox(),
 
@@ -85,7 +88,6 @@ class _JobDetailsScreenState extends State<JobDetailsScreen> {
                     else{
                       startJob();
                     }
-
                   }
                   else if(guardianBookingPojo.status==1){
                     Navigator.pop(context,true);
@@ -93,13 +95,14 @@ class _JobDetailsScreenState extends State<JobDetailsScreen> {
                 }
                 else{
                   if(driverBookingPojo.startJob==0){
-                    if(await Global.isJobInProgress()){
+                    if(await Global.isJobInProgress())
+                    {
                       Global.toast(context, "Job already in progress");
                     }
-                    else{
+                    else
+                   {
                       startJob();
                     }
-
                   }
                   else if(driverBookingPojo.startJob==1)
                   {
@@ -114,7 +117,8 @@ class _JobDetailsScreenState extends State<JobDetailsScreen> {
     );
   }
 
-String generateText(){
+String generateText()
+{
     if(isGuard){
       if(guardianBookingPojo.status==0){
         return "Start Job";
@@ -139,6 +143,21 @@ String generateText(){
     }
 }
 
+String getDaysString(){
+    String days="";
+    if(daysList.isNotEmpty){
+      for(int i=0;i<daysList.length;i++){
+        if(i==0){
+          days="${daysList[i]}";
+        }
+        else{
+          days="$days,${daysList[i]}";
+        }
+      }
+    }
+    return days;
+}
+
   String commentBoxText()
   {
     if(isGuard)
@@ -154,7 +173,7 @@ String generateText(){
     }
     else
       {
-      if(journeyBooking.comment!=null && journeyBooking.comment.isNotEmpty)
+        if(journeyBooking.comment!=null && journeyBooking.comment.isNotEmpty)
       {
         return journeyBooking.comment;
       }
