@@ -47,7 +47,7 @@ class CurrentJob {
   int startJob;
   DateTime createdAt;
   DateTime updatedAt;
-  DBooking bookings;
+  Bookings bookings;
 
   factory CurrentJob.fromJson(Map<String, dynamic> json) => CurrentJob(
     id: json["id"],
@@ -57,7 +57,7 @@ class CurrentJob {
     startJob: json["start_job"],
     createdAt: DateTime.parse(json["created_at"]),
     updatedAt: DateTime.parse(json["updated_at"]),
-    bookings: DBooking.fromJson(json["bookings"]),
+    bookings: Bookings.fromJson(json["bookings"]),
   );
 
   Map<String, dynamic> toJson() => {
@@ -72,77 +72,89 @@ class CurrentJob {
   };
 }
 
-class DBooking {
-  DBooking({
+class Bookings {
+  Bookings({
     this.id,
+    this.location,
+    this.locationLat,
+    this.locationLong,
     this.userId,
-    this.destinationLocation,
-    this.arrivalLocation,
-    this.date,
-    this.time,
-    this.isAdmin,
+    this.counting,
+    this.fromTime,
+    this.userType,
+    this.toTime,
+    this.fromDate,
+    this.toDate,
     this.price,
     this.status,
     this.comment,
     this.latitude,
     this.longitude,
-    this.securityGuard,
-    this.acceptReject,
+    this.selectDays,
     this.createdAt,
     this.updatedAt,
   });
 
   int id;
+  String location;
+  String locationLat;
+  String locationLong;
   int userId;
-  String destinationLocation;
-  String arrivalLocation;
-  DateTime date;
-  String time;
-  int isAdmin;
+  String counting;
+  String fromTime;
+  String userType;
+  String toTime;
+  DateTime fromDate;
+  DateTime toDate;
   int price;
   int status;
   String comment;
   dynamic latitude;
   dynamic longitude;
-  int securityGuard;
-  int acceptReject;
+  List<String> selectDays;
   DateTime createdAt;
   DateTime updatedAt;
 
-  factory DBooking.fromJson(Map<String, dynamic> json) => DBooking(
+  factory Bookings.fromJson(Map<String, dynamic> json) => Bookings(
     id: json["id"],
+    location: json["location"],
+    locationLat: json["location_lat"],
+    locationLong: json["location_long"],
     userId: json["user_id"],
-    destinationLocation: json["destination_location"],
-    arrivalLocation: json["arrival_location"],
-    date: DateTime.parse(json["date"]),
-    time: json["time"],
-    isAdmin: json["is_admin"],
+    counting: json["counting"],
+    fromTime: json["from_time"],
+    userType: json["user_type"],
+    toTime: json["to_time"],
+    fromDate: DateTime.parse(json["from_date"]),
+    toDate: DateTime.parse(json["to_date"]),
     price: json["price"],
     status: json["status"],
     comment: json["comment"],
     latitude: json["latitude"],
     longitude: json["longitude"],
-    securityGuard: json["security_guard"],
-    acceptReject: json["accept_reject"],
+    selectDays: List<String>.from(json["select_days"].map((x) => x)),
     createdAt: DateTime.parse(json["created_at"]),
     updatedAt: DateTime.parse(json["updated_at"]),
   );
 
   Map<String, dynamic> toJson() => {
     "id": id,
+    "location": location,
+    "location_lat": locationLat,
+    "location_long": locationLong,
     "user_id": userId,
-    "destination_location": destinationLocation,
-    "arrival_location": arrivalLocation,
-    "date": "${date.year.toString().padLeft(4, '0')}-${date.month.toString().padLeft(2, '0')}-${date.day.toString().padLeft(2, '0')}",
-    "time": time,
-    "is_admin": isAdmin,
+    "counting": counting,
+    "from_time": fromTime,
+    "user_type": userType,
+    "to_time": toTime,
+    "from_date": "${fromDate.year.toString().padLeft(4, '0')}-${fromDate.month.toString().padLeft(2, '0')}-${fromDate.day.toString().padLeft(2, '0')}",
+    "to_date": "${toDate.year.toString().padLeft(4, '0')}-${toDate.month.toString().padLeft(2, '0')}-${toDate.day.toString().padLeft(2, '0')}",
     "price": price,
     "status": status,
     "comment": comment,
     "latitude": latitude,
     "longitude": longitude,
-    "security_guard": securityGuard,
-    "accept_reject": acceptReject,
+    "select_days": List<dynamic>.from(selectDays.map((x) => x)),
     "created_at": createdAt.toIso8601String(),
     "updated_at": updatedAt.toIso8601String(),
   };

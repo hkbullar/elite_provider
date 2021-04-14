@@ -189,7 +189,7 @@ if(isInProgress && isGuardian){
     Constants.JOB_SC_BOOKING_ID:bookingId,
     Constants.JOB_SC_CREATED_BY:driverId,
     Constants.JOB_SC_JOB_STATUS:1,
-    Constants.JOB_SC_DRIVER_ID:driverId
+    Constants.JOB_SC_GUARD_ID_2:driverId
   };
 }
 else if(!isInProgress && isGuardian){
@@ -197,7 +197,7 @@ else if(!isInProgress && isGuardian){
   jsonPost ={
     Constants.JOB_SC_BOOKING_ID:bookingId,
     Constants.JOB_SC_JOB_STATUS:2,
-    Constants.JOB_SC_DRIVER_ID:driverId
+    Constants.JOB_SC_GUARD_ID:driverId
   };
 }
 else if(isInProgress && !isGuardian){

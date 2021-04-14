@@ -58,6 +58,8 @@ class Constants{
   //JOB START COMPLETE KEYS
   //static const String JOB_SC_GUARD_ID="booking_id";
   static const String JOB_SC_DRIVER_ID="driver_id";
+  static const String JOB_SC_GUARD_ID_2="gurad_id";
+  static const String JOB_SC_GUARD_ID="guard_id";
   static const String JOB_SC_JOB_STATUS="start_job";
   static const String JOB_SC_CREATED_BY="created_by";
   static const String JOB_SC_BOOKING_ID="booking_id";

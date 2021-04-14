@@ -42,18 +42,23 @@ class _JobDetailsScreenState extends State<JobDetailsScreen> {
   bool isGuard=false;
 
   @override
-  void initState() {
-    if(isGuard){
+  void initState()
+  {
+    if(isGuard)
+    {
       guardianBooking=guardianBookingPojo.bookings[0];
       daysList=guardianBooking.selectDays;
-    }else{
+    }
+    else
+    {
       journeyBooking=driverBookingPojo.bookings[0];
     }
     super.initState();
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context)
+  {
     return Scaffold(
       appBar: EliteAppBar("Job Details"),
       backgroundColor: AppColours.black,
@@ -76,25 +81,40 @@ class _JobDetailsScreenState extends State<JobDetailsScreen> {
 
               commentBoxText()!=null?CommonWidgets.requestTextContainer("Comments",commentBoxText(),Icons.comment_bank_outlined):SizedBox(),
 
-              CommonWidgets.requestTextContainer("Price","${isGuard?guardianBooking.price:journeyBooking.price}",Icons.attach_money),
+              CommonWidgets.requestTextContainer(isGuard?"Price per hour":"Price","${isGuard?guardianBooking.price:journeyBooking.price}",Icons.attach_money),
+              isGuard?CommonWidgets.requestTextContainer("Total hours spent","${guardianBookingPojo.totalHour}",Icons.lock_clock):SizedBox(),
+
               SizedBox(height: 10),
-              CommonWidgets.goldenFullWidthButton(generateText(),onClick: ()
-              async {
-                if(isGuard){
-                  if(guardianBookingPojo.status==0){
-                    if(await Global.isJobInProgress()){
+              CommonWidgets.goldenFullWidthButton(generateText(),onClick: () async
+              {
+                if(isGuard)
+                {
+                  if(guardianBookingPojo.startJob==0)
+                  {
+                    if(await Global.isJobInProgress())
+                    {
                       Global.toast(context, "Job already in progress");
                     }
-                    else{
+                    else
+                    {
+                      if(compareTime(guardianBookingPojo.bookings[0])){
+                        startJob();
+                      }
+                    }
+                  }
+                  else if(guardianBookingPojo.startJob==1){
+                    Navigator.pop(context,true);
+                  }
+                  else if(guardianBookingPojo.startJob==2){
+                    if(compareTime(guardianBookingPojo.bookings[0])){
                       startJob();
                     }
                   }
-                  else if(guardianBookingPojo.status==1){
-                    Navigator.pop(context,true);
-                  }
                 }
-                else{
-                  if(driverBookingPojo.startJob==0){
+                else
+                  {
+                  if(driverBookingPojo.startJob==0)
+                  {
                     if(await Global.isJobInProgress())
                     {
                       Global.toast(context, "Job already in progress");
@@ -119,38 +139,51 @@ class _JobDetailsScreenState extends State<JobDetailsScreen> {
 
 String generateText()
 {
-    if(isGuard){
-      if(guardianBookingPojo.status==0){
+    if(isGuard)
+    {
+      if(guardianBookingPojo.startJob==0)
+      {
         return "Start Job";
       }
-      else if(guardianBookingPojo.status==1){
+      else if(guardianBookingPojo.startJob==1)
+      {
         return "Job in Progress";
       }
-      else{
-        return "Completed Job :)";
+      else
+      {
+          return "Start Job";
       }
     }
-    else{
-      if(driverBookingPojo.startJob==0){
+    else
+      {
+      if(driverBookingPojo.startJob==0)
+      {
         return "Start Journey";
       }
-      else if(driverBookingPojo.startJob==1){
+      else if(driverBookingPojo.startJob==1)
+      {
         return "On a Journey";
       }
-      else {
+      else
+      {
         return "Completed Journey :)";
       }
     }
 }
 
-String getDaysString(){
+String getDaysString()
+{
     String days="";
-    if(daysList.isNotEmpty){
-      for(int i=0;i<daysList.length;i++){
-        if(i==0){
+    if(daysList.isNotEmpty)
+    {
+      for(int i=0;i<daysList.length;i++)
+      {
+        if(i==0)
+        {
           days="${daysList[i]}";
         }
-        else{
+        else
+        {
           days="$days,${daysList[i]}";
         }
       }
@@ -158,8 +191,37 @@ String getDaysString(){
     return days;
 }
 
-  String commentBoxText()
+bool compareTime(GuardianBooking data){
+  var nowTime=DateTime.now();
+
+  String fromDate= DateFormat("yyyy-MM-dd").format(data.fromDate);
+  String toDate= DateFormat("yyyy-MM-dd").format(data.toDate);
+
+  DateTime fromVal=DateFormat("yyyy-MM-dd HH:mm").parse(fromDate+" "+data.fromTime);
+  DateTime toVal=DateFormat("yyyy-MM-dd HH:mm").parse(toDate+" "+data.toTime);
+
+  String day=DateFormat("EE").format(nowTime);
+
+  if(nowTime.isAfter(fromVal) && nowTime.isBefore(toVal))
   {
+    if(daysList.contains(day))
+    {
+        return true;
+    }
+    else
+     {
+       Global.toast(context,"Not the valid day to start the job");
+       return false;
+    }
+  }
+  else
+  {
+        Global.toast(context,"Not the valid time to start the job");
+        return false;
+  }
+}
+String commentBoxText()
+{
     if(isGuard)
     {
       if(guardianBooking.comment!=null && guardianBooking.comment.isNotEmpty)

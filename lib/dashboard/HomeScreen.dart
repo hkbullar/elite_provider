@@ -71,7 +71,7 @@ void initState()
 {
     location = new Location();
     polylinePoints = PolylinePoints();
-
+    isDisposed=false;
   WidgetsBinding.instance.addObserver(this);
     super.initState();
 }
@@ -167,11 +167,11 @@ Widget build(BuildContext context)
                 }
                 Global.isOnline().then((isOnline)
                 {
-
                   setState(() {
                     this.ifOnline=isOnline;
                   });
                 });
+
                 Global.userType().then((value)
                 {
 
@@ -315,7 +315,7 @@ Widget currentJobSheet()
             child: Column(
               children:
               [
-                Text("${isGuard?"Location":"Source"}: ${isGuard?_currentJobPojo.currentJob.bookings.destinationLocation:_currentJourneyPojo.bookings.arrivalLocation}",style: TextStyle(color: AppColours.black,fontSize: 16,fontWeight: FontWeight.bold)),
+                Text("${isGuard?"Location":"Source"}: ${isGuard?_currentJobPojo.currentJob.bookings.location:_currentJourneyPojo.bookings.arrivalLocation}",style: TextStyle(color: AppColours.black,fontSize: 16,fontWeight: FontWeight.bold)),
                 SizedBox(height: 10),
                 isGuard?SizedBox(): Text("Destination: ${_currentJourneyPojo.bookings.destinationLocation}",style: TextStyle(color: AppColours.black,fontSize: 16,fontWeight: FontWeight.bold)),
                 SizedBox(height: 10),
@@ -575,8 +575,8 @@ getCurrentJob()
             Global.setJobInProgress(false);
             startTimer();
           }
-      });}
-
+      });
+    }
     else
     {
       API(context).getJobDetails(onSuccess: (value)
@@ -652,33 +652,36 @@ getRequests()
     }
     else if(isGuard)
     {
-      API(context).getGuardianRequests(false,onSuccess: (value)
-      {
-        if(value!=null)
+      if (!isDisposed && isResumed){
+        API(context).getGuardianRequests(false,onSuccess: (value)
         {
-          if(value.isNotEmpty)
+          if(value!=null)
           {
-            if(!isDisposed)
+            if(value.isNotEmpty)
+            {
+              if(!isDisposed)
+              {
+                setState(()
+                {
+                  guardianBooking=value[0].bookings[0];
+                  isBooking=true;
+                  controller.show();
+                  requestSheetTitleHeight=70;
+                });
+              }
+            }
+            else
             {
               setState(()
               {
-                guardianBooking=value[0].bookings[0];
-                isBooking=true;
-                controller.show();
-                requestSheetTitleHeight=70;
+                isBooking=false;
+                requestSheetTitleHeight=0;
               });
             }
           }
-          else
-            {
-              setState(()
-            {
-              isBooking=false;
-              requestSheetTitleHeight=0;
-            });
-          }
-        }
-      });
+        });
+      }
+
     }
 }
 
@@ -721,6 +724,7 @@ Future<Uint8List> getCurrentMarkerIcon() async
 
 void showPinOnMapForGuardian()
 {
+  _markers.clear();
     if(currentLocation!=null){
       setState(() {
         var currentPosition = LatLng(currentLocation.latitude,currentLocation.longitude);
@@ -742,9 +746,7 @@ void setPolylines(String aLat,String aLng,String dLat,dLng) async
         double.tryParse(dLng)));
     if(result.points.isNotEmpty){
       result.points.forEach((PointLatLng point){
-        polylineCoordinates.add(
-            LatLng(point.latitude,point.longitude)
-        );
+        polylineCoordinates.add(LatLng(point.latitude,point.longitude));
       });
       setState(() {
         _polylines.add(Polyline(
@@ -765,7 +767,8 @@ Future<Uint8List> getBytesFromAsset(String path, int width) async
     return (await fi.image.toByteData(format: ui.ImageByteFormat.png)).buffer.asUint8List();
   }
 
-String getDaysString(List<String> daysList){
+String getDaysString(List<String> daysList)
+{
     String days="";
     if(daysList.isNotEmpty){
       for(int i=0;i<daysList.length;i++){

@@ -30,6 +30,10 @@ class GuardianBookingPojo {
     this.bookingId,
     this.guardId,
     this.status,
+    this.startJob,
+    this.startAt,
+    this.endAt,
+    this.totalHour,
     this.createdAt,
     this.updatedAt,
     this.bookings,
@@ -39,6 +43,10 @@ class GuardianBookingPojo {
   int bookingId;
   int guardId;
   int status;
+  int startJob;
+  String startAt;
+  String endAt;
+  int totalHour;
   DateTime createdAt;
   DateTime updatedAt;
   List<GuardianBooking> bookings;
@@ -48,6 +56,10 @@ class GuardianBookingPojo {
     bookingId: json["booking_id"],
     guardId: json["guard_id"],
     status: json["status"],
+    startJob: json["start_job"],
+    startAt: json["start_at"],
+    endAt: json["end_at"],
+    totalHour: json["total_hour"],
     createdAt: DateTime.parse(json["created_at"]),
     updatedAt: DateTime.parse(json["updated_at"]),
     bookings: List<GuardianBooking>.from(json["bookings"].map((x) => GuardianBooking.fromJson(x))),
@@ -58,16 +70,21 @@ class GuardianBookingPojo {
     "booking_id": bookingId,
     "guard_id": guardId,
     "status": status,
+    "start_job": startJob,
+    "start_at": startAt,
+    "end_at": endAt,
+    "total_hour": totalHour,
     "created_at": createdAt.toIso8601String(),
     "updated_at": updatedAt.toIso8601String(),
     "bookings": List<dynamic>.from(bookings.map((x) => x.toJson())),
   };
 }
-
 class GuardianBooking {
   GuardianBooking({
     this.id,
     this.location,
+    this.locationLat,
+    this.locationLong,
     this.userId,
     this.counting,
     this.fromTime,
@@ -78,6 +95,8 @@ class GuardianBooking {
     this.price,
     this.status,
     this.comment,
+    this.latitude,
+    this.longitude,
     this.selectDays,
     this.createdAt,
     this.updatedAt,
@@ -85,6 +104,8 @@ class GuardianBooking {
 
   int id;
   String location;
+  String locationLat;
+  String locationLong;
   int userId;
   String counting;
   String fromTime;
@@ -95,6 +116,8 @@ class GuardianBooking {
   int price;
   int status;
   String comment;
+  dynamic latitude;
+  dynamic longitude;
   List<String> selectDays;
   DateTime createdAt;
   DateTime updatedAt;
@@ -102,6 +125,8 @@ class GuardianBooking {
   factory GuardianBooking.fromJson(Map<String, dynamic> json) => GuardianBooking(
     id: json["id"],
     location: json["location"],
+    locationLat: json["location_lat"],
+    locationLong: json["location_long"],
     userId: json["user_id"],
     counting: json["counting"],
     fromTime: json["from_time"],
@@ -112,6 +137,8 @@ class GuardianBooking {
     price: json["price"],
     status: json["status"],
     comment: json["comment"],
+    latitude: json["latitude"],
+    longitude: json["longitude"],
     selectDays: List<String>.from(json["select_days"].map((x) => x)),
     createdAt: DateTime.parse(json["created_at"]),
     updatedAt: DateTime.parse(json["updated_at"]),
@@ -120,6 +147,8 @@ class GuardianBooking {
   Map<String, dynamic> toJson() => {
     "id": id,
     "location": location,
+    "location_lat": locationLat,
+    "location_long": locationLong,
     "user_id": userId,
     "counting": counting,
     "from_time": fromTime,
@@ -130,6 +159,8 @@ class GuardianBooking {
     "price": price,
     "status": status,
     "comment": comment,
+    "latitude": latitude,
+    "longitude": longitude,
     "select_days": List<dynamic>.from(selectDays.map((x) => x)),
     "created_at": createdAt.toIso8601String(),
     "updated_at": updatedAt.toIso8601String(),

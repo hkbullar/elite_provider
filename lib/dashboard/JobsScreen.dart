@@ -87,7 +87,7 @@ class _JobsScreenState extends State<JobsScreen> {
                               children: [
                                 isGuard?CommonWidgets.selectedFontWidget("From: ${Global.generateDate(guardianBooking[index].bookings[0].fromDate)} "
                                     "To: ${Global.generateDate(guardianBooking[index].bookings[0].toDate)}\n"
-                                    "Timings: ${Global.formatTime(guardianBooking[index].bookings[0].fromTime)}To"
+                                    "Timings: ${Global.formatTime(guardianBooking[index].bookings[0].fromTime)} To"
                                     " ${Global.formatTime(guardianBooking[index].bookings[0].toTime)}\nDays: ${getDaysString(guardianBooking[index].bookings[0].selectDays)}",
                                     AppColours.black, 15.0,FontWeight.bold):
                                 CommonWidgets.selectedFontWidget("${Global.generateDate(journeyBooking[index].bookings[0].date)} at ${Global.formatTime(journeyBooking[index].bookings[0].time)}", AppColours.black, 15.0,FontWeight.bold),
