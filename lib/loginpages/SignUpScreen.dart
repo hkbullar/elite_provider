@@ -10,14 +10,16 @@ import 'package:permission_handler/permission_handler.dart';
 
 class SignUpScreen extends StatefulWidget {
  final int userType;
-  SignUpScreen(this.userType);
+ String guardSubType;
+  SignUpScreen(this.userType,{this.guardSubType});
   @override
-  _SignUpScreenState createState() => _SignUpScreenState(userType);
+  _SignUpScreenState createState() => _SignUpScreenState(userType,guardSubType);
 }
 
 class _SignUpScreenState extends State<SignUpScreen> {
   int userType;
-  _SignUpScreenState(this.userType);
+  String guardSubType;
+  _SignUpScreenState(this.userType,this.guardSubType);
   var _nameController = TextEditingController();
   var _emailController = TextEditingController();
   var _mobileController = TextEditingController();
@@ -178,10 +180,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
 
 _signUpClick() {
 
-  String userTypeText="";
+  String userTypeText="guard";
   if(userType==1){userTypeText=Constants.USER_TYPE_DRIVER;}
-  if(userType==2){userTypeText=Constants.USER_TYPE_GUARDIAN;}
-  if(userType==3){userTypeText=Constants.USER_TYPE_GUARDIAN;}
 
   if (CommonWidgets.isValidate(_formKey)) {
     Map jsonPost =
@@ -190,8 +190,8 @@ _signUpClick() {
       Constants.EMAIL: _emailController.text,
       Constants.PASSWORD: _passwordController.text,
       Constants.USER_TYPE: userTypeText,
+      Constants.USER_SUB_TYPE: guardSubType,
     };
-    print(jsonPost);
     permissionCode(jsonPost);
   }
 }

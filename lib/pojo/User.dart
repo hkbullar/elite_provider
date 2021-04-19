@@ -8,6 +8,9 @@ class User {
     this.gender,
     this.emailVerifiedAt,
     this.onlineOffline,
+    this.lat,
+    this.long,
+    this.userSubType,
     this.createdAt,
     this.updatedAt,
   });
@@ -17,9 +20,12 @@ class User {
   String email;
   dynamic phoneNo;
   dynamic image;
-  dynamic gender;
+  String gender;
   dynamic emailVerifiedAt;
-  dynamic onlineOffline;
+  int onlineOffline;
+  String lat;
+  String long;
+  String userSubType;
   DateTime createdAt;
   DateTime updatedAt;
 
@@ -32,6 +38,9 @@ class User {
     gender: json["gender"],
     emailVerifiedAt: json["email_verified_at"],
     onlineOffline: json["online_offline"],
+    lat: json["lat"],
+    long: json["long"],
+    userSubType: json["user_sub_type"],
     createdAt: DateTime.parse(json["created_at"]),
     updatedAt: DateTime.parse(json["updated_at"]),
   );
@@ -45,6 +54,9 @@ class User {
     "gender": gender,
     "email_verified_at": emailVerifiedAt,
     "online_offline": onlineOffline,
+    "lat": lat,
+    "long": long,
+    "user_sub_type": userSubType,
     "created_at": createdAt.toIso8601String(),
     "updated_at": updatedAt.toIso8601String(),
   };

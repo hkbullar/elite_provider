@@ -5,6 +5,7 @@ class Constants{
   static const String PHONE = "phone";
   static const String PASSWORD = "password";
   static const String USER_TYPE = "user_type";
+  static const String USER_SUB_TYPE = "user_sub_type";
   static const String PASSWORD_CONFIRMATION = "password_confirmation";
   static const String ID = "id";
   static const String LANGUAGE_CODE = "language";

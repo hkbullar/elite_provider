@@ -80,7 +80,7 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
                   height: 150,
                   alignment: Alignment.center,
                   child: Container(
-                    height: 50,
+                    height: 65,
                     padding: EdgeInsets.only(left: 30),
                     alignment: Alignment.center,
                     child: Row(
@@ -106,6 +106,7 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
                             children: [
                               Text(userinfo!=null?userinfo.name:"",style: TextStyle(color: AppColours.white, fontSize: 20)),
                               Text(userinfo!=null?userinfo.email:"",style: TextStyle(color: AppColours.golden_button_bg, fontSize: 12)),
+                              Text(userinfo!=null && userinfo.userSubType!=null?"(${userinfo.userSubType})":"",style: TextStyle(color: AppColours.golden_button_bg, fontSize: 12)),
                             ],
                           ),
                         ),

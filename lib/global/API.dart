@@ -39,7 +39,11 @@ class API{
           preferences.setString(Constants.USER_PREF,json.encode(loginPojo.user.toJson()));
 
           loader.hide();
-          Global.toast(context, "Logged In Successfully\nWelcome to Elite");
+          String userType="";
+          if(loginPojo.user.userSubType!=null){
+            userType=loginPojo.user.userSubType;
+          }
+          Global.toast(context, "Logged In Successfully as $userType\nWelcome to Elite");
           addUserForChat(loginPojo.user);
           Global.userType().then((value)
           {

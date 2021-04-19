@@ -619,6 +619,7 @@ getCurrentLocation() async
       target: LatLng(currentLocation.latitude,
           currentLocation.longitude),
     );
+    API(context).updateUserLocation(currentLocation);
     final GoogleMapController controller = await _controller.future;
     controller.animateCamera(CameraUpdate.newCameraPosition(cPosition));
     getCurrentJob();
@@ -627,6 +628,7 @@ getCurrentLocation() async
 
 getRequests()
 {
+  if (!isDisposed && isResumed){
     if(!isGuard)
     {
       API(context).getDriverRequests(false,onSuccess: (value)
@@ -683,6 +685,8 @@ getRequests()
       }
 
     }
+  }
+
 }
 
 showPinsOnMapForJourney(String aLat,String aLng,String dLat,dLng)async

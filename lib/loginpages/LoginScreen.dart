@@ -41,9 +41,8 @@ class _LoginScreenState extends State<LoginScreen> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Image.asset(
-                Constants.LOCAL_IMAGE+"logo.png",height: MediaQuery.of(context).size.height/6,
-              ),
+              Image.asset(Constants.LOCAL_IMAGE+"logo.png",height: MediaQuery.of(context).size.height/6),
+
               SizedBox(height: MediaQuery.of(context).size.height/15),
               TextFormField(
                 validator: (value) => value.isEmpty ? 'Email cannot be blank': null,
@@ -124,9 +123,9 @@ class _LoginScreenState extends State<LoginScreen> {
     );
   }
 
-  void navigationToSignUp(userType)
+  void navigationToSignUp(userType,{String subType})
   {
-    Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) => SignUpScreen(userType)));
+    Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) => SignUpScreen(userType,guardSubType: subType)));
   }
 
   _loginClick()
@@ -146,10 +145,6 @@ permissionCode(Map jsonPost) async {
     if (await Permission.location.request().isGranted)
     {
       loginAPI(jsonPost);
-    }
-    else
-    {
-    print("AA");
     }
   }
   else{
@@ -180,9 +175,9 @@ permissionCode(Map jsonPost) async {
                               children: [
                                  Text("Register as :",style: TextStyle(color: AppColours.textFeildBG,fontSize: 22,fontWeight: FontWeight.bold),),
                                 SizedBox(height: 30,),
-                                CommonWidgets.blackFullWidthButton("DRIVER",onClick: (){navigationToSignUp(1);}),
+                                CommonWidgets.blackFullWidthButton("DRIVER",onClick: (){navigationToSignUp(1,subType: "Driver");}),
                                 SizedBox(height: 30,),
-                                CommonWidgets.blackFullWidthButton("GUARDIAN",onClick: (){navigationToSignUp(2);}),
+                                CommonWidgets.blackFullWidthButton("GUARDIAN",onClick: (){navigationToSignUp(2,subType: "Guardian");}),
                                 SizedBox(height: 30,),
                                 CommonWidgets.blackFullWidthButton("SECURITY OFFICER",onClick: (){selectSecurityOfficerTypeUI();}),
             ],
@@ -202,15 +197,15 @@ permissionCode(Map jsonPost) async {
                 children: [
                   Text("Register as :",style: TextStyle(color: AppColours.textFeildBG,fontSize: 22,fontWeight: FontWeight.bold),),
                   SizedBox(height: 20,),
-                  CommonWidgets.blackFullWidthButton("Steward",onClick: (){navigationToSignUp(3);}),
+                  CommonWidgets.blackFullWidthButton("Steward",onClick: (){navigationToSignUp(3,subType: "Steward");}),
                   SizedBox(height: 20,),
-                  CommonWidgets.blackFullWidthButton("Security Guard",onClick: (){navigationToSignUp(4);}),
+                  CommonWidgets.blackFullWidthButton("Security Guard",onClick: (){navigationToSignUp(4,subType:"Security Guard" );}),
                   SizedBox(height: 20,),
-                  CommonWidgets.blackFullWidthButton("Door Supervisor",onClick: (){navigationToSignUp(5);}),
+                  CommonWidgets.blackFullWidthButton("Door Supervisor",onClick: (){navigationToSignUp(5,subType:"Door Supervisor" );}),
                   SizedBox(height: 20,),
-                  CommonWidgets.blackFullWidthButton("Close Protection Officerr",onClick: (){navigationToSignUp(6);}),
+                  CommonWidgets.blackFullWidthButton("Close Protection Officerr",onClick: (){navigationToSignUp(6,subType:"Close Protection Officerr" );}),
                   SizedBox(height: 20,),
-                  CommonWidgets.blackFullWidthButton("CSAS Officer",onClick: (){navigationToSignUp(7);}),
+                  CommonWidgets.blackFullWidthButton("CSAS Officer",onClick: (){navigationToSignUp(7,subType: "CSAS Officer");}),
                 ],
               ),
             ));

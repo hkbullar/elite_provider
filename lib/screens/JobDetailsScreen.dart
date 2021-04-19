@@ -21,8 +21,6 @@ class JobDetailsScreen extends StatefulWidget
   DriverBookingPojo journeyBooking;
   GuardianBookingPojo guardianBooking;
 
-
-
   bool isGuard=false;
 
   @override
@@ -75,7 +73,9 @@ class _JobDetailsScreenState extends State<JobDetailsScreen> {
               CommonWidgets.requestTextContainer("Date",Global.generateDate(journeyBooking.date),Icons.date_range_outlined),
 
               isGuard?CommonWidgets.requestTextContainer("Timings","${Global.formatTime(guardianBooking.fromTime)} To ${Global.formatTime(guardianBooking.toTime)}",Icons.time_to_leave_outlined):
-              CommonWidgets.requestTextContainer("Time","${Global.formatTime(journeyBooking.time)}",Icons.time_to_leave_outlined),
+
+              !isGuard?CommonWidgets.requestTextContainer("Time","${Global.formatTime(journeyBooking.time)}",Icons.time_to_leave_outlined):SizedBox(),
+              !isGuard && journeyBooking.securityGuard!=0?CommonWidgets.requestTextContainer("Guardians Required",journeyBooking.securityGuard==1?"One":journeyBooking.securityGuard==2?"Two":"",Icons.security_outlined):SizedBox(),
 
               isGuard?CommonWidgets.requestTextContainer("Working Days:",getDaysString(),Icons.view_week_outlined):
 
@@ -220,6 +220,7 @@ bool compareTime(GuardianBooking data){
         return false;
   }
 }
+
 String commentBoxText()
 {
     if(isGuard)
