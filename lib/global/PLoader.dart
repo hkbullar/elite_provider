@@ -1,8 +1,7 @@
 
 import 'package:elite_provider/global/AppColours.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:progress_dialog/progress_dialog.dart';
+import 'package:progress_dialog_null_safe/progress_dialog_null_safe.dart';
 
 class PLoader{
   BuildContext _context;
@@ -12,7 +11,7 @@ class PLoader{
     if(pr==null){
       pr= ProgressDialog(
           _context,
-          type: ProgressDialogType.Normal,
+          type: ProgressDialogType.normal,
           isDismissible: false
       );
       pr.style(

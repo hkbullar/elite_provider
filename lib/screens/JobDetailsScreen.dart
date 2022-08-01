@@ -93,7 +93,7 @@ class _JobDetailsScreenState extends State<JobDetailsScreen> {
                   {
                     if(await Global.isJobInProgress())
                     {
-                      Global.toast(context, "Job already in progress");
+                      Global().toast(context, "Job already in progress");
                     }
                     else
                     {
@@ -117,7 +117,7 @@ class _JobDetailsScreenState extends State<JobDetailsScreen> {
                   {
                     if(await Global.isJobInProgress())
                     {
-                      Global.toast(context, "Job already in progress");
+                      Global().toast(context, "Job already in progress");
                     }
                     else
                    {
@@ -210,13 +210,13 @@ bool compareTime(GuardianBooking data){
     }
     else
      {
-       Global.toast(context,"Not the valid day to start the job");
+       Global().toast(context,"Not the valid day to start the job");
        return false;
     }
   }
   else
   {
-        Global.toast(context,"Not the valid time to start the job");
+        Global().toast(context,"Not the valid time to start the job");
         return false;
   }
 }

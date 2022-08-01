@@ -12,8 +12,8 @@ class Global{
     return _prefs;
   }
 
-  static void toast(BuildContext context,String message) {
-    Toast.show(message, context, duration: Toast.LENGTH_LONG, gravity:  Toast.BOTTOM);
+  void toast(BuildContext context,String message) {
+    Toast.show(message, duration: Toast.lengthLong, gravity:  Toast.bottom);
   }
 
   static Future<bool> isRegistered() async {

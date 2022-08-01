@@ -15,9 +15,7 @@ import 'package:elite_provider/pojo/GuardianBookingsPojo.dart';
 import 'package:elite_provider/pojo/LoginPojo.dart';
 import 'package:elite_provider/pojo/OnlineOfflinePojo.dart';
 import 'package:elite_provider/pojo/User.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:location/location.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -43,7 +41,7 @@ class API{
           if(loginPojo.user.userSubType!=null){
             userType=loginPojo.user.userSubType;
           }
-          Global.toast(context, "Logged In Successfully as $userType\nWelcome to Elite");
+          Global().toast(context, "Logged In Successfully as $userType\nWelcome to Elite");
           addUserForChat(loginPojo.user);
           Global.userType().then((value)
           {
@@ -78,7 +76,7 @@ class API{
           preferences.setBool(Constants.ISAPPROVED, false);
           preferences.setString(Constants.USER_PREF,json.encode(loginPojo.user.toJson()));
           loader.hide();
-          Global.toast(context, "Registered Successfully");
+          Global().toast(context, "Registered Successfully");
           addUserForChat(loginPojo.user);
         Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) => DashBoardScreen()));
         }, onError: (value) {
@@ -318,7 +316,7 @@ addUserForChat(User user) async {
           int status=map["status"];
           if(status==200 || status==201)
           {
-            Global.toast(context, "Password Changed Successfully");
+            Global().toast(context, "Password Changed Successfully");
             Navigator.of(context).pop();
           }
           else
