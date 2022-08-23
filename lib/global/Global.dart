@@ -13,6 +13,7 @@ class Global{
   }
 
   void toast(BuildContext context,String message) {
+    ToastContext().init(context);
     Toast.show(message, duration: Toast.lengthLong, gravity:  Toast.bottom);
   }
 

@@ -181,8 +181,10 @@ class _SignUpScreenState extends State<SignUpScreen> {
 _signUpClick() {
 
   String userTypeText="guard";
-  if(userType==1){userTypeText=Constants.USER_TYPE_DRIVER;}
-
+  if(userType==1)
+  {
+    userTypeText=Constants.USER_TYPE_DRIVER;
+  }
   if (CommonWidgets.isValidate(_formKey)) {
     Map jsonPost =
     {
